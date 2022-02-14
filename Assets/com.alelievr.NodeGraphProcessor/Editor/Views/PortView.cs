@@ -10,8 +10,8 @@ namespace GraphProcessor
 {
     public class PortView : Port
     {
-        public string fieldName => fieldInfo.Name;
-        public Type fieldType => fieldInfo.GetUnderlyingType();
+        public string MemberName => memberInfo.Name;
+        public Type MemberType => memberInfo.GetUnderlyingType();
         public new Type portType;
         public BaseNodeView owner { get; private set; }
         public PortData portData;
@@ -19,7 +19,7 @@ namespace GraphProcessor
         public event Action<PortView, Edge> OnConnected;
         public event Action<PortView, Edge> OnDisconnected;
 
-        protected MemberInfo fieldInfo;
+        protected MemberInfo memberInfo;
         protected BaseEdgeConnectorListener listener;
 
         string userPortStyleFile = "PortViewTypes";
@@ -30,14 +30,14 @@ namespace GraphProcessor
 
         readonly string portStyle = "GraphProcessorStyles/PortView";
 
-        protected PortView(Direction direction, MemberInfo fieldInfo, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
-            : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.displayType ?? fieldInfo.GetUnderlyingType())
+        protected PortView(Direction direction, MemberInfo memberInfo, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
+            : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.displayType ?? memberInfo.GetUnderlyingType())
         {
-            this.fieldInfo = fieldInfo;
+            this.memberInfo = memberInfo;
             this.listener = edgeConnectorListener;
-            this.portType = portData.displayType ?? fieldInfo.GetUnderlyingType();
+            this.portType = portData.displayType ?? memberInfo.GetUnderlyingType();
             this.portData = portData;
-            this.portName = fieldName;
+            this.portName = MemberName;
 
             styleSheets.Add(Resources.Load<StyleSheet>(portStyle));
 
@@ -53,9 +53,9 @@ namespace GraphProcessor
             this.tooltip = portData.tooltip;
         }
 
-        public static PortView CreatePortView(Direction direction, MemberInfo fieldInfo, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
+        public static PortView CreatePortView(Direction direction, MemberInfo memberInfo, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
         {
-            var pv = new PortView(direction, fieldInfo, portData, edgeConnectorListener);
+            var pv = new PortView(direction, memberInfo, portData, edgeConnectorListener);
             pv.m_EdgeConnector = new BaseEdgeConnector(edgeConnectorListener);
             pv.AddManipulator(pv.m_EdgeConnector);
 
@@ -98,13 +98,13 @@ namespace GraphProcessor
         public virtual void Initialize(BaseNodeView nodeView, string name)
         {
             this.owner = nodeView;
-            AddToClassList(fieldName);
+            AddToClassList(MemberName);
 
             // Correct port type if port accept multiple values (and so is a container)
-            if (direction == Direction.Input && portData.acceptMultipleEdges && portType == fieldType) // If the user haven't set a custom field type
+            if (direction == Direction.Input && portData.acceptMultipleEdges && portType == MemberType) // If the user haven't set a custom field type
             {
-                if (fieldType.GetGenericArguments().Length > 0)
-                    portType = fieldType.GetGenericArguments()[0];
+                if (MemberType.GetGenericArguments().Length > 0)
+                    portType = MemberType.GetGenericArguments()[0];
             }
 
             if (name != null)

@@ -117,12 +117,12 @@ namespace GraphProcessor
 
             foreach (var inputPort in nodeTarget.inputPorts)
             {
-                AddPort(inputPort.fieldInfo, Direction.Input, listener, inputPort.portData);
+                AddPort(inputPort.memberInfo, Direction.Input, listener, inputPort.portData);
             }
 
             foreach (var outputPort in nodeTarget.outputPorts)
             {
-                AddPort(outputPort.fieldInfo, Direction.Output, listener, outputPort.portData);
+                AddPort(outputPort.memberInfo, Direction.Output, listener, outputPort.portData);
             }
         }
 
@@ -337,32 +337,32 @@ namespace GraphProcessor
 
         #region API
 
-        public List<PortView> GetPortViewsFromFieldName(string fieldName)
+        public List<PortView> GetPortViewsFromMemberName(string memberName)
         {
             List<PortView> ret;
 
-            portsPerFieldName.TryGetValue(fieldName, out ret);
+            portsPerFieldName.TryGetValue(memberName, out ret);
 
             return ret;
         }
 
-        public PortView GetFirstPortViewFromFieldName(string fieldName)
+        public PortView GetFirstPortViewFromMemberName(string memberName)
         {
-            return GetPortViewsFromFieldName(fieldName)?.First();
+            return GetPortViewsFromMemberName(memberName)?.First();
         }
 
-        public PortView GetPortViewFromFieldName(string fieldName, string identifier)
+        public PortView GetPortViewFromMemberName(string memberName, string identifier)
         {
-            return GetPortViewsFromFieldName(fieldName)?.FirstOrDefault(pv =>
+            return GetPortViewsFromMemberName(memberName)?.FirstOrDefault(pv =>
             {
                 return (pv.portData.identifier == identifier) || (String.IsNullOrEmpty(pv.portData.identifier) && String.IsNullOrEmpty(identifier));
             });
         }
 
 
-        public PortView AddPort(MemberInfo fieldInfo, Direction direction, BaseEdgeConnectorListener listener, PortData portData)
+        public PortView AddPort(MemberInfo memberInfo, Direction direction, BaseEdgeConnectorListener listener, PortData portData)
         {
-            PortView p = CreatePortView(direction, fieldInfo, portData, listener);
+            PortView p = CreatePortView(direction, memberInfo, portData, listener);
 
             if (p.direction == Direction.Input)
             {
@@ -386,19 +386,19 @@ namespace GraphProcessor
             p.Initialize(this, portData?.displayName);
 
             List<PortView> ports;
-            portsPerFieldName.TryGetValue(p.fieldName, out ports);
+            portsPerFieldName.TryGetValue(p.MemberName, out ports);
             if (ports == null)
             {
                 ports = new List<PortView>();
-                portsPerFieldName[p.fieldName] = ports;
+                portsPerFieldName[p.MemberName] = ports;
             }
             ports.Add(p);
 
             return p;
         }
 
-        protected virtual PortView CreatePortView(Direction direction, MemberInfo fieldInfo, PortData portData, BaseEdgeConnectorListener listener)
-            => PortView.CreatePortView(direction, fieldInfo, portData, listener);
+        protected virtual PortView CreatePortView(Direction direction, MemberInfo memberInfo, PortData portData, BaseEdgeConnectorListener listener)
+            => PortView.CreatePortView(direction, memberInfo, portData, listener);
 
         public void InsertPort(PortView portView, int index)
         {
@@ -437,7 +437,7 @@ namespace GraphProcessor
             }
 
             List<PortView> ports;
-            portsPerFieldName.TryGetValue(p.fieldName, out ports);
+            portsPerFieldName.TryGetValue(p.MemberName, out ports);
             ports.Remove(p);
         }
 
@@ -693,8 +693,8 @@ namespace GraphProcessor
                 {
                     foreach (var port in portsPerFieldName[field.Name])
                     {
-                        string fieldPath = port.portData.IsProxied ? port.portData.proxiedFieldPath : port.fieldName;
-                        DrawField(new MemberInfoWithPath(MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget)), fromInspector, port.portData.IsProxied);
+                        string memberPath = port.portData.IsProxied ? port.portData.proxiedMemberPath : port.MemberName;
+                        DrawField(new MemberInfoWithPath(MemberInfoWithPath.GetMemberInfoPath(memberPath, nodeTarget)), fromInspector, port.portData.IsProxied);
                     }
                 }
                 else
@@ -704,10 +704,10 @@ namespace GraphProcessor
             }
         }
 
-        protected virtual void DrawField(MemberInfoWithPath fieldInfoWithPath, bool fromInspector, bool isProxied = false)
+        protected virtual void DrawField(MemberInfoWithPath memberInfoWithPath, bool fromInspector, bool isProxied = false)
         {
-            MemberInfo member = fieldInfoWithPath.Member;
-            string fieldPath = fieldInfoWithPath.Path;
+            MemberInfo member = memberInfoWithPath.Member;
+            string fieldPath = memberInfoWithPath.Path;
 
             if (!member.IsField())
             {
@@ -862,8 +862,8 @@ namespace GraphProcessor
 
         protected VisualElement AddControlField(string fieldPath, string label = null, bool showInputDrawer = false, Action valueChangedCallback = null)
         {
-            List<MemberInfo> fieldInfoPath = MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget);
-            return AddControlField(new MemberInfoWithPath(fieldInfoPath.Last(), fieldPath), label, showInputDrawer, valueChangedCallback);
+            List<MemberInfo> memberInfoPath = MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget);
+            return AddControlField(new MemberInfoWithPath(memberInfoPath.Last(), fieldPath), label, showInputDrawer, valueChangedCallback);
         }
         Regex s_ReplaceNodeIndexPropertyPath = new Regex(@"(^nodes.Array.data\[)(\d+)(\])");
         internal void SyncSerializedPropertyPathes()
@@ -894,10 +894,10 @@ namespace GraphProcessor
             return owner.serializedGraph.FindProperty("nodes").GetArrayElementAtIndex(i).FindPropertyRelative(fieldName);
         }
 
-        protected VisualElement AddControlField(MemberInfoWithPath fieldInfoWithPath, string label = null, bool showInputDrawer = false, Action valueChangedCallback = null)
+        protected VisualElement AddControlField(MemberInfoWithPath memberInfoWithPath, string label = null, bool showInputDrawer = false, Action valueChangedCallback = null)
         {
-            var field = fieldInfoWithPath.Member;
-            var fieldPath = fieldInfoWithPath.Path;
+            var field = memberInfoWithPath.Member;
+            var fieldPath = memberInfoWithPath.Path;
 
             if (field == null)
                 return null;
@@ -928,8 +928,8 @@ namespace GraphProcessor
                     objectField.allowSceneObjects = false;
             }
 
-            if (!fieldControlsMap.TryGetValue(fieldInfoWithPath, out var inputFieldList))
-                inputFieldList = fieldControlsMap[fieldInfoWithPath] = new List<VisualElement>();
+            if (!fieldControlsMap.TryGetValue(memberInfoWithPath, out var inputFieldList))
+                inputFieldList = fieldControlsMap[memberInfoWithPath] = new List<VisualElement>();
             inputFieldList.Add(element);
 
             if (element != null)
@@ -998,12 +998,12 @@ namespace GraphProcessor
 
         internal void OnPortConnected(PortView port)
         {
-            string fieldName = port.portData.IsProxied ? port.portData.proxiedFieldPath : port.fieldName;
+            string memberName = port.portData.IsProxied ? port.portData.proxiedMemberPath : port.MemberName;
 
-            if (port.direction == Direction.Input && inputContainerElement?.Q(fieldName) != null)
-                inputContainerElement.Q(fieldName).AddToClassList("empty");
+            if (port.direction == Direction.Input && inputContainerElement?.Q(memberName) != null)
+                inputContainerElement.Q(memberName).AddToClassList("empty");
 
-            if (hideElementIfConnected.TryGetValue(fieldName, out var elem))
+            if (hideElementIfConnected.TryGetValue(memberName, out var elem))
                 elem.style.display = DisplayStyle.None;
 
             onPortConnected?.Invoke(port);
@@ -1012,22 +1012,22 @@ namespace GraphProcessor
         internal void OnPortDisconnected(PortView port) //
         {
             bool isProxied = port.portData.IsProxied;
-            string fieldName = isProxied ? port.portData.proxiedFieldPath : port.fieldName;
+            string memberName = isProxied ? port.portData.proxiedMemberPath : port.MemberName;
 
-            if (port.direction == Direction.Input && inputContainerElement?.Q(fieldName) != null)
+            if (port.direction == Direction.Input && inputContainerElement?.Q(memberName) != null)
             {
-                inputContainerElement.Q(fieldName).RemoveFromClassList("empty");
-                var fieldInfoWithPath = new MemberInfoWithPath(fieldName, nodeTarget);
+                inputContainerElement.Q(memberName).RemoveFromClassList("empty");
+                var memberInfoWithPath = new MemberInfoWithPath(memberName, nodeTarget);
 
-                var valueBeforeConnection = GetInputFieldValue(fieldInfoWithPath);
+                var valueBeforeConnection = GetInputFieldValue(memberInfoWithPath);
 
                 if (valueBeforeConnection != null)
                 {
-                    fieldInfoWithPath.SetValue(nodeTarget, valueBeforeConnection);
+                    memberInfoWithPath.SetValue(nodeTarget, valueBeforeConnection);
                 }
             }
 
-            if (hideElementIfConnected.TryGetValue(fieldName, out var elem))
+            if (hideElementIfConnected.TryGetValue(memberName, out var elem))
                 elem.style.display = DisplayStyle.Flex;
 
             onPortDisconnected?.Invoke(port);
@@ -1137,8 +1137,8 @@ namespace GraphProcessor
                 // Add missing port views
                 if (!portViews.Any(pv => p.portData.identifier == pv.portData.identifier))
                 {
-                    Direction portDirection = nodeTarget.IsFieldInput(p.fieldName) ? Direction.Input : Direction.Output;
-                    var pv = AddPort(p.fieldInfo, portDirection, listener, p.portData);
+                    Direction portDirection = nodeTarget.IsMemberInput(p.memberName) ? Direction.Input : Direction.Output;
+                    var pv = AddPort(p.memberInfo, portDirection, listener, p.portData);
                     portViewList.Add(pv);
                 }
             }
@@ -1184,8 +1184,8 @@ namespace GraphProcessor
                     SyncPortCounts(ports, portViews);
                 else
                 {
-                    var p = ports.GroupBy(n => n.fieldName);
-                    var pv = portViews.GroupBy(v => v.fieldName);
+                    var p = ports.GroupBy(n => n.memberName);
+                    var pv = portViews.GroupBy(v => v.MemberName);
                     p.Zip(pv, (portPerFieldName, portViewPerFieldName) =>
                     {
                         IEnumerable<PortView> portViewsList = portViewPerFieldName;
@@ -1249,10 +1249,10 @@ namespace GraphProcessor
             this.path = path;
         }
 
-        public MemberInfoWithPath(List<MemberInfo> fieldInfos)
+        public MemberInfoWithPath(List<MemberInfo> memberInfos)
         {
-            this.member = fieldInfos.Last();
-            this.path = fieldInfos.GetPath();
+            this.member = memberInfos.Last();
+            this.path = memberInfos.GetPath();
         }
 
         public MemberInfoWithPath(MemberInfo field)
@@ -1275,18 +1275,18 @@ namespace GraphProcessor
         public static List<MemberInfo> GetMemberInfoPath(string path, object startValue)
         {
             string[] pathArray = path.Split('.');
-            List<MemberInfo> fieldInfoPath = new List<MemberInfo>();
+            List<MemberInfo> memberInfoPath = new List<MemberInfo>();
             object value = startValue;
             for (int i = 0; i < pathArray.Length; i++)
             {
                 MemberInfo info = value.GetType().GetMember(pathArray[i], BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)[0];
-                fieldInfoPath.Add(info);
+                memberInfoPath.Add(info);
                 if (i + 1 < pathArray.Length)
                 {
-                    value = fieldInfoPath[i].GetValue(value);
+                    value = memberInfoPath[i].GetValue(value);
                 }
             }
-            return fieldInfoPath;
+            return memberInfoPath;
         }
     }
 }

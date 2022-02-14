@@ -207,7 +207,7 @@ namespace GraphProcessor
                 graphView.RegisterCompleteObjectUndo("Added " + nodeType);
                 BaseNodeView view = graphView.AddNode(method.Invoke(nodeType, graphMousePosition));
 
-                var targetPort = view.GetPortViewFromFieldName(userData.Item1.portFieldName, userData.Item1.portIdentifier);
+                var targetPort = view.GetPortViewFromMemberName(userData.Item1.portFieldName, userData.Item1.portIdentifier);
                 if (inputPortView == null)
                     graphView.Connect(targetPort, outputPortView);
                 else

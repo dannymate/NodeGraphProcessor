@@ -38,7 +38,7 @@ namespace GraphProcessor
         /// <summary>
         /// The field the port is proxying if using custombehavior
         /// </summary>
-        public string proxiedFieldPath;
+        public string proxiedMemberPath;
         /// <summary>
         /// Port size, will also affect the size of the connected edge
         /// </summary>
@@ -52,7 +52,7 @@ namespace GraphProcessor
         /// </summary>
         public bool vertical;
 
-        public bool IsProxied => !String.IsNullOrEmpty(proxiedFieldPath);
+        public bool IsProxied => !String.IsNullOrEmpty(proxiedMemberPath);
 
         public bool Equals(PortData other)
         {
@@ -62,7 +62,7 @@ namespace GraphProcessor
                 && showAsDrawer == other.showAsDrawer
                 && acceptMultipleEdges == other.acceptMultipleEdges
                 && sizeInPixel == other.sizeInPixel
-                && proxiedFieldPath == other.proxiedFieldPath
+                && proxiedMemberPath == other.proxiedMemberPath
                 && tooltip == other.tooltip
                 && vertical == other.vertical;
         }
@@ -75,7 +75,7 @@ namespace GraphProcessor
             showAsDrawer = other.showAsDrawer;
             acceptMultipleEdges = other.acceptMultipleEdges;
             sizeInPixel = other.sizeInPixel;
-            proxiedFieldPath = other.proxiedFieldPath;
+            proxiedMemberPath = other.proxiedMemberPath;
             tooltip = other.tooltip;
             vertical = other.vertical;
         }
@@ -89,7 +89,7 @@ namespace GraphProcessor
         /// <summary>
         /// The actual name of the property behind the port (must be exact, it is used for Reflection)
         /// </summary>
-        public string fieldName;
+        public string memberName;
         /// <summary>
         /// The node on which the port is
         /// </summary>
@@ -97,7 +97,7 @@ namespace GraphProcessor
         /// <summary>
         /// The fieldInfo from the fieldName
         /// </summary>
-        public MemberInfo fieldInfo;
+        public MemberInfo memberInfo;
         /// <summary>
         /// Data of the port
         /// </summary>
@@ -109,7 +109,7 @@ namespace GraphProcessor
         /// <summary>
         /// Owner of the FieldInfo, to be used in case of Get/SetValue
         /// </summary>
-        public object fieldOwner;
+        public object memberOwner;
 
         CustomPortIODelegate customPortIOMethod;
 
@@ -137,16 +137,16 @@ namespace GraphProcessor
         /// <param name="portData">Data of the port</param>
         public NodePort(BaseNode owner, object fieldOwner, string fieldName, PortData portData)
         {
-            this.fieldName = fieldName;
+            this.memberName = fieldName;
             this.owner = owner;
             this.portData = portData;
-            this.fieldOwner = fieldOwner;
+            this.memberOwner = fieldOwner;
 
-            fieldInfo = fieldOwner.GetType().GetField(
+            memberInfo = fieldOwner.GetType().GetField(
                 fieldName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            if (fieldInfo == null)
-                fieldInfo = fieldOwner.GetType().GetProperty(
+            if (memberInfo == null)
+                memberInfo = fieldOwner.GetType().GetProperty(
                 fieldName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             customPortIOMethod = CustomPortIO.GetCustomPortMethod(owner.GetType(), fieldName);
@@ -187,12 +187,12 @@ namespace GraphProcessor
             try
             {
                 //Creation of the delegate to move the data from the input node to the output node:
-                MemberInfo inputField = edge.inputNode.GetType().GetField(edge.inputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                MemberInfo inputField = edge.inputNode.GetType().GetField(edge.inputMemberName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 if (inputField == null)
-                    inputField = edge.inputNode.GetType().GetProperty(edge.inputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                MemberInfo outputField = edge.outputNode.GetType().GetField(edge.outputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    inputField = edge.inputNode.GetType().GetProperty(edge.inputMemberName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                MemberInfo outputField = edge.outputNode.GetType().GetField(edge.outputMemberName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 if (outputField == null)
-                    outputField = edge.outputNode.GetType().GetProperty(edge.outputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    outputField = edge.outputNode.GetType().GetProperty(edge.outputMemberName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
                 Type inType, outType;
 
@@ -292,7 +292,7 @@ namespace GraphProcessor
                 return;
 
             //if there are custom IO implementation on the other ports, they'll need our value in the passThrough buffer
-            object ourValue = fieldInfo.GetValue(fieldOwner);
+            object ourValue = memberInfo.GetValue(memberOwner);
             foreach (var edge in edgeWithRemoteCustomIO)
                 edge.passThroughBuffer = ourValue;
         }
@@ -303,15 +303,15 @@ namespace GraphProcessor
         public void ResetToDefault()
         {
             // Clear lists, set classes to null and struct to default value.
-            if (typeof(IList).IsAssignableFrom(fieldInfo.GetUnderlyingType()))
-                (fieldInfo.GetValue(fieldOwner) as IList)?.Clear();
-            else if (fieldInfo.GetUnderlyingType().GetTypeInfo().IsClass)
-                fieldInfo.SetValue(fieldOwner, null);
+            if (typeof(IList).IsAssignableFrom(memberInfo.GetUnderlyingType()))
+                (memberInfo.GetValue(memberOwner) as IList)?.Clear();
+            else if (memberInfo.GetUnderlyingType().GetTypeInfo().IsClass)
+                memberInfo.SetValue(memberOwner, null);
             else
             {
                 try
                 {
-                    fieldInfo.SetValue(fieldOwner, Activator.CreateInstance(fieldInfo.GetUnderlyingType()));
+                    memberInfo.SetValue(memberOwner, Activator.CreateInstance(memberInfo.GetUnderlyingType()));
                 }
                 catch { } // Catch types that don't have any constructors
             }
@@ -341,10 +341,10 @@ namespace GraphProcessor
 
                 // We do an extra conversion step in case the buffer output is not compatible with the input port
                 if (passThroughObject != null)
-                    if (TypeAdapter.AreAssignable(fieldInfo.GetUnderlyingType(), passThroughObject.GetType()))
-                        passThroughObject = TypeAdapter.Convert(passThroughObject, fieldInfo.GetUnderlyingType());
+                    if (TypeAdapter.AreAssignable(memberInfo.GetUnderlyingType(), passThroughObject.GetType()))
+                        passThroughObject = TypeAdapter.Convert(passThroughObject, memberInfo.GetUnderlyingType());
 
-                fieldInfo.SetValue(fieldOwner, passThroughObject);
+                memberInfo.SetValue(memberOwner, passThroughObject);
             }
         }
     }
@@ -376,7 +376,7 @@ namespace GraphProcessor
         /// <param name="edge"></param>
         public void Add(SerializableEdge edge)
         {
-            string portFieldName = (edge.inputNode == node) ? edge.inputFieldName : edge.outputFieldName;
+            string portFieldName = (edge.inputNode == node) ? edge.inputMemberName : edge.outputMemberName;
             string portIdentifier = (edge.inputNode == node) ? edge.inputPortIdentifier : edge.outputPortIdentifier;
 
             // Force empty string to null since portIdentifier is a serialized value
@@ -385,7 +385,7 @@ namespace GraphProcessor
 
             var port = this.FirstOrDefault(p =>
             {
-                return p.fieldName == portFieldName && p.portData.identifier == portIdentifier;
+                return p.memberName == portFieldName && p.portData.identifier == portIdentifier;
             });
 
             if (port == null)

@@ -178,7 +178,7 @@ namespace GraphProcessor
             }
         }
 
-        static FieldInfo SetGraph = typeof(BaseNode).GetField("graph", BindingFlags.NonPublic | BindingFlags.Instance);
+        static MemberInfo SetGraph = typeof(BaseNode).GetMember("graph", BindingFlags.NonPublic | BindingFlags.Instance)[0];
         static void ProvideNodePortCreationDescription(Type nodeType, NodeDescriptions targetDescription, BaseGraph graph = null)
         {
             var node = Activator.CreateInstance(nodeType) as BaseNode;
@@ -200,10 +200,10 @@ namespace GraphProcessor
                 targetDescription.nodeCreatePortDescription.Add(new PortDescription
                 {
                     nodeType = nodeType,
-                    portType = p.portData.displayType ?? p.fieldInfo.GetUnderlyingType(),
+                    portType = p.portData.displayType ?? p.memberInfo.GetUnderlyingType(),
                     isInput = input,
-                    portFieldName = p.fieldName,
-                    portDisplayName = p.portData.displayName ?? p.fieldName,
+                    portFieldName = p.memberName,
+                    portDisplayName = p.portData.displayName ?? p.memberName,
                     portIdentifier = p.portData.identifier,
                 });
             }

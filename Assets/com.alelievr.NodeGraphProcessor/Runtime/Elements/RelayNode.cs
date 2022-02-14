@@ -57,7 +57,7 @@ public class RelayNode : BaseNode
         {
             input.values = edges.Select(e => e.passThroughBuffer).ToList();
             input.names = edges.Select(e => e.outputPort.portData.displayName).ToList();
-            input.types = edges.Select(e => e.outputPort.portData.displayType ?? e.outputPort.fieldInfo.GetUnderlyingType()).ToList();
+            input.types = edges.Select(e => e.outputPort.portData.displayType ?? e.outputPort.memberInfo.GetUnderlyingType()).ToList();
         }
     }
 
@@ -184,7 +184,7 @@ public class RelayNode : BaseNode
         var inputEdges = GetNonRelayEdges();
 
         if (inputEdges != null)
-            return inputEdges.Select(e => (e.outputPort.portData.displayType ?? e.outputPort.fieldInfo.GetUnderlyingType(), e.outputPort.portData.displayName)).ToList();
+            return inputEdges.Select(e => (e.outputPort.portData.displayType ?? e.outputPort.memberInfo.GetUnderlyingType(), e.outputPort.portData.displayName)).ToList();
 
         return s_empty;
     }

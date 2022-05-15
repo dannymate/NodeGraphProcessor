@@ -1047,7 +1047,7 @@ namespace GraphProcessor
 
         public override void SetPosition(Rect newPos)
         {
-            if (initializing || !nodeTarget.isLocked) return;
+            if (!initializing || nodeTarget.isLocked) return;
 
             base.SetPosition(newPos);
 

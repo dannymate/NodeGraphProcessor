@@ -30,7 +30,7 @@ namespace GraphProcessor
 
             var node = Activator.CreateInstance(nodeType) as BaseNode;
 
-            node.position = new Rect(position, new Vector2(100, 100));
+            node.initialPosition = new Rect(position, new Vector2(100, 100));
 
             node.View = new ViewDelegates(node);
 

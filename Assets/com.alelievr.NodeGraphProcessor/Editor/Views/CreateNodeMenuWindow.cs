@@ -198,7 +198,7 @@ namespace GraphProcessor
                 graphView.RegisterCompleteObjectUndo("Added " + nodeType);
                 graphView.AddNode(method.Invoke(nodeType, graphMousePosition));
             }
-            else
+            else if (searchTreeEntry.userData is Tuple<NodeProvider.PortDescription, Func<Type, Vector2, BaseNode>>)
             {
                 Tuple<NodeProvider.PortDescription, Func<Type, Vector2, BaseNode>> userData = searchTreeEntry.userData as Tuple<NodeProvider.PortDescription, Func<Type, Vector2, BaseNode>>;
                 var nodeType = userData.Item1.nodeType;
@@ -208,6 +208,19 @@ namespace GraphProcessor
                 BaseNodeView view = graphView.AddNode(method.Invoke(nodeType, graphMousePosition));
 
                 var targetPort = view.GetPortViewFromFieldName(userData.Item1.portFieldName, userData.Item1.portIdentifier);
+                if (inputPortView == null)
+                    graphView.Connect(targetPort, outputPortView);
+                else
+                    graphView.Connect(inputPortView, targetPort);
+            }
+            else
+            {
+                NodeProvider.PortDescription userData = (NodeProvider.PortDescription)searchTreeEntry.userData;
+
+                graphView.RegisterCompleteObjectUndo("Added " + userData.nodeType);
+                var nodeView = graphView.AddNode(BaseNode.CreateFromType(userData.nodeType, graphMousePosition));
+                var targetPort = nodeView.GetPortViewFromFieldName(userData.portFieldName, userData.portIdentifier);
+
                 if (inputPortView == null)
                     graphView.Connect(targetPort, outputPortView);
                 else

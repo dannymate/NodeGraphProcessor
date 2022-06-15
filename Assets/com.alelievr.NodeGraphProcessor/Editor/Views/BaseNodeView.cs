@@ -897,8 +897,27 @@ namespace GraphProcessor
 
         protected SerializedProperty FindSerializedProperty(string fieldName)
         {
+            return FindSerializedProperty(fieldName, out _);
+        }
+
+        protected SerializedProperty FindSerializedProperty(string fieldName, out SerializedObject parent)
+        {
             int i = owner.graph.nodes.FindIndex(n => n == nodeTarget);
-            return owner.serializedGraph.FindProperty("nodes").GetArrayElementAtIndex(i).FindPropertyRelative(fieldName);
+            List<string> fieldPaths = MemberInfoWithPath.GetPathAsListOfPaths(fieldName);
+
+            var parentObject = owner.serializedGraph;
+            var property = parentObject.FindProperty("nodes").GetArrayElementAtIndex(i);
+            for (int x = 0; x < fieldPaths.Count; x++)
+            {
+                if (property.propertyType == SerializedPropertyType.ObjectReference)
+                {
+                    parentObject = new SerializedObject(property.objectReferenceValue);
+                    property = parentObject.FindProperty(fieldPaths[x]);
+                }
+                else property = property.FindPropertyRelative(fieldPaths[x]);
+            }
+            parent = parentObject;
+            return property;
         }
 
         protected VisualElement AddControlField(MemberInfoWithPath fieldInfoWithPath, string label = null, bool showInputDrawer = false, Action valueChangedCallback = null)
@@ -909,8 +928,8 @@ namespace GraphProcessor
             if (field == null)
                 return null;
 
-            var element = new PropertyField(FindSerializedProperty(fieldPath), showInputDrawer ? "" : label);
-            element.Bind(owner.serializedGraph);
+            var element = new PropertyField(FindSerializedProperty(fieldPath, out SerializedObject fieldParentObject), showInputDrawer ? "" : label);
+            element.Bind(fieldParentObject);
 
 #if UNITY_2020_3 // In Unity 2020.3 the empty label on property field doesn't hide it, so we do it manually
 			if ((showInputDrawer || String.IsNullOrEmpty(label)) && element != null)
@@ -1294,6 +1313,11 @@ namespace GraphProcessor
                 }
             }
             return fieldInfoPath;
+        }
+
+        public static List<string> GetPathAsListOfPaths(string path)
+        {
+            return new List<string>(path.Split('.'));
         }
     }
 }

@@ -817,7 +817,11 @@ namespace GraphProcessor
         /// This custom name will be serialized inside the node.
         /// </summary>
         /// <param name="customNodeName">New name of the node.</param>
-        public void SetCustomName(string customName) => nodeCustomName = customName;
+        public void SetCustomName(string customName)
+        {
+            nodeCustomName = customName;
+            View?.UpdateTitle();
+        }
 
         /// <summary>
         /// Get the name of the node. If the node have a custom name (set using the UI by double clicking on the node title) then it will return this name first, otherwise it returns the value of the name field.

@@ -115,7 +115,7 @@ namespace GraphProcessor
 
         private void InitializeNodeToViewInterface()
         {
-            nodeTarget.View = new ViewDelegates(nodeTarget, this.GetPosition, this.SetPosition);
+            nodeTarget.View = new ViewDelegates(nodeTarget, this.GetPosition, this.SetPosition, UpdateTitle);
         }
 
         void InitializePorts()

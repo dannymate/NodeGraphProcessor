@@ -692,29 +692,32 @@ namespace GraphProcessor
 
             fields = nodeTarget.OverrideFieldOrder(fields).Reverse().ToList();
 
-
             for (int i = 0; i < fields.Count; i++)
             {
                 MemberInfo field = fields[i];
-                if (field.HasCustomAttribute<InputAttribute>() && portsPerFieldName.ContainsKey(field.Name))
+                if (portsPerFieldName.ContainsKey(field.Name))
                 {
-                    foreach (var port in portsPerFieldName[field.Name])
+                    foreach (var portView in portsPerFieldName[field.Name])
                     {
-                        string fieldPath = port.portData.IsProxied ? port.portData.proxiedFieldPath : port.fieldName;
-                        DrawField(new MemberInfoWithPath(MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget)), fromInspector, port.portData.IsProxied);
+                        string fieldPath = portView.portData.IsProxied ? portView.portData.proxiedFieldPath : portView.fieldName;
+                        DrawField(new MemberInfoWithPath(MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget)), fromInspector, portView);
                     }
                 }
                 else
                 {
+
                     DrawField(new MemberInfoWithPath(field), fromInspector);
                 }
             }
         }
 
-        protected virtual void DrawField(MemberInfoWithPath fieldInfoWithPath, bool fromInspector, bool isProxied = false)
+        protected virtual void DrawField(MemberInfoWithPath fieldInfoWithPath, bool fromInspector, PortView portView = null)
         {
             MemberInfo member = fieldInfoWithPath.Member;
             string fieldPath = fieldInfoWithPath.Path;
+            bool hasPortView = portView != null;
+            PortData portData = portView?.portData;
+            bool isProxied = hasPortView ? portData.IsProxied : false;
 
             if (!member.IsField())
             {
@@ -743,7 +746,8 @@ namespace GraphProcessor
             bool hasInputAttribute = inputAttribute != null;
             bool hasInputOrOutputAttribute = hasInputAttribute || field.HasCustomAttribute<OutputAttribute>();
             bool showAsDrawer = !fromInspector && hasInputAttribute && (inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>());
-            if ((!serializeField || isProxied) && hasInputOrOutputAttribute && !showAsDrawer)
+            showAsDrawer |= !fromInspector && (hasPortView && portView.direction == Direction.Input) && portData.showAsDrawer;
+            if ((!serializeField || isProxied) && (hasPortView || hasInputOrOutputAttribute) && !showAsDrawer)
             {
                 AddEmptyField(field, fromInspector);
                 return;

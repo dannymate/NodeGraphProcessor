@@ -87,7 +87,7 @@ namespace GraphProcessor
 
         public static bool IsField(this MemberInfo memberInfo)
         {
-            return memberInfo.MemberType == MemberTypes.Field;
+            return memberInfo != null && memberInfo.MemberType == MemberTypes.Field;
         }
 
         public static object GetFinalValue(this IList<MemberInfo> list, object startingValue)

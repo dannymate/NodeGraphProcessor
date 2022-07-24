@@ -781,7 +781,7 @@ namespace GraphProcessor
                 displayName = inspectorNameAttribute.displayName;
 
             var elem = AddControlField(fieldPath, displayName, showInputDrawer);
-            if (hasInputAttribute)
+            if (hasInputAttribute || (hasPortView && portView.direction == Direction.Input))
             {
                 hideElementIfConnected[fieldPath] = elem;
 
@@ -1281,12 +1281,16 @@ namespace GraphProcessor
 
         public MemberInfoWithPath(List<MemberInfo> fieldInfos)
         {
+            if (fieldInfos == null) return;
+
             this.member = fieldInfos.Last();
             this.path = fieldInfos.GetPath();
         }
 
         public MemberInfoWithPath(MemberInfo field)
         {
+            if (field == null) return;
+
             this.member = field;
             this.path = field.Name;
         }
@@ -1309,7 +1313,13 @@ namespace GraphProcessor
             object value = startValue;
             for (int i = 0; i < pathArray.Length; i++)
             {
-                MemberInfo info = value.GetType().GetMember(pathArray[i], BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)[0];
+                MemberInfo[] members = value.GetType().GetMember(pathArray[i], BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (members.Length == 0)
+                {
+                    Debug.LogWarning(path + " " + "(" + pathArray[i] + ")" + " not found.");
+                    return null;
+                }
+                MemberInfo info = members[0];
                 fieldInfoPath.Add(info);
                 if (i + 1 < pathArray.Length)
                 {

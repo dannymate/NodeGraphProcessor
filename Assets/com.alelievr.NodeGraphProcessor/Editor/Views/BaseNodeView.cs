@@ -692,21 +692,26 @@ namespace GraphProcessor
 
             fields = nodeTarget.OverrideFieldOrder(fields).Reverse().ToList();
 
+            DrawFields(fields, fromInspector);
+        }
+
+        protected virtual void DrawFields(List<MemberInfo> fields, bool fromInspector = false)
+        {
+            if (!fromInspector) { inputContainerElement.Clear(); controlsContainer.Clear(); }
+
             for (int i = 0; i < fields.Count; i++)
             {
                 MemberInfo field = fields[i];
-                if (portsPerFieldName.ContainsKey(field.Name))
+                if (!portsPerFieldName.ContainsKey(field.Name))
                 {
-                    foreach (var portView in portsPerFieldName[field.Name])
-                    {
-                        string fieldPath = portView.portData.IsProxied ? portView.portData.proxiedFieldPath : portView.fieldName;
-                        DrawField(new MemberInfoWithPath(MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget)), fromInspector, portView);
-                    }
-                }
-                else
-                {
-
                     DrawField(new MemberInfoWithPath(field), fromInspector);
+                    continue;
+                }
+
+                foreach (var portView in portsPerFieldName[field.Name])
+                {
+                    string fieldPath = portView.portData.IsProxied ? portView.portData.proxiedFieldPath : portView.fieldName;
+                    DrawField(new MemberInfoWithPath(MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget)), fromInspector, portView);
                 }
             }
         }
@@ -717,7 +722,7 @@ namespace GraphProcessor
             string fieldPath = fieldInfoWithPath.Path;
             bool hasPortView = portView != null;
             PortData portData = portView?.portData;
-            bool isProxied = hasPortView ? portData.IsProxied : false;
+            bool isProxied = hasPortView && portData.IsProxied;
 
             if (!member.IsField())
             {
@@ -1192,6 +1197,23 @@ namespace GraphProcessor
             }
         }
 
+        public void RedrawControlDrawers()
+        {
+            // IEnumerable<string> uniqueFields = this.nodeTarget.GetAllPorts().Select(p => p.fieldName).Distinct();
+            // var fields = nodeTarget.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            //     .Cast<MemberInfo>()
+            //     .Concat(nodeTarget.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            //     // Filter fields from the BaseNode type since we are only interested in user-defined fields
+            //     // (better than BindingFlags.DeclaredOnly because we keep any inherited user-defined fields) 
+            //     .Where(f => f.DeclaringType != typeof(BaseNode)).ToList()
+            //     .Where(f => uniqueFields.Contains(f.Name));
+
+            // fields = nodeTarget.OverrideFieldOrder(fields).Reverse().ToList();
+
+            // DrawFields(fields.ToList());
+            DrawDefaultInspector();
+        }
+
         public virtual new bool RefreshPorts()
         {
             // If a port behavior was attached to one port, then
@@ -1242,12 +1264,15 @@ namespace GraphProcessor
             nodeTarget.UpdateAllPorts();
 
             RefreshPorts();
+
+            RedrawControlDrawers();
         }
 
         void UpdatePortsForField(string fieldName)
         {
             // TODO: actual code
             RefreshPorts();
+            RedrawControlDrawers();
         }
 
         protected virtual VisualElement CreateSettingsView() => new Label("Settings") { name = "header" };

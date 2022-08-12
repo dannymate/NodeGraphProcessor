@@ -395,7 +395,7 @@ namespace GraphProcessor
                 return p1Index.CompareTo(p2Index);
             });
 
-            if (sendPortUpdatedEvent)
+            if (sendPortUpdatedEvent && changed)
                 onPortsUpdated?.Invoke(fieldName);
 
             return changed;

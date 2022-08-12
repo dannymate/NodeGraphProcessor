@@ -740,7 +740,8 @@ namespace GraphProcessor
 
             //skip if the field is not serializable
             bool serializeField = field.HasCustomAttribute<SerializeField>();
-            if ((!field.IsPublic && !serializeField) || field.IsNotSerialized)
+            bool serializeReference = field.HasCustomAttribute<SerializeReference>();
+            if ((!field.IsPublic && !serializeField && !serializeReference) || field.IsNotSerialized)
             {
                 AddEmptyField(field, fromInspector);
                 return;
@@ -752,7 +753,7 @@ namespace GraphProcessor
             bool hasInputOrOutputAttribute = hasInputAttribute || field.HasCustomAttribute<OutputAttribute>();
             bool showAsDrawer = !fromInspector && hasInputAttribute && (inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>());
             showAsDrawer |= !fromInspector && (hasPortView && portView.direction == Direction.Input) && portData.showAsDrawer;
-            if ((!serializeField || isProxied) && (hasPortView || hasInputOrOutputAttribute) && !showAsDrawer)
+            if (((!serializeField && !serializeReference) || isProxied) && (hasPortView || hasInputOrOutputAttribute) && !showAsDrawer)
             {
                 AddEmptyField(field, fromInspector);
                 return;
@@ -767,14 +768,14 @@ namespace GraphProcessor
 
             // Hide the field if we want to display in in the inspector
             var showInInspector = field.GetCustomAttribute<ShowInInspector>();
-            if (!serializeField && showInInspector != null && !showInInspector.showInNode && !fromInspector)
+            if (!serializeField && !serializeReference && showInInspector != null && !showInInspector.showInNode && !fromInspector)
             {
                 AddEmptyField(field, fromInspector);
                 return;
             }
 
 
-            var showInputDrawer = hasInputAttribute && serializeField;
+            var showInputDrawer = hasInputAttribute && (serializeField || serializeReference);
             showInputDrawer |= showAsDrawer;
             showInputDrawer &= !fromInspector; // We can't show a drawer in the inspector
             showInputDrawer &= !typeof(IList).IsAssignableFrom(field.GetUnderlyingType());

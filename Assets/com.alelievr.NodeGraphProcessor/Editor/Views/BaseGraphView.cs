@@ -371,7 +371,7 @@ namespace GraphProcessor
 
                             nodeInspector.NodeViewRemoved(nodeView);
                             ExceptionToLog.Call(() => nodeView.OnRemoved());
-                            graph.RemoveNode(nodeView.nodeTarget);
+                            RemoveNode(nodeView.nodeTarget);
                             UpdateSerializedProperties();
                             RemoveElement(nodeView);
                             if (Selection.activeObject == nodeInspector)
@@ -983,9 +983,15 @@ namespace GraphProcessor
 
         public void RemoveNode(BaseNode node)
         {
-            var view = nodeViewsPerNode[node];
-            RemoveNodeView(view);
+            if (nodeViewsPerNode.ContainsKey(node))
+            {
+                var view = nodeViewsPerNode[node];
+                RemoveNodeView(view);
+            }
+
             graph.RemoveNode(node);
+
+            UpdateComputeOrder();
         }
 
         public void RemoveNodeView(BaseNodeView nodeView)

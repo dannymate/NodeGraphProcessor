@@ -110,12 +110,13 @@ namespace GraphProcessor
 
         void CreateEdgeNodeMenu(List<SearchTreeEntry> tree)
         {
+            var cachedCustomMenuItemMethods = NodeProvider.CustomMenuItemMethods;
             var entries = NodeProvider.GetEdgeCreationNodeMenuEntry((edgeFilter.input ?? edgeFilter.output) as PortView, graphView.graph);
 
             var titlePaths = new HashSet<string>();
 
-            var nodePaths = NodeProvider.GetNodeMenuEntries(graphView.graph).Concat(NodeProvider.GetCustomNodeMenuEntries(graphView.graph));
-            // var customMenuEntries = 
+            var customNodePaths = NodeProvider.GetCustomNodeMenuEntries(graphView.graph, cachedCustomMenuItemMethods);
+            var nodePaths = NodeProvider.GetNodeMenuEntries(graphView.graph).Concat(customNodePaths);
 
             tree.Add(new SearchTreeEntry(new GUIContent($"Relay", icon))
             {
@@ -136,12 +137,19 @@ namespace GraphProcessor
             // Sort menu by alphabetical order and submenus
             foreach (var nodeMenuItem in sortedMenuItems)
             {
-                foreach (var node in nodePaths.Where(kp => kp.type == nodeMenuItem.port.nodeType))
+                string portFieldName = nodeMenuItem.port.portFieldName;
+                Type portNodeType = nodeMenuItem.port.nodeType;
+                Type portType = nodeMenuItem.port.portType;
+                var filteredCustomNodePaths = NodeProvider.GetFilteredCustomNodeMenuEntries((edgeFilter.input ?? edgeFilter.output).portType, nodeMenuItem.port, cachedCustomMenuItemMethods);
+                foreach (var node in nodePaths.Where(kp => kp.type == portNodeType))
                 {
                     var nodePath = node.path;
 
                     // Ignore the node if it's not in the create menu
                     if (String.IsNullOrEmpty(nodePath))
+                        continue;
+                    // Ignore the node if it has filters and it doesn't meet the requirements
+                    if (customNodePaths.Contains(node) && !filteredCustomNodePaths.Contains(node))
                         continue;
 
                     var nodeName = nodePath;

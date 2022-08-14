@@ -265,4 +265,23 @@ namespace GraphProcessor
             this.onlyCompatibleWithGraph = onlyCompatibleWithGraph;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public class CustomMenuItemFilter : Attribute
+    {
+        public string portFieldName;
+        public Type type;
+
+        /// <summary>
+        /// Used alongside CustomMenuItemAttribute to filter a certain Port to a Type. Can only be used to remove NodeTypes from the Menu.
+        /// If the NodeType doesn't show without the filter then this filter will do nothing. 
+        /// </summary>
+        /// <param name="portFieldName">FieldName of the port to filter.</param>
+        /// <param name="type">Type to Check For</param>
+        public CustomMenuItemFilter(string portFieldName, Type type)
+        {
+            this.portFieldName = portFieldName;
+            this.type = type;
+        }
+    }
 }

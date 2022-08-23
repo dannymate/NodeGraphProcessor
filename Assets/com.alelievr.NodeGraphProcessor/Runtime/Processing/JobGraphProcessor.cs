@@ -31,7 +31,7 @@ namespace GraphProcessor
         /// Manage graph scheduling and processing
         /// </summary>
         /// <param name="graph">Graph to be processed</param>
-        public JobGraphProcessor(BaseGraph graph) : base(graph) { }
+        public JobGraphProcessor(GraphBase graph) : base(graph) { }
 
         public override void UpdateComputeOrder()
         {

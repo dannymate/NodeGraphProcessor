@@ -8,7 +8,7 @@ namespace GraphProcessor
     public class ExposedParameterWorkaround : ScriptableObject
     {
         [SerializeReference]
-        public List<ExposedParameter>   parameters = new List<ExposedParameter>();
-        public BaseGraph                graph;
+        public List<ExposedParameter> parameters = new List<ExposedParameter>();
+        public GraphBase graph;
     }
 }

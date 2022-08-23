@@ -4,16 +4,16 @@ using NodeGraphProcessor.Examples;
 
 public class RuntimeConditionalGraph : MonoBehaviour
 {
-	[Header("Graph to Run on Start")]
-	public BaseGraph graph;
+    [Header("Graph to Run on Start")]
+    public GraphBase graph;
 
-	private ConditionalProcessor processor;
+    private ConditionalProcessor processor;
 
-	private void Start()
-	{
-		if(graph != null)
-			processor = new ConditionalProcessor(graph);
+    private void Start()
+    {
+        if (graph != null)
+            processor = new ConditionalProcessor(graph);
 
-		processor.Run();
-	}
+        processor.Run();
+    }
 }

@@ -3,25 +3,25 @@ using UnityEditor;
 
 namespace GraphProcessor
 {
-	[ExecuteAlways]
-	public class DeleteCallback : UnityEditor.AssetModificationProcessor
-	{
-		static AssetDeleteResult OnWillDeleteAsset(string path, RemoveAssetOptions options)
-		{
-			var objects = AssetDatabase.LoadAllAssetsAtPath(path);
+    [ExecuteAlways]
+    public class DeleteCallback : UnityEditor.AssetModificationProcessor
+    {
+        static AssetDeleteResult OnWillDeleteAsset(string path, RemoveAssetOptions options)
+        {
+            var objects = AssetDatabase.LoadAllAssetsAtPath(path);
 
-			foreach (var obj in objects)
-			{
-				if (obj is BaseGraph b)
-				{
-					foreach (var graphWindow in Resources.FindObjectsOfTypeAll< BaseGraphWindow >())
-						graphWindow.OnGraphDeleted();
-					
-					b.OnAssetDeleted();
-				}
-			}
+            foreach (var obj in objects)
+            {
+                if (obj is GraphBase b)
+                {
+                    foreach (var graphWindow in Resources.FindObjectsOfTypeAll<BaseGraphWindow>())
+                        graphWindow.OnGraphDeleted();
 
-			return AssetDeleteResult.DidNotDelete;
-		}
-	}
+                    b.OnAssetDeleted();
+                }
+            }
+
+            return AssetDeleteResult.DidNotDelete;
+        }
+    }
 }

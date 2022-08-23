@@ -22,7 +22,7 @@ namespace NodeGraphProcessor.Examples
         /// Manage graph scheduling and processing
         /// </summary>
         /// <param name="graph">Graph to be processed</param>
-        public ConditionalProcessor(BaseGraph graph) : base(graph) { }
+        public ConditionalProcessor(GraphBase graph) : base(graph) { }
 
         public override void UpdateComputeOrder()
         {

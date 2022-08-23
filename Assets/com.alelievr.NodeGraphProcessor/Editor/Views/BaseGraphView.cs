@@ -26,7 +26,7 @@ namespace GraphProcessor
         /// <summary>
         /// Graph that owns of the node
         /// </summary>
-        public BaseGraph graph;
+        public GraphBase graph;
 
         /// <summary>
         /// Connector listener that will create the edges between ports
@@ -451,7 +451,7 @@ namespace GraphProcessor
                     return false;
 
                 //Check for type assignability
-                if (!BaseGraph.TypesAreConnectable(startPort.portType, p.portType))
+                if (!GraphBase.TypesAreConnectable(startPort.portType, p.portType))
                     return false;
 
                 //Check if the edge already exists
@@ -747,7 +747,7 @@ namespace GraphProcessor
             UpdateNodeInspectorSelection();
         }
 
-        public void Initialize(BaseGraph graph)
+        public void Initialize(GraphBase graph)
         {
             if (this.graph != null)
             {

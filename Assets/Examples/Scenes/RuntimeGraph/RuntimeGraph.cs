@@ -5,27 +5,27 @@ using GraphProcessor;
 
 public class RuntimeGraph : MonoBehaviour
 {
-	public BaseGraph	graph;
-	public ProcessGraphProcessor	processor;
+    public GraphBase graph;
+    public ProcessGraphProcessor processor;
 
-	public GameObject	assignedGameObject;
+    public GameObject assignedGameObject;
 
-	private void Start()
-	{
-		if (graph != null)
-			processor = new ProcessGraphProcessor(graph);
-	}
+    private void Start()
+    {
+        if (graph != null)
+            processor = new ProcessGraphProcessor(graph);
+    }
 
-	int i = 0;
+    int i = 0;
 
     void Update()
     {
-		if (graph != null)
-		{
-			graph.SetParameterValue("Input", (float)i++);
-			graph.SetParameterValue("GameObject", assignedGameObject);
-			processor.Run();
-			Debug.Log("Output: " + graph.GetParameterValue("Output"));
-		}
+        if (graph != null)
+        {
+            graph.SetParameterValue("Input", (float)i++);
+            graph.SetParameterValue("GameObject", assignedGameObject);
+            processor.Run();
+            Debug.Log("Output: " + graph.GetParameterValue("Output"));
+        }
     }
 }

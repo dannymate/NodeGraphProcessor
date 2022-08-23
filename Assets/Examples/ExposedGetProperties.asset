@@ -12,106 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31390c44c9f3a3d40b424bf6821999a2, type: 3}
   m_Name: ExposedGetProperties
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: nodes
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[GraphProcessor.BaseNode, com.alelievr.NodeGraphProcessor.Runtime]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 1|GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime
-    - Name: nodeCustomName
-      Entry: 6
-      Data: 
-    - Name: GUID
-      Entry: 1
-      Data: a6344a41-0200-4af9-87a3-1e5b6b2a52bf
-    - Name: computeOrder
-      Entry: 3
-      Data: 0
-    - Name: position
-      Entry: 7
-      Data: UnityEngine.Rect, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 280.5293
-    - Name: 
-      Entry: 4
-      Data: 58.97921
-    - Name: 
-      Entry: 4
-      Data: 100
-    - Name: 
-      Entry: 4
-      Data: 100
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: initialPosition
-      Entry: 7
-      Data: UnityEngine.Rect, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 280.5293
-    - Name: 
-      Entry: 4
-      Data: 58.97921
-    - Name: 
-      Entry: 4
-      Data: 100
-    - Name: 
-      Entry: 4
-      Data: 100
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: expanded
-      Entry: 5
-      Data: false
-    - Name: debug
-      Entry: 5
-      Data: false
-    - Name: nodeLock
-      Entry: 5
-      Data: false
-    - Name: input
-      Entry: 6
-      Data: 
-    - Name: output
-      Entry: 7
-      Data: 2|System.Single, mscorlib
-    - Name: 
-      Entry: 4
-      Data: 0.54
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: parameterGUID
-      Entry: 1
-      Data: ae7b8636-b4ca-4259-afac-f09ff0dc0ad4
-    - Name: accessor
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
   serializedNodes: []
   edges: []
   groups: []
@@ -225,8 +125,9 @@ MonoBehaviour:
       rid: 27
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 371, y: 53, z: 0}
+  position: {x: 365, y: 97, z: 0}
   scale: {x: 1.3225, y: 1.3225, z: 1}
+  nodes: []
   references:
     version: 2
     RefIds:

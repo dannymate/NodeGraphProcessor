@@ -4,7 +4,4 @@ using System.Linq;
 using UnityEngine;
 using GraphProcessor;
 
-public class ExposedPropertiesGraph : BaseGraph
-{
-
-}
+public class ExposedPropertiesGraph : BaseGraph { }

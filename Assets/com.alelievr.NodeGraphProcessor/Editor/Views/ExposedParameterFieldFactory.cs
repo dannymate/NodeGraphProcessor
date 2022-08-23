@@ -16,16 +16,16 @@ namespace GraphProcessor
     // but it's far better than having to re-create the graph every time a parameter or a setting is changed.
     public class ExposedParameterFieldFactory : IDisposable
     {
-        BaseGraph graph;
+        GraphBase graph;
         [SerializeField]
-        ExposedParameterWorkaround  exposedParameterObject;
-        SerializedObject            serializedObject;
-        SerializedProperty          serializedParameters;
+        ExposedParameterWorkaround exposedParameterObject;
+        SerializedObject serializedObject;
+        SerializedProperty serializedParameters;
 
         Dictionary<ExposedParameter, object> oldParameterValues = new Dictionary<ExposedParameter, object>();
         Dictionary<ExposedParameter, ExposedParameter.Settings> oldParameterSettings = new Dictionary<ExposedParameter, ExposedParameter.Settings>();
 
-        public ExposedParameterFieldFactory(BaseGraph graph, List<ExposedParameter> customParameters = null)
+        public ExposedParameterFieldFactory(GraphBase graph, List<ExposedParameter> customParameters = null)
         {
             this.graph = graph;
 
@@ -67,12 +67,12 @@ namespace GraphProcessor
                 oldParameterValues[parameter] = parameter.value;
             }));
 
-			// Disallow picking scene objects when the graph is not linked to a scene
+            // Disallow picking scene objects when the graph is not linked to a scene
             if (!this.graph.IsLinkedToScene())
             {
-				var objectField = view.Q<ObjectField>();
-				if (objectField != null)
-					objectField.allowSceneObjects = false;
+                var objectField = view.Q<ObjectField>();
+                if (objectField != null)
+                    objectField.allowSceneObjects = false;
             }
             return view;
         }

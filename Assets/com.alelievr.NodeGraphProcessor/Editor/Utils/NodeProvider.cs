@@ -39,7 +39,7 @@ namespace GraphProcessor
             public Type compatibleWithGraphType;
         }
 
-        static Dictionary<BaseGraph, NodeDescriptions> specificNodeDescriptions = new Dictionary<BaseGraph, NodeDescriptions>();
+        static Dictionary<GraphBase, NodeDescriptions> specificNodeDescriptions = new Dictionary<GraphBase, NodeDescriptions>();
         static List<NodeSpecificToGraph> specificNodes = new List<NodeSpecificToGraph>();
 
         static NodeDescriptions genericNodes = new NodeDescriptions();
@@ -50,7 +50,7 @@ namespace GraphProcessor
             BuildGenericNodeCache();
         }
 
-        public static void LoadGraph(BaseGraph graph)
+        public static void LoadGraph(GraphBase graph)
         {
             // Clear old graph data in case there was some
             specificNodeDescriptions.Remove(graph);
@@ -73,7 +73,7 @@ namespace GraphProcessor
             }
         }
 
-        public static void UnloadGraph(BaseGraph graph)
+        public static void UnloadGraph(GraphBase graph)
         {
             specificNodeDescriptions.Remove(graph);
         }
@@ -92,7 +92,7 @@ namespace GraphProcessor
             }
         }
 
-        static void BuildCacheForNode(Type nodeType, NodeDescriptions targetDescription, BaseGraph graph = null)
+        static void BuildCacheForNode(Type nodeType, NodeDescriptions targetDescription, GraphBase graph = null)
         {
             var attrs = nodeType.GetCustomAttributes(typeof(NodeMenuItemAttribute), false) as NodeMenuItemAttribute[];
 
@@ -135,8 +135,8 @@ namespace GraphProcessor
             {
                 // Check if the method is static and have the correct prototype
                 var p = method.GetParameters();
-                if (method.ReturnType != typeof(bool) || p.Count() != 1 || p[0].ParameterType != typeof(BaseGraph))
-                    Debug.LogError($"The function '{method.Name}' marked with the IsCompatibleWithGraph attribute either doesn't return a boolean or doesn't take one parameter of BaseGraph type.");
+                if (method.ReturnType != typeof(bool) || p.Count() != 1 || p[0].ParameterType != typeof(GraphBase))
+                    Debug.LogError($"The function '{method.Name}' marked with the IsCompatibleWithGraph attribute either doesn't return a boolean or doesn't take one parameter of GraphBase type.");
                 else
                     compatibleMethods.Add(method);
             }
@@ -179,7 +179,7 @@ namespace GraphProcessor
         }
 
         static FieldInfo SetGraph = typeof(BaseNode).GetField("graph", BindingFlags.NonPublic | BindingFlags.Instance);
-        static void ProvideNodePortCreationDescription(Type nodeType, NodeDescriptions targetDescription, BaseGraph graph = null)
+        static void ProvideNodePortCreationDescription(Type nodeType, NodeDescriptions targetDescription, GraphBase graph = null)
         {
             var node = Activator.CreateInstance(nodeType) as BaseNode;
             try
@@ -282,7 +282,7 @@ namespace GraphProcessor
             return view;
         }
 
-        public static IEnumerable<(string path, Type type, Func<Type, Vector2, BaseNode> creationMethod)> GetNodeMenuEntries(BaseGraph graph = null)
+        public static IEnumerable<(string path, Type type, Func<Type, Vector2, BaseNode> creationMethod)> GetNodeMenuEntries(GraphBase graph = null)
         {
             Func<Type, Vector2, BaseNode> creationMethod = BaseNode.CreateFromType;
             foreach (var node in genericNodes.nodePerMenuTitle)
@@ -307,7 +307,7 @@ namespace GraphProcessor
         }
 
         public static IEnumerable<(string path, Type type, Func<Type, Vector2, BaseNode> creationMethod)> GetCustomNodeMenuEntries(
-            BaseGraph graph = null,
+            GraphBase graph = null,
             IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> customMenuItems = null
         )
         {
@@ -393,7 +393,7 @@ namespace GraphProcessor
             return script;
         }
 
-        public static IEnumerable<Type> GetSlotTypes(BaseGraph graph = null)
+        public static IEnumerable<Type> GetSlotTypes(GraphBase graph = null)
         {
             foreach (var type in genericNodes.slotTypes)
                 yield return type;
@@ -405,7 +405,7 @@ namespace GraphProcessor
             }
         }
 
-        public static IEnumerable<PortDescription> GetEdgeCreationNodeMenuEntry(PortView portView, BaseGraph graph = null)
+        public static IEnumerable<PortDescription> GetEdgeCreationNodeMenuEntry(PortView portView, GraphBase graph = null)
         {
             foreach (var description in genericNodes.nodeCreatePortDescription)
             {
@@ -432,12 +432,12 @@ namespace GraphProcessor
 
                 if (portView.direction == Direction.Input)
                 {
-                    if (!BaseGraph.TypesAreConnectable(description.portType, portView.portType))
+                    if (!GraphBase.TypesAreConnectable(description.portType, portView.portType))
                         return false;
                 }
                 else
                 {
-                    if (!BaseGraph.TypesAreConnectable(portView.portType, description.portType))
+                    if (!GraphBase.TypesAreConnectable(portView.portType, description.portType))
                         return false;
                 }
 

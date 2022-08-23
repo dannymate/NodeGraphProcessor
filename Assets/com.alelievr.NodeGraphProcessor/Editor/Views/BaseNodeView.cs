@@ -885,7 +885,7 @@ namespace GraphProcessor
         Regex s_ReplaceNodeIndexPropertyPath = new Regex(@"(^nodes.Array.data\[)(\d+)(\])");
         internal void SyncSerializedPropertyPathes()
         {
-            int nodeIndex = owner.graph.nodes.FindIndex(n => n == nodeTarget);
+            int nodeIndex = owner.graph.Nodes.FindIndex(n => n == nodeTarget);
 
             // If the node is not found, then it means that it has been deleted from serialized data.
             if (nodeIndex == -1)
@@ -912,7 +912,7 @@ namespace GraphProcessor
 
         protected SerializedProperty FindSerializedProperty(string fieldName, out SerializedObject parent)
         {
-            int i = owner.graph.nodes.FindIndex(n => n == nodeTarget);
+            int i = owner.graph.Nodes.FindIndex(n => n == nodeTarget);
             List<string> fieldPaths = MemberInfoWithPath.GetPathAsListOfPaths(fieldName);
 
             var parentObject = owner.serializedGraph;

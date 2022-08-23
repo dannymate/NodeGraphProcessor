@@ -857,9 +857,9 @@ namespace GraphProcessor
 
         void InitializeNodeViews()
         {
-            graph.nodes.RemoveAll(n => n == null);
+            graph.Nodes.RemoveAll(n => n == null);
 
-            foreach (var node in graph.nodes)
+            foreach (var node in graph.Nodes)
             {
                 var v = AddNodeView(node);
             }

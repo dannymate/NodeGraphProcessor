@@ -9,62 +9,63 @@ using Unity.Collections;
 namespace GraphProcessor
 {
 
-	/// <summary>
-	/// Graph processor
-	/// </summary>
-	public class JobGraphProcessor : BaseGraphProcessor
-	{
-		GraphScheduleList[]			scheduleList;
-		
-		internal class GraphScheduleList
-		{
-			public BaseNode			node;
-			public BaseNode[]		dependencies;
-	
-			public GraphScheduleList(BaseNode node)
-			{
-				this.node = node;
-			}
-		}
+    /// <summary>
+    /// Graph processor
+    /// </summary>
+    public class JobGraphProcessor : BaseGraphProcessor
+    {
+        GraphScheduleList[] scheduleList;
 
-		/// <summary>
-		/// Manage graph scheduling and processing
-		/// </summary>
-		/// <param name="graph">Graph to be processed</param>
-		public JobGraphProcessor(BaseGraph graph) : base(graph) {}
+        internal class GraphScheduleList
+        {
+            public BaseNode node;
+            public BaseNode[] dependencies;
 
-		public override void UpdateComputeOrder()
-		{
-			scheduleList = graph.nodes.OrderBy(n => n.computeOrder).Select(n => {
-				GraphScheduleList gsl = new GraphScheduleList(n);
-				gsl.dependencies = n.GetInputNodes().ToArray();
-				return gsl;
-			}).ToArray();
-		}
+            public GraphScheduleList(BaseNode node)
+            {
+                this.node = node;
+            }
+        }
 
-		/// <summary>
-		/// Schedule the graph into the job system
-		/// </summary>
-		public override void Run()
-		{
-			int count = scheduleList.Length;
-			var scheduledHandles = new Dictionary< BaseNode, JobHandle >();
+        /// <summary>
+        /// Manage graph scheduling and processing
+        /// </summary>
+        /// <param name="graph">Graph to be processed</param>
+        public JobGraphProcessor(BaseGraph graph) : base(graph) { }
 
-			for (int i = 0; i < count; i++)
-			{
-				JobHandle dep = default(JobHandle);
-				var schedule = scheduleList[i];
-				int dependenciesCount = schedule.dependencies.Length;
+        public override void UpdateComputeOrder()
+        {
+            scheduleList = graph.Nodes.OrderBy(n => n.computeOrder).Select(n =>
+            {
+                GraphScheduleList gsl = new GraphScheduleList(n);
+                gsl.dependencies = n.GetInputNodes().ToArray();
+                return gsl;
+            }).ToArray();
+        }
 
-				for (int j = 0; j < dependenciesCount; j++)
-					dep = JobHandle.CombineDependencies(dep, scheduledHandles[schedule.dependencies[j]]);
+        /// <summary>
+        /// Schedule the graph into the job system
+        /// </summary>
+        public override void Run()
+        {
+            int count = scheduleList.Length;
+            var scheduledHandles = new Dictionary<BaseNode, JobHandle>();
 
-				// TODO: call the onSchedule on the current node
-				// JobHandle currentJob = schedule.node.OnSchedule(dep);
-				// scheduledHandles[schedule.node] = currentJob;
-			}
+            for (int i = 0; i < count; i++)
+            {
+                JobHandle dep = default(JobHandle);
+                var schedule = scheduleList[i];
+                int dependenciesCount = schedule.dependencies.Length;
 
-			JobHandle.ScheduleBatchedJobs();
-		}
-	}
+                for (int j = 0; j < dependenciesCount; j++)
+                    dep = JobHandle.CombineDependencies(dep, scheduledHandles[schedule.dependencies[j]]);
+
+                // TODO: call the onSchedule on the current node
+                // JobHandle currentJob = schedule.node.OnSchedule(dep);
+                // scheduledHandles[schedule.node] = currentJob;
+            }
+
+            JobHandle.ScheduleBatchedJobs();
+        }
+    }
 }

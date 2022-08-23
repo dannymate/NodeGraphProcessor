@@ -143,7 +143,7 @@ namespace GraphProcessor
         List<string> messages = new List<string>();
 
         [NonSerialized]
-        protected BaseGraph graph;
+        protected GraphBase graph;
 
         // Used in port update algorithm
         Stack<PortUpdate> fieldsToUpdate = new Stack<PortUpdate>();
@@ -152,7 +152,7 @@ namespace GraphProcessor
         #region Initialization
 
         // called by the BaseGraph when the node is added to the graph
-        public void Initialize(BaseGraph graph)
+        public void Initialize(GraphBase graph)
         {
             this.graph = graph;
 
@@ -350,7 +350,7 @@ namespace GraphProcessor
                 else
                 {
                     // in case the port type have changed for an incompatible type, we disconnect all the edges attached to this port
-                    if (!BaseGraph.TypesAreConnectable(port.portData.displayType, portData.displayType))
+                    if (!GraphBase.TypesAreConnectable(port.portData.displayType, portData.displayType))
                     {
                         foreach (var edge in port.GetEdges().ToList())
                             graph.Disconnect(edge.GUID);

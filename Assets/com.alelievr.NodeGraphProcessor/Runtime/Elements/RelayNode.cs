@@ -31,6 +31,14 @@ public class RelayNode : BaseNode
     int outputIndex = 0;
 
     SerializableType inputType = new SerializableType(typeof(object));
+    SerializableType InputType
+    {
+        get
+        {
+            if (inputType == null) inputType = new(typeof(object));
+            return inputType;
+        }
+    }
 
     const int k_MaxPortSize = 14;
 
@@ -64,10 +72,10 @@ public class RelayNode : BaseNode
     [CustomPortOutput(nameof(output), typeof(object), true)]
     public void PushOutputs(List<SerializableEdge> edges, NodePort outputPort)
     {
-        if (inputPorts.Count == 0)
+        if (InputPorts.Count == 0)
             return;
 
-        var inputPortEdges = inputPorts[0].GetEdges();
+        var inputPortEdges = InputPorts[0].GetEdges();
 
         if (outputPort.portData.identifier != packIdentifier && outputIndex >= 0 && (unpackOutput || inputPortEdges.Count == 1))
         {
@@ -97,22 +105,22 @@ public class RelayNode : BaseNode
     {
         // When the node is initialized, the input ports is empty because it's this function that generate the ports
         int sizeInPixel = 0;
-        if (inputPorts.Count != 0)
+        if (InputPorts.Count != 0)
         {
             // Add the size of all input edges:
-            var inputEdges = inputPorts[0]?.GetEdges();
+            var inputEdges = InputPorts[0]?.GetEdges();
             sizeInPixel = inputEdges.Sum(e => Mathf.Max(0, e.outputPort.portData.sizeInPixel - 8));
         }
 
         if (edges.Count == 1 && !packInput)
-            inputType.type = edges[0].outputPort.portData.displayType;
+            InputType.type = edges[0].outputPort.portData.displayType;
         else
-            inputType.type = typeof(object);
+            InputType.type = typeof(object);
 
         yield return new PortData
         {
             displayName = "",
-            displayType = inputType.type,
+            displayType = InputType.type,
             identifier = "0",
             acceptMultipleEdges = true,
             sizeInPixel = Mathf.Min(k_MaxPortSize, sizeInPixel + 8),
@@ -122,7 +130,7 @@ public class RelayNode : BaseNode
     [CustomPortBehavior(nameof(output))]
     IEnumerable<PortData> OutputPortBehavior(List<SerializableEdge> edges)
     {
-        if (inputPorts.Count == 0)
+        if (InputPorts.Count == 0)
         {
             // Default dummy port to avoid having a relay without any output:
             yield return new PortData
@@ -135,7 +143,7 @@ public class RelayNode : BaseNode
             yield break;
         }
 
-        var inputPortEdges = inputPorts[0].GetEdges();
+        var inputPortEdges = InputPorts[0].GetEdges();
         var underlyingPortData = GetUnderlyingPortDataList();
         if (unpackOutput && inputPortEdges.Count == 1)
         {
@@ -178,7 +186,7 @@ public class RelayNode : BaseNode
     public List<(Type type, string name)> GetUnderlyingPortDataList()
     {
         // get input edges:
-        if (inputPorts.Count == 0)
+        if (InputPorts.Count == 0)
             return s_empty;
 
         var inputEdges = GetNonRelayEdges();
@@ -191,11 +199,14 @@ public class RelayNode : BaseNode
 
     public List<SerializableEdge> GetNonRelayEdges()
     {
-        var inputEdges = inputPorts?[0]?.GetEdges();
+        if (InputPorts.Count == 0)
+            return new();
+
+        var inputEdges = InputPorts?[0]?.GetEdges();
 
         // Iterate until we don't have a relay node in input
         while (inputEdges.Count == 1 && inputEdges.First().outputNode.GetType() == typeof(RelayNode))
-            inputEdges = inputEdges.First().outputNode.inputPorts[0]?.GetEdges();
+            inputEdges = inputEdges.First().outputNode.InputPorts[0]?.GetEdges();
 
         return inputEdges;
     }

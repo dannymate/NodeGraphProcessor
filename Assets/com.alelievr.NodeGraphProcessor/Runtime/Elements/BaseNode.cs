@@ -62,12 +62,29 @@ namespace GraphProcessor
         /// Container of input ports
         /// </summary>
         [NonSerialized]
-        public readonly NodeInputPortContainer inputPorts;
+        public NodeInputPortContainer _inputPorts;
+        public NodeInputPortContainer InputPorts
+        {
+            get
+            {
+                if (_inputPorts == null) _inputPorts = new NodeInputPortContainer(this);
+                return _inputPorts;
+            }
+        }
+
         /// <summary>
         /// Container of output ports
         /// </summary>
         [NonSerialized]
-        public readonly NodeOutputPortContainer outputPorts;
+        public NodeOutputPortContainer _outputPorts;
+        public NodeOutputPortContainer OutputPorts
+        {
+            get
+            {
+                if (_outputPorts == null) _outputPorts = new NodeOutputPortContainer(this);
+                return _outputPorts;
+            }
+        }
 
         //Node view datas
         public Rect position;
@@ -134,10 +151,12 @@ namespace GraphProcessor
         public bool createdWithinGroup { get; internal set; } = false;
 
         [NonSerialized]
-        internal Dictionary<string, NodeFieldInformation> nodeFields = new Dictionary<string, NodeFieldInformation>();
+        private Dictionary<string, NodeFieldInformation> _nodeFields;
+        internal Dictionary<string, NodeFieldInformation> NodeFields => Property.Getter(ref _nodeFields, () => InitializeInOutDatas());
 
         [NonSerialized]
-        internal Dictionary<Type, CustomPortTypeBehaviorDelegate> customPortTypeBehaviorMap = new Dictionary<Type, CustomPortTypeBehaviorDelegate>();
+        private Dictionary<Type, CustomPortTypeBehaviorDelegate> _customPortTypeBehaviorMap;
+        internal Dictionary<Type, CustomPortTypeBehaviorDelegate> CustomPortTypeBehaviorMap => Property.Getter(ref _customPortTypeBehaviorMap);
 
         [NonSerialized]
         List<string> messages = new List<string>();
@@ -145,9 +164,11 @@ namespace GraphProcessor
         [NonSerialized]
         protected GraphBase graph;
 
-        // Used in port update algorithm
-        Stack<PortUpdate> fieldsToUpdate = new Stack<PortUpdate>();
-        HashSet<PortUpdate> updatedFields = new HashSet<PortUpdate>();
+        private Stack<PortUpdate> _fieldsToUpdate;
+        private Stack<PortUpdate> FieldsToUpdate => Property.Getter(ref _fieldsToUpdate);
+
+        private HashSet<PortUpdate> _updatedFields;
+        private HashSet<PortUpdate> UpdatedFields => Property.Getter(ref _updatedFields);
 
         #region Initialization
 
@@ -187,7 +208,7 @@ namespace GraphProcessor
                     }
 
                     foreach (var typeBehavior in typeBehaviors)
-                        customPortTypeBehaviorMap[typeBehavior.type] = deleg;
+                        CustomPortTypeBehaviorMap[typeBehavior.type] = deleg;
                 }
 
                 // Try to also find private methods in the base class
@@ -205,9 +226,9 @@ namespace GraphProcessor
         {
             InitializeCustomPortTypeMethods();
 
-            foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+            foreach (var key in OverrideFieldOrder(NodeFields.Values.Select(k => k.info)))
             {
-                var nodeField = nodeFields[key.Name];
+                var nodeField = NodeFields[key.Name];
 
                 if (HasCustomBehavior(nodeField))
                 {
@@ -239,7 +260,7 @@ namespace GraphProcessor
         /// <returns>Sorted list of fields</returns>
         public virtual IEnumerable<MemberInfo> OverrideFieldOrder(IEnumerable<MemberInfo> fields)
         {
-            long GetFieldInheritanceLevel(MemberInfo f)
+            static long GetFieldInheritanceLevel(MemberInfo f)
             {
                 int level = 0;
                 var t = f.DeclaringType;
@@ -253,15 +274,13 @@ namespace GraphProcessor
             }
 
             // Order by MetadataToken and inheritance level to sync the order with the port order (make sure FieldDrawers are next to the correct port)
-            return fields.OrderByDescending(f => (long)(((GetFieldInheritanceLevel(f) << 32)) | (long)f.MetadataToken));
+            return fields.OrderByDescending(f => (GetFieldInheritanceLevel(f) << 32) | (long)f.MetadataToken);
         }
 
         protected BaseNode()
         {
-            inputPorts = new NodeInputPortContainer(this);
-            outputPorts = new NodeOutputPortContainer(this);
-
-            InitializeInOutDatas();
+            var test = NodeFields;
+            // InitializeInOutDatas();
         }
 
         /// <summary>
@@ -271,9 +290,9 @@ namespace GraphProcessor
         {
             bool changed = false;
 
-            foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+            foreach (var key in OverrideFieldOrder(NodeFields.Values.Select(k => k.info)))
             {
-                var field = nodeFields[key.Name];
+                var field = NodeFields[key.Name];
                 changed |= UpdatePortsForField(field.fieldName);
             }
 
@@ -287,9 +306,9 @@ namespace GraphProcessor
         {
             bool changed = false;
 
-            foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+            foreach (var key in OverrideFieldOrder(NodeFields.Values.Select(k => k.info)))
             {
-                var field = nodeFields[key.Name];
+                var field = NodeFields[key.Name];
                 changed |= UpdatePortsForFieldLocal(field.fieldName);
             }
 
@@ -305,17 +324,17 @@ namespace GraphProcessor
         {
             bool changed = false;
 
-            if (!nodeFields.ContainsKey(fieldName))
+            if (!NodeFields.ContainsKey(fieldName))
                 return false;
 
-            var fieldInfo = nodeFields[fieldName];
+            var fieldInfo = NodeFields[fieldName];
 
             if (!HasCustomBehavior(fieldInfo))
                 return false;
 
-            List<string> finalPorts = new List<string>();
+            List<string> finalPorts = new();
 
-            var portCollection = fieldInfo.input ? (NodePortContainer)inputPorts : outputPorts;
+            var portCollection = fieldInfo.input ? (NodePortContainer)InputPorts : OutputPorts;
 
             // Gather all fields for this port (before to modify them)
             var nodePorts = portCollection.Where(p => p.fieldName == fieldName);
@@ -332,7 +351,7 @@ namespace GraphProcessor
             }
             else
             {
-                var customPortTypeBehavior = customPortTypeBehaviorMap[fieldInfo.info.GetUnderlyingType()];
+                var customPortTypeBehavior = CustomPortTypeBehaviorMap[fieldInfo.info.GetUnderlyingType()];
 
                 foreach (var portData in customPortTypeBehavior(fieldName, fieldInfo.name, fieldInfo.info.GetValue(this)))
                     AddPortData(portData);
@@ -406,7 +425,7 @@ namespace GraphProcessor
             if (info.behavior != null)
                 return true;
 
-            if (customPortTypeBehaviorMap.ContainsKey(info.info.GetUnderlyingType()))
+            if (CustomPortTypeBehaviorMap.ContainsKey(info.info.GetUnderlyingType()))
                 return true;
 
             return false;
@@ -420,28 +439,28 @@ namespace GraphProcessor
         {
             bool changed = false;
 
-            fieldsToUpdate.Clear();
-            updatedFields.Clear();
+            FieldsToUpdate.Clear();
+            UpdatedFields.Clear();
 
-            fieldsToUpdate.Push(new PortUpdate { fieldNames = new List<string>() { fieldName }, node = this });
+            FieldsToUpdate.Push(new PortUpdate { fieldNames = new List<string>() { fieldName }, node = this });
 
             // Iterate through all the ports that needs to be updated, following graph connection when the 
             // port is updated. This is required ton have type propagation multiple nodes that changes port types
             // are connected to each other (i.e. the relay node)
-            while (fieldsToUpdate.Count != 0)
+            while (FieldsToUpdate.Count != 0)
             {
-                var (fields, node) = fieldsToUpdate.Pop();
+                var (fields, node) = FieldsToUpdate.Pop();
 
                 // Avoid updating twice a port
-                if (updatedFields.Any((t) => t.node == node && fields.SequenceEqual(t.fieldNames)))
+                if (UpdatedFields.Any((t) => t.node == node && fields.SequenceEqual(t.fieldNames)))
                     continue;
-                updatedFields.Add(new PortUpdate { fieldNames = fields, node = node });
+                UpdatedFields.Add(new PortUpdate { fieldNames = fields, node = node });
 
                 foreach (var field in fields)
                 {
                     if (node.UpdatePortsForFieldLocal(field, sendPortUpdatedEvent))
                     {
-                        foreach (var port in node.IsFieldInput(field) ? (NodePortContainer)node.inputPorts : node.outputPorts)
+                        foreach (var port in node.IsFieldInput(field) ? (NodePortContainer)node.InputPorts : node.OutputPorts)
                         {
                             if (port.fieldName != field)
                                 continue;
@@ -449,8 +468,8 @@ namespace GraphProcessor
                             foreach (var edge in port.GetEdges())
                             {
                                 var edgeNode = (node.IsFieldInput(field)) ? edge.outputNode : edge.inputNode;
-                                var fieldsWithBehavior = edgeNode.nodeFields.Values.Where(f => HasCustomBehavior(f)).Select(f => f.fieldName).ToList();
-                                fieldsToUpdate.Push(new PortUpdate { fieldNames = fieldsWithBehavior, node = edgeNode });
+                                var fieldsWithBehavior = edgeNode.NodeFields.Values.Where(f => HasCustomBehavior(f)).Select(f => f.fieldName).ToList();
+                                FieldsToUpdate.Push(new PortUpdate { fieldNames = fieldsWithBehavior, node = edgeNode });
                             }
                         }
                         changed = true;
@@ -466,8 +485,8 @@ namespace GraphProcessor
         internal void DisableInternal()
         {
             // port containers are initialized in the OnEnable
-            inputPorts.Clear();
-            outputPorts.Clear();
+            InputPorts.Clear();
+            OutputPorts.Clear();
 
             ExceptionToLog.Call(() => Disable());
         }
@@ -510,7 +529,7 @@ namespace GraphProcessor
                     continue;
 
                 //check if field is a collection type
-                isMultiple = (inputAttribute != null) ? inputAttribute.allowMultiple : (outputAttribute.allowMultiple);
+                isMultiple = (inputAttribute != null) ? inputAttribute.allowMultiple : outputAttribute.allowMultiple;
                 input = inputAttribute != null;
 
                 if (input)
@@ -524,7 +543,7 @@ namespace GraphProcessor
                     name = outputAttribute.name;
 
                 // By default we set the behavior to null, if the field have a custom behavior, it will be set in the loop just below
-                nodeFields[field.Name] = new NodeFieldInformation(field, name, input, isMultiple, tooltip, showAsDrawer, vertical != null, null);
+                NodeFields[field.Name] = new NodeFieldInformation(field, name, input, isMultiple, tooltip, showAsDrawer, vertical != null, null);
             }
 
             foreach (var method in methods)
@@ -546,8 +565,8 @@ namespace GraphProcessor
                     Debug.LogError("The function " + method + " cannot be converted to the required delegate format: " + typeof(CustomPortBehaviorDelegate));
                 }
 
-                if (nodeFields.ContainsKey(customPortBehaviorAttribute.fieldName))
-                    nodeFields[customPortBehaviorAttribute.fieldName].behavior = behavior;
+                if (NodeFields.ContainsKey(customPortBehaviorAttribute.fieldName))
+                    NodeFields[customPortBehaviorAttribute.fieldName].behavior = behavior;
                 else
                     Debug.LogError("Invalid field name for custom port behavior: " + method + ", " + customPortBehaviorAttribute.fieldName);
             }
@@ -560,7 +579,7 @@ namespace GraphProcessor
         public void OnEdgeConnected(SerializableEdge edge)
         {
             bool input = edge.inputNode == this;
-            NodePortContainer portCollection = (input) ? (NodePortContainer)inputPorts : outputPorts;
+            NodePortContainer portCollection = input ? InputPorts : OutputPorts;
 
             portCollection.Add(edge);
 
@@ -577,12 +596,12 @@ namespace GraphProcessor
                 return;
 
             bool input = edge.inputNode == this;
-            NodePortContainer portCollection = (input) ? (NodePortContainer)inputPorts : outputPorts;
+            NodePortContainer portCollection = input ? InputPorts : OutputPorts;
 
             portCollection.Remove(edge);
 
             // Reset default values of input port:
-            bool haveConnectedEdges = edge.inputNode.inputPorts.Where(p => p.fieldName == edge.inputFieldName).Any(p => p.GetEdges().Count != 0);
+            bool haveConnectedEdges = edge.inputNode.InputPorts.Where(p => p.fieldName == edge.inputFieldName).Any(p => p.GetEdges().Count != 0);
             if (edge.inputNode == this && !haveConnectedEdges && CanResetPort(edge.inputPort))
                 edge.inputPort?.ResetToDefault();
 
@@ -593,13 +612,13 @@ namespace GraphProcessor
 
         public void OnProcess()
         {
-            inputPorts.PullDatas();
+            InputPorts.PullDatas();
 
             ExceptionToLog.Call(() => Process());
 
             InvokeOnProcessed();
 
-            outputPorts.PushDatas();
+            OutputPorts.PushDatas();
         }
 
         public void InvokeOnProcessed() => onProcessed?.Invoke();
@@ -636,12 +655,12 @@ namespace GraphProcessor
         {
             // Fixup port data info if needed:
             if (portData.displayType == null)
-                portData.displayType = nodeFields[fieldName].info.GetUnderlyingType();
+                portData.displayType = NodeFields[fieldName].info.GetUnderlyingType();
 
             if (input)
-                inputPorts.Add(new NodePort(this, fieldName, portData));
+                InputPorts.Add(new NodePort(this, fieldName, portData));
             else
-                outputPorts.Add(new NodePort(this, fieldName, portData));
+                OutputPorts.Add(new NodePort(this, fieldName, portData));
         }
 
         /// <summary>
@@ -652,9 +671,9 @@ namespace GraphProcessor
         public void RemovePort(bool input, NodePort port)
         {
             if (input)
-                inputPorts.Remove(port);
+                InputPorts.Remove(port);
             else
-                outputPorts.Remove(port);
+                OutputPorts.Remove(port);
         }
 
         /// <summary>
@@ -665,9 +684,9 @@ namespace GraphProcessor
         public void RemovePort(bool input, string fieldName)
         {
             if (input)
-                inputPorts.RemoveAll(p => p.fieldName == fieldName);
+                InputPorts.RemoveAll(p => p.fieldName == fieldName);
             else
-                outputPorts.RemoveAll(p => p.fieldName == fieldName);
+                OutputPorts.RemoveAll(p => p.fieldName == fieldName);
         }
 
         /// <summary>
@@ -676,7 +695,7 @@ namespace GraphProcessor
         /// <returns>an enumerable of node</returns>
         public IEnumerable<BaseNode> GetInputNodes()
         {
-            foreach (var port in inputPorts)
+            foreach (var port in InputPorts)
                 foreach (var edge in port.GetEdges())
                     yield return edge.outputNode;
         }
@@ -687,7 +706,7 @@ namespace GraphProcessor
         /// <returns>an enumerable of node</returns>
         public IEnumerable<BaseNode> GetOutputNodes()
         {
-            foreach (var port in outputPorts)
+            foreach (var port in OutputPorts)
                 foreach (var edge in port.GetEdges())
                     yield return edge.inputNode;
         }
@@ -730,7 +749,7 @@ namespace GraphProcessor
         /// <returns></returns>
         public NodePort GetPort(string fieldName, string identifier)
         {
-            return inputPorts.Concat(outputPorts).FirstOrDefault(p =>
+            return InputPorts.Concat(OutputPorts).FirstOrDefault(p =>
             {
                 var bothNull = String.IsNullOrEmpty(identifier) && String.IsNullOrEmpty(p.portData.identifier);
                 return p.fieldName == fieldName && (bothNull || identifier == p.portData.identifier);
@@ -743,9 +762,9 @@ namespace GraphProcessor
         /// <returns></returns>
         public IEnumerable<NodePort> GetAllPorts()
         {
-            foreach (var port in inputPorts)
+            foreach (var port in InputPorts)
                 yield return port;
-            foreach (var port in outputPorts)
+            foreach (var port in OutputPorts)
                 yield return port;
         }
 
@@ -765,7 +784,7 @@ namespace GraphProcessor
         /// </summary>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        public bool IsFieldInput(string fieldName) => nodeFields[fieldName].input;
+        public bool IsFieldInput(string fieldName) => NodeFields[fieldName].input;
 
         /// <summary>
         /// Add a message on the node

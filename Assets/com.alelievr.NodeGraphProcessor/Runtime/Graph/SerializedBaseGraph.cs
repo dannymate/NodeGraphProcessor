@@ -6,12 +6,11 @@ using Sirenix.OdinInspector;
 namespace GraphProcessor
 {
     [ShowOdinSerializedPropertiesInInspector]
-    public class SerializedBaseGraph : GraphBase
+    public class SerializedBaseGraph : GraphBase, ISerializationCallbackReceiver
     {
         [OdinSerialize]
-        public List<BaseNode> nodes = new();
+        private List<BaseNode> nodes = new();
         public override List<BaseNode> Nodes => nodes;
-
 
         [SerializeField, HideInInspector]
         private SerializationData serializationData;

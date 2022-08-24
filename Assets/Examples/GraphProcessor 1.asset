@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: GraphProcessor 1
   m_EditorClassIdentifier: 
   serializedNodes: []
-  edges: []
   groups: []
   stackNodes: []
   pinnedElements: []
@@ -21,8 +20,57 @@ MonoBehaviour:
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 0, y: 0, z: 0}
-  scale: {x: 1, y: 1, z: 1}
+  position: {x: -80, y: 642, z: 0}
+  scale: {x: 0.7561437, y: 0.7561437, z: 1}
+  edges:
+  - GUID: 21f412da-d5ab-4f45-b805-f44f5946c6ca
+    owner: {fileID: 11400000}
+    inputNodeGUID: 711cee49-c1a3-4378-99dd-ebf0424cb328
+    outputNodeGUID: 7fc59536-e13f-4213-b7b1-03827fdffa84
+    inputFieldName: floatInput
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 05cab9d9-6bc0-437b-940d-f547967d7c0f
+    owner: {fileID: 11400000}
+    inputNodeGUID: ce002c1a-ce1a-48eb-90f3-64d1e3d20180
+    outputNodeGUID: 7fc59536-e13f-4213-b7b1-03827fdffa84
+    inputFieldName: input
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 8b83ce67-f81c-45f7-bb93-aa0197d7179d
+    owner: {fileID: 11400000}
+    inputNodeGUID: a2d2b861-4320-4799-b4de-9cd507fa2d68
+    outputNodeGUID: 7fc59536-e13f-4213-b7b1-03827fdffa84
+    inputFieldName: input
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 91da6f26-10a6-481e-ab4b-67a331af0ad2
+    owner: {fileID: 11400000}
+    inputNodeGUID: 7efdff50-5c85-4e14-bf8e-9562e67b8668
+    outputNodeGUID: 7fc59536-e13f-4213-b7b1-03827fdffa84
+    inputFieldName: input
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 36ed0c3d-2c70-40fb-8180-43fdd806a21f
+    owner: {fileID: 11400000}
+    inputNodeGUID: 9a72facc-75c2-4201-8e9f-b0471c418861
+    outputNodeGUID: 7fc59536-e13f-4213-b7b1-03827fdffa84
+    inputFieldName: floatInput
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: be1a1ec3-b5d8-415a-be1b-7d62e50f9fca
+    owner: {fileID: 11400000}
+    inputNodeGUID: 9a72facc-75c2-4201-8e9f-b0471c418861
+    outputNodeGUID: df29336e-62a4-4d16-9ba2-10a1cceb62a2
+    inputFieldName: gameObject
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -38,7 +86,847 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
+      Data: 8
+    - Name: 
+      Entry: 7
+      Data: 1|InspectorNode, Assembly-CSharp
+    - Name: nodeCustomName
+      Entry: 6
+      Data: 
+    - Name: GUID
+      Entry: 1
+      Data: 7fc59536-e13f-4213-b7b1-03827fdffa84
+    - Name: computeOrder
+      Entry: 3
       Data: 0
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 437.3375
+    - Name: 
+      Entry: 4
+      Data: -192.999969
+    - Name: 
+      Entry: 4
+      Data: 127
+    - Name: 
+      Entry: 4
+      Data: 75
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: initialPosition
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 685.2174
+    - Name: 
+      Entry: 4
+      Data: -133.043488
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: expanded
+      Entry: 5
+      Data: false
+    - Name: debug
+      Entry: 5
+      Data: false
+    - Name: nodeLock
+      Entry: 5
+      Data: false
+    - Name: input
+      Entry: 4
+      Data: 0
+    - Name: output
+      Entry: 4
+      Data: 0
+    - Name: additionalSettings
+      Entry: 5
+      Data: false
+    - Name: additionalParam
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|DrawerFieldTestNode, Assembly-CSharp
+    - Name: nodeCustomName
+      Entry: 6
+      Data: 
+    - Name: GUID
+      Entry: 1
+      Data: 711cee49-c1a3-4378-99dd-ebf0424cb328
+    - Name: computeOrder
+      Entry: 3
+      Data: 1
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 991.875
+    - Name: 
+      Entry: 4
+      Data: -117.702484
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: initialPosition
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 991.875
+    - Name: 
+      Entry: 4
+      Data: -117.702484
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: expanded
+      Entry: 5
+      Data: false
+    - Name: debug
+      Entry: 5
+      Data: false
+    - Name: nodeLock
+      Entry: 5
+      Data: false
+    - Name: vector4
+      Entry: 7
+      Data: UnityEngine.Vector4, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: vector3
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: vector2
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: floatInput
+      Entry: 4
+      Data: 0
+    - Name: vector3Int
+      Entry: 7
+      Data: UnityEngine.Vector3Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: vector2Int
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: intInput
+      Entry: 3
+      Data: 0
+    - Name: intInput2
+      Entry: 3
+      Data: 0
+    - Name: stringInput
+      Entry: 6
+      Data: 
+    - Name: myColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gameObject
+      Entry: 6
+      Data: 
+    - Name: animationCurve
+      Entry: 6
+      Data: 
+    - Name: rigidbody
+      Entry: 6
+      Data: 
+    - Name: layerMask
+      Entry: 7
+      Data: UnityEngine.LayerMask, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|AbstractNodeChild2, Assembly-CSharp
+    - Name: nodeCustomName
+      Entry: 6
+      Data: 
+    - Name: GUID
+      Entry: 1
+      Data: ce002c1a-ce1a-48eb-90f3-64d1e3d20180
+    - Name: computeOrder
+      Entry: 3
+      Data: 2
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 991.875
+    - Name: 
+      Entry: 4
+      Data: -117.702484
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: initialPosition
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 991.875
+    - Name: 
+      Entry: 4
+      Data: -117.702484
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: expanded
+      Entry: 5
+      Data: false
+    - Name: debug
+      Entry: 5
+      Data: false
+    - Name: nodeLock
+      Entry: 5
+      Data: false
+    - Name: input
+      Entry: 4
+      Data: 0
+    - Name: output
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 4|Inheritance2, Assembly-CSharp
+    - Name: nodeCustomName
+      Entry: 6
+      Data: 
+    - Name: GUID
+      Entry: 1
+      Data: a2d2b861-4320-4799-b4de-9cd507fa2d68
+    - Name: computeOrder
+      Entry: 3
+      Data: 3
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 897.6501
+    - Name: 
+      Entry: 4
+      Data: -561.6502
+    - Name: 
+      Entry: 4
+      Data: 180
+    - Name: 
+      Entry: 4
+      Data: 183
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: initialPosition
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 991.875
+    - Name: 
+      Entry: 4
+      Data: -117.702484
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: expanded
+      Entry: 5
+      Data: false
+    - Name: debug
+      Entry: 5
+      Data: false
+    - Name: nodeLock
+      Entry: 5
+      Data: false
+    - Name: input
+      Entry: 4
+      Data: 0
+    - Name: output
+      Entry: 4
+      Data: 0
+    - Name: fieldBase
+      Entry: 4
+      Data: 0
+    - Name: input1
+      Entry: 4
+      Data: 0
+    - Name: output1
+      Entry: 4
+      Data: 0
+    - Name: field1
+      Entry: 4
+      Data: 0
+    - Name: input2
+      Entry: 4
+      Data: 0
+    - Name: output2
+      Entry: 4
+      Data: 0
+    - Name: field2
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Inheritance1, Assembly-CSharp
+    - Name: nodeCustomName
+      Entry: 6
+      Data: 
+    - Name: GUID
+      Entry: 1
+      Data: 7efdff50-5c85-4e14-bf8e-9562e67b8668
+    - Name: computeOrder
+      Entry: 3
+      Data: 4
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1172
+    - Name: 
+      Entry: 4
+      Data: -415.033478
+    - Name: 
+      Entry: 4
+      Data: 180
+    - Name: 
+      Entry: 4
+      Data: 139
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: initialPosition
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 991.875
+    - Name: 
+      Entry: 4
+      Data: -117.702484
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: expanded
+      Entry: 5
+      Data: false
+    - Name: debug
+      Entry: 5
+      Data: false
+    - Name: nodeLock
+      Entry: 5
+      Data: false
+    - Name: input
+      Entry: 4
+      Data: 0
+    - Name: output
+      Entry: 4
+      Data: 0
+    - Name: fieldBase
+      Entry: 4
+      Data: 0
+    - Name: input1
+      Entry: 4
+      Data: 0
+    - Name: output1
+      Entry: 4
+      Data: 0
+    - Name: field1
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 6|DrawerFieldTestNode, Assembly-CSharp
+    - Name: nodeCustomName
+      Entry: 6
+      Data: 
+    - Name: GUID
+      Entry: 1
+      Data: 9a72facc-75c2-4201-8e9f-b0471c418861
+    - Name: computeOrder
+      Entry: 3
+      Data: 5
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 638.9001
+    - Name: 
+      Entry: 4
+      Data: -838.368042
+    - Name: 
+      Entry: 4
+      Data: 143
+    - Name: 
+      Entry: 4
+      Data: 387
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: initialPosition
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 618.93
+    - Name: 
+      Entry: 4
+      Data: -285.66
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: expanded
+      Entry: 5
+      Data: false
+    - Name: debug
+      Entry: 5
+      Data: false
+    - Name: nodeLock
+      Entry: 5
+      Data: false
+    - Name: vector4
+      Entry: 7
+      Data: UnityEngine.Vector4, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: vector3
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: vector2
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: floatInput
+      Entry: 4
+      Data: 0
+    - Name: vector3Int
+      Entry: 7
+      Data: UnityEngine.Vector3Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: vector2Int
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: intInput
+      Entry: 3
+      Data: 0
+    - Name: intInput2
+      Entry: 3
+      Data: 0
+    - Name: stringInput
+      Entry: 6
+      Data: 
+    - Name: myColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gameObject
+      Entry: 6
+      Data: 
+    - Name: animationCurve
+      Entry: 6
+      Data: 
+    - Name: rigidbody
+      Entry: 6
+      Data: 
+    - Name: layerMask
+      Entry: 7
+      Data: UnityEngine.LayerMask, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|ColorNode, Assembly-CSharp
+    - Name: nodeCustomName
+      Entry: 6
+      Data: 
+    - Name: GUID
+      Entry: 1
+      Data: 0e1c8e8b-9b91-4557-b3c2-e89eb54ea698
+    - Name: computeOrder
+      Entry: 3
+      Data: 6
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 118.655518
+    - Name: 
+      Entry: 4
+      Data: -621.5
+    - Name: 
+      Entry: 4
+      Data: 200
+    - Name: 
+      Entry: 4
+      Data: 119
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: initialPosition
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 394.105
+    - Name: 
+      Entry: 4
+      Data: -486.68
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: expanded
+      Entry: 5
+      Data: false
+    - Name: debug
+      Entry: 5
+      Data: false
+    - Name: nodeLock
+      Entry: 5
+      Data: false
+    - Name: color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 8|RelayNode, com.alelievr.NodeGraphProcessor.Runtime
+    - Name: nodeCustomName
+      Entry: 6
+      Data: 
+    - Name: GUID
+      Entry: 1
+      Data: 9552a678-985a-4189-b987-4ae202a3108f
+    - Name: computeOrder
+      Entry: 3
+      Data: 7
+    - Name: position
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 454.94
+    - Name: 
+      Entry: 4
+      Data: -433.78
+    - Name: 
+      Entry: 4
+      Data: 200
+    - Name: 
+      Entry: 4
+      Data: 200
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: initialPosition
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 454.94
+    - Name: 
+      Entry: 4
+      Data: -433.78
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: expanded
+      Entry: 5
+      Data: false
+    - Name: debug
+      Entry: 5
+      Data: false
+    - Name: nodeLock
+      Entry: 5
+      Data: false
+    - Name: input
+      Entry: 7
+      Data: RelayNode+PackedRelayData, com.alelievr.NodeGraphProcessor.Runtime
+    - Name: values
+      Entry: 6
+      Data: 
+    - Name: names
+      Entry: 6
+      Data: 
+    - Name: types
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: output
+      Entry: 7
+      Data: RelayNode+PackedRelayData, com.alelievr.NodeGraphProcessor.Runtime
+    - Name: values
+      Entry: 6
+      Data: 
+    - Name: names
+      Entry: 6
+      Data: 
+    - Name: types
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: unpackOutput
+      Entry: 5
+      Data: false
+    - Name: packInput
+      Entry: 5
+      Data: false
+    - Name: inputEdgeCount
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 

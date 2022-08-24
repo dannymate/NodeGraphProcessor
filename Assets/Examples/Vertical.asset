@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Vertical
   m_EditorClassIdentifier: 
   serializedNodes: []
-  edges: []
   groups: []
   stackNodes: []
   pinnedElements:
@@ -34,6 +33,7 @@ MonoBehaviour:
   position: {x: -48, y: -358, z: 0}
   scale: {x: 1.15, y: 1.15, z: 1}
   nodes: []
+  edges: []
   references:
     version: 2
     RefIds: []

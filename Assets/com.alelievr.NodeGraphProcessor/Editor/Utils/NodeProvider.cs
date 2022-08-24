@@ -190,9 +190,9 @@ namespace GraphProcessor
             }
             catch (Exception) { }
 
-            foreach (var p in node.inputPorts)
+            foreach (var p in node.InputPorts)
                 AddPort(p, true);
-            foreach (var p in node.outputPorts)
+            foreach (var p in node.OutputPorts)
                 AddPort(p, false);
 
             void AddPort(NodePort p, bool input)

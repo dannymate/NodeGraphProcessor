@@ -114,13 +114,13 @@ namespace GraphProcessor
         public List<ExposedParameter> exposedParameters = new List<ExposedParameter>();
 
         [SerializeField, FormerlySerializedAs("exposedParameters")] // We keep this for upgrade
-        List<ExposedParameter> serializedParameterList = new List<ExposedParameter>();
+        List<ExposedParameter> serializedParameterList = new();
 
         [SerializeField]
-        public List<StickyNote> stickyNotes = new List<StickyNote>();
+        public List<StickyNote> stickyNotes = new();
 
         [System.NonSerialized]
-        Dictionary<BaseNode, int> computeOrderDictionary = new Dictionary<BaseNode, int>();
+        Dictionary<BaseNode, int> computeOrderDictionary = new();
 
         [NonSerialized]
         Scene linkedScene;

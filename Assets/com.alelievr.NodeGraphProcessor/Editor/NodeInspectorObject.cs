@@ -61,7 +61,7 @@ namespace GraphProcessor
             nodeView.controlsContainer.AddToClassList("NodeControls");
             var block = nodeView.controlsContainer;
             nodeView.controlsContainer = tmp;
-            
+
             return block;
         }
     }

@@ -12,20 +12,28 @@ using System.Text.RegularExpressions;
 
 using Status = UnityEngine.UIElements.DropdownMenuAction.Status;
 using NodeView = UnityEditor.Experimental.GraphView.Node;
+using Sirenix.OdinInspector.Editor;
 
 namespace GraphProcessor
 {
     [NodeCustomEditor(typeof(BaseNode))]
-    public class BaseNodeView : NodeView
+    public class BaseNodeView : NodeView//
     {
         public BaseNode nodeTarget;
 
-        public List<PortView> inputPortViews = new List<PortView>();
-        public List<PortView> outputPortViews = new List<PortView>();
+        [SerializeField]
+        private List<PortView> _inputPortViews;
+        public List<PortView> InputPortViews => Property.Getter(ref _inputPortViews);
+
+        [SerializeField]
+        public List<PortView> _outputPortViews;
+        public List<PortView> OutputPortViews => Property.Getter(ref _outputPortViews);
 
         public BaseGraphView owner { private set; get; }
 
-        protected Dictionary<string, List<PortView>> portsPerFieldName = new Dictionary<string, List<PortView>>();
+        private Dictionary<string, List<PortView>> _portsPerFieldName;
+        protected Dictionary<string, List<PortView>> PortsPerFieldName => Property.Getter(ref _portsPerFieldName);
+
 
         public VisualElement controlsContainer;
         protected VisualElement debugContainer;
@@ -76,7 +84,7 @@ namespace GraphProcessor
 
             if (!node.deletable)
                 capabilities &= ~Capabilities.Deletable;
-            // Note that the Renamable capability is useless right now as it haven't been implemented in Graphview
+            // Note that the Renamable capability is useless right now as it haven't been implemented in GraphView
             if (node.isRenamable)
                 capabilities |= Capabilities.Renamable;
 
@@ -122,12 +130,12 @@ namespace GraphProcessor
         {
             var listener = owner.connectorListener;
 
-            foreach (var inputPort in nodeTarget.inputPorts)
+            foreach (var inputPort in nodeTarget.InputPorts)
             {
                 AddPort(inputPort.fieldInfo, Direction.Input, listener, inputPort.portData);
             }
 
-            foreach (var outputPort in nodeTarget.outputPorts)
+            foreach (var outputPort in nodeTarget.OutputPorts)
             {
                 AddPort(outputPort.fieldInfo, Direction.Output, listener, outputPort.portData);
             }
@@ -346,9 +354,7 @@ namespace GraphProcessor
 
         public List<PortView> GetPortViewsFromFieldName(string fieldName)
         {
-            List<PortView> ret;
-
-            portsPerFieldName.TryGetValue(fieldName, out ret);
+            PortsPerFieldName.TryGetValue(fieldName, out List<PortView> ret);
 
             return ret;
         }
@@ -373,7 +379,7 @@ namespace GraphProcessor
 
             if (p.direction == Direction.Input)
             {
-                inputPortViews.Add(p);
+                InputPortViews.Add(p);
 
                 if (portData.vertical)
                     topPortContainer.Add(p);
@@ -382,7 +388,7 @@ namespace GraphProcessor
             }
             else
             {
-                outputPortViews.Add(p);
+                OutputPortViews.Add(p);
 
                 if (portData.vertical)
                     bottomPortContainer.Add(p);
@@ -392,12 +398,11 @@ namespace GraphProcessor
 
             p.Initialize(this, portData?.displayName);
 
-            List<PortView> ports;
-            portsPerFieldName.TryGetValue(p.fieldName, out ports);
+            PortsPerFieldName.TryGetValue(p.fieldName, out List<PortView> ports);
             if (ports == null)
             {
                 ports = new List<PortView>();
-                portsPerFieldName[p.fieldName] = ports;
+                PortsPerFieldName[p.fieldName] = ports;
             }
             ports.Add(p);
 
@@ -434,17 +439,17 @@ namespace GraphProcessor
 
             if (p.direction == Direction.Input)
             {
-                if (inputPortViews.Remove(p))
+                if (InputPortViews.Remove(p))
                     p.RemoveFromHierarchy();
             }
             else
             {
-                if (outputPortViews.Remove(p))
+                if (OutputPortViews.Remove(p))
                     p.RemoveFromHierarchy();
             }
 
             List<PortView> ports;
-            portsPerFieldName.TryGetValue(p.fieldName, out ports);
+            PortsPerFieldName.TryGetValue(p.fieldName, out ports);
             ports.Remove(p);
         }
 
@@ -702,13 +707,13 @@ namespace GraphProcessor
             for (int i = 0; i < fields.Count; i++)
             {
                 MemberInfo field = fields[i];
-                if (!portsPerFieldName.ContainsKey(field.Name))
+                if (!PortsPerFieldName.ContainsKey(field.Name))
                 {
                     DrawField(new MemberInfoWithPath(field), fromInspector);
                     continue;
                 }
 
-                foreach (var portView in portsPerFieldName[field.Name])
+                foreach (var portView in PortsPerFieldName[field.Name])
                 {
                     string fieldPath = portView.portData.IsProxied ? portView.portData.proxiedFieldPath : portView.fieldName;
                     DrawField(new MemberInfoWithPath(MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget)), fromInspector, portView);
@@ -792,7 +797,7 @@ namespace GraphProcessor
                 hideElementIfConnected[fieldPath] = elem;
 
                 // Hide the field right away if there is already a connection:
-                if (portsPerFieldName.TryGetValue(fieldPath, out var pvs))
+                if (PortsPerFieldName.TryGetValue(fieldPath, out var pvs))
                     if (pvs.Any(pv => pv.GetEdges().Count > 0))
                         elem.style.display = DisplayStyle.None;
             }
@@ -907,27 +912,30 @@ namespace GraphProcessor
 
         protected SerializedProperty FindSerializedProperty(string fieldName)
         {
-            return FindSerializedProperty(fieldName, out _);
-        }
-
-        protected SerializedProperty FindSerializedProperty(string fieldName, out SerializedObject parent)
-        {
             int i = owner.graph.Nodes.FindIndex(n => n == nodeTarget);
-            List<string> fieldPaths = MemberInfoWithPath.GetPathAsListOfPaths(fieldName);
 
-            var parentObject = owner.serializedGraph;
-            var property = parentObject.FindProperty("nodes").GetArrayElementAtIndex(i);
-            for (int x = 0; x < fieldPaths.Count; x++)
+            if (owner.graph is SerializedBaseGraph)
             {
-                if (property.propertyType == SerializedPropertyType.ObjectReference)
-                {
-                    parentObject = new SerializedObject(property.objectReferenceValue);
-                    property = parentObject.FindProperty(fieldPaths[x]);
-                }
-                else property = property.FindPropertyRelative(fieldPaths[x]);
+                PropertyTree tree = PropertyTree.Create(owner.serializedGraph);//
+                string prefix = $"nodes.${i}.";
+                return tree.GetUnityPropertyForPath(prefix + fieldName);
             }
-            parent = parentObject;
-            return property;
+            else
+            {
+                List<string> fieldPaths = MemberInfoWithPath.GetPathAsListOfPaths(fieldName);
+                var parentObject = owner.serializedGraph;
+                var property = parentObject.FindProperty("nodes").GetArrayElementAtIndex(i);
+                for (int x = 0; x < fieldPaths.Count; x++)
+                {
+                    if (property.propertyType == SerializedPropertyType.ObjectReference)
+                    {
+                        parentObject = new SerializedObject(property.objectReferenceValue);
+                        property = parentObject.FindProperty(fieldPaths[x]);
+                    }
+                    else property = property.FindPropertyRelative(fieldPaths[x]);
+                }
+                return property;
+            }
         }
 
         protected VisualElement AddControlField(MemberInfoWithPath fieldInfoWithPath, string label = null, bool showInputDrawer = false, Action valueChangedCallback = null)
@@ -938,8 +946,9 @@ namespace GraphProcessor
             if (field == null)
                 return null;
 
-            var element = new PropertyField(FindSerializedProperty(fieldPath, out SerializedObject fieldParentObject), showInputDrawer ? "" : label);
-            element.Bind(fieldParentObject);
+            SerializedProperty prop = FindSerializedProperty(fieldPath);
+            var element = new PropertyField(prop, showInputDrawer ? "" : label);
+            element.Bind(prop.serializedObject);
 
 #if UNITY_2020_3 // In Unity 2020.3 the empty label on property field doesn't hide it, so we do it manually
 			if ((showInputDrawer || String.IsNullOrEmpty(label)) && element != null)
@@ -1220,8 +1229,8 @@ namespace GraphProcessor
             // If a port behavior was attached to one port, then
             // the port count might have been updated by the node
             // so we have to refresh the list of port views.
-            UpdatePortViewWithPorts(nodeTarget.inputPorts, inputPortViews);
-            UpdatePortViewWithPorts(nodeTarget.outputPorts, outputPortViews);
+            UpdatePortViewWithPorts(nodeTarget.InputPorts, InputPortViews);
+            UpdatePortViewWithPorts(nodeTarget.OutputPorts, OutputPortViews);
 
             void UpdatePortViewWithPorts(NodePortContainer ports, List<PortView> portViews)
             {
@@ -1252,7 +1261,6 @@ namespace GraphProcessor
 
                 // Here we're sure that we have the same amount of port and portView
                 // so we can update the view with the new port data (if the name of a port have been changed for example)
-
                 for (int i = 0; i < portViews.Count; i++)
                     portViews[i].UpdatePortView(ports[i].portData);
             }

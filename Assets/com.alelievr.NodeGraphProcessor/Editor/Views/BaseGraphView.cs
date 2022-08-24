@@ -354,7 +354,7 @@ namespace GraphProcessor
                 });
 
                 //Handle ourselves the edge and node remove
-                changes.elementsToRemove.RemoveAll(e =>
+                changes.elementsToRemove.RemoveAll((Predicate<GraphElement>)(e =>
                 {
 
                     switch (e)
@@ -364,7 +364,7 @@ namespace GraphProcessor
                             return true;
                         case BaseNodeView nodeView:
                             // For vertical nodes, we need to delete them ourselves as it's not handled by GraphView
-                            foreach (var pv in nodeView.inputPortViews.Concat(nodeView.outputPortViews))
+                            foreach (var pv in nodeView.InputPortViews.Concat((IEnumerable<PortView>)nodeView.OutputPortViews))
                                 if (pv.orientation == Orientation.Vertical)
                                     foreach (var edge in pv.GetEdges().ToList())
                                         Disconnect(edge);
@@ -403,7 +403,7 @@ namespace GraphProcessor
                     }
 
                     return false;
-                });
+                }));
             }
 
             return changes;
@@ -1258,9 +1258,9 @@ namespace GraphProcessor
 
 
                 var conversionInputName = conversion.GetConversionInput();
-                var converterInput = converterView.inputPortViews.Find(view => view.fieldName == conversionInputName);
+                var converterInput = converterView.InputPortViews.Find(view => view.fieldName == conversionInputName);
                 var conversionOutputName = conversion.GetConversionOutput();
-                var converterOutput = converterView.outputPortViews.Find(view => view.fieldName == conversionOutputName);
+                var converterOutput = converterView.OutputPortViews.Find(view => view.fieldName == conversionOutputName);
 
                 Connect(inputPortView, converterOutput, autoDisconnectInputs);
 
@@ -1463,9 +1463,9 @@ namespace GraphProcessor
             var view = AddNode(relayNode) as RelayNodeView;
 
             if (outputPort != null)
-                Connect(view.inputPortViews[0], outputPort);
+                Connect(view.InputPortViews[0], outputPort);
             if (inputPort != null)
-                Connect(inputPort, view.outputPortViews[0]);
+                Connect(inputPort, view.OutputPortViews[0]);
 
             return view;
         }

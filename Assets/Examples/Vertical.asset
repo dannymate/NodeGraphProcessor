@@ -33,6 +33,7 @@ MonoBehaviour:
   nodeInspectorReference: {fileID: 0}
   position: {x: -48, y: -358, z: 0}
   scale: {x: 1.15, y: 1.15, z: 1}
+  nodes: []
   references:
     version: 2
     RefIds: []

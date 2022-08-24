@@ -11,7 +11,14 @@ public class GraphAssetCallbacks
     [MenuItem("Assets/Create/GraphProcessor", false, 10)]
     public static void CreateGraphProcessor()
     {
-        var graph = ScriptableObject.CreateInstance<GraphBase>();
+        var graph = ScriptableObject.CreateInstance<BaseGraph>();
+        ProjectWindowUtil.CreateAsset(graph, "GraphProcessor.asset");
+    }
+
+    [MenuItem("Assets/Create/SerializedGraphProcessor", false, 10)]
+    public static void CreateSerializedGraphProcessor()
+    {
+        var graph = ScriptableObject.CreateInstance<SerializedBaseGraph>();
         ProjectWindowUtil.CreateAsset(graph, "GraphProcessor.asset");
     }
 
@@ -22,7 +29,7 @@ public class GraphAssetCallbacks
 
         if (asset != null && AssetDatabase.GetAssetPath(asset).Contains("Examples"))
         {
-            EditorWindow.GetWindow<AllGraphWindow>().InitializeGraph(asset as GraphBase);
+            EditorWindow.GetWindow<AllGraphWindow>().InitializeGraph(asset);
             return true;
         }
         return false;

@@ -6,10 +6,11 @@ using System.Linq;
 using System.IO;
 using System.Reflection;
 using UnityEditor.Experimental.GraphView;
+using static GraphProcessor.NodeUtils;
 
 namespace GraphProcessor
 {
-    public static class NodeProvider
+    public static partial class NodeProvider
     {
         public struct PortDescription
         {
@@ -178,7 +179,7 @@ namespace GraphProcessor
             }
         }
 
-        static FieldInfo SetGraph = typeof(BaseNode).GetField("graph", BindingFlags.NonPublic | BindingFlags.Instance);
+        static FieldInfo SetGraph => typeof(BaseNode).GetField("graph", BindingFlags.NonPublic | BindingFlags.Instance);
         static void ProvideNodePortCreationDescription(Type nodeType, NodeDescriptions targetDescription, BaseGraph graph = null)
         {
             var node = Activator.CreateInstance(nodeType) as BaseNode;
@@ -292,19 +293,19 @@ namespace GraphProcessor
             }
         }
 
-        public static IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] args)> GetNodeMenuEntries(BaseGraph graph = null)
+        public static IEnumerable<NodeMenuEntry> GetNodeMenuEntries(BaseGraph graph = null)
         {
-            Func<Type, Vector2, object[], BaseNode> creationMethod = BaseNode.CreateFromType;
+            NodeCreationMethod creationMethod = BaseNode.CreateFromType;
             foreach (var node in genericNodes.nodePerMenuTitle)
-                yield return (node.Key, node.Value, creationMethod, null);
+                yield return new NodeMenuEntry(node.Key, node.Value, creationMethod, null);
 
             foreach (var (type, attribute) in GetBasicCustomClassMenuItemEntries())
-                yield return (attribute.menuTitle, attribute.nodeType ?? typeof(BaseNode), creationMethod, attribute.args);
+                yield return new NodeMenuEntry(attribute.menuTitle, attribute.nodeType ?? typeof(BaseNode), creationMethod, attribute.args);
 
             if (graph != null && specificNodeDescriptions.TryGetValue(graph, out var specificNodes))
             {
                 foreach (var node in specificNodes.nodePerMenuTitle)
-                    yield return (node.Key, node.Value, creationMethod, null);
+                    yield return new NodeMenuEntry(node.Key, node.Value, creationMethod, null);
             }
         }
 
@@ -328,31 +329,27 @@ namespace GraphProcessor
             }
         }
 
-        public static IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] args)> GetCustomNodeMenuEntries(
+        public static IEnumerable<NodeMenuEntry> GetCustomNodeMenuEntries(
             BaseGraph graph = null,
             IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> customMenuItems = null
         )
         {
             foreach (var (methodInfo, attribute) in customMenuItems ?? CustomMenuItemMethods().Concat(GetCustomClassMenuItemMethods()))
             {
-                Func<Type, Vector2, object[], BaseNode> method =
-                    Delegate.CreateDelegate(typeof(Func<Type, Vector2, object[], BaseNode>), methodInfo) as Func<Type, Vector2, object[], BaseNode>;
-                yield return (attribute.menuTitle, methodInfo.ReturnType, method, attribute.args);
+                NodeCreationMethod method =
+                    Delegate.CreateDelegate(typeof(NodeCreationMethod), methodInfo) as NodeCreationMethod;
+                yield return new NodeMenuEntry(attribute.menuTitle, methodInfo.ReturnType, method, attribute.args);
             }
         }
 
-        public static IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] args)> GetFilteredCustomNodeMenuEntries(
+        public static IEnumerable<NodeMenuEntry> GetFilteredCustomNodeMenuEntries(
             Type checkForType,
             PortDescription port,
             IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> customMenuItems = null
         )
         {
-            foreach (var customMenuItem in customMenuItems ?? CustomMenuItemMethods())
+            foreach (var (methodInfo, attribute) in customMenuItems ?? CustomMenuItemMethods())
             {
-                MethodInfo methodInfo = customMenuItem.methodInfo;
-                CustomMenuItem attribute = customMenuItem.attribute;
-
-
                 Dictionary<string, Type> filters = new();
                 foreach (var filter in methodInfo.GetCustomAttributes<CustomMenuItemFilter>(true).Where(x => x.key == null || x.key == attribute.key))
                     filters.Add(filter.portFieldName, filter.type);
@@ -361,9 +358,9 @@ namespace GraphProcessor
                 Type portNodeType = port.nodeType;
                 if (methodInfo.ReturnType == portNodeType && (!filters.ContainsKey(portFieldName) || filters[portFieldName] == checkForType))
                 {
-                    Func<Type, Vector2, object[], BaseNode> method =
-                        Delegate.CreateDelegate(typeof(Func<Type, Vector2, object[], BaseNode>), methodInfo) as Func<Type, Vector2, object[], BaseNode>;
-                    yield return (attribute.menuTitle, methodInfo.ReturnType, method, attribute.args);
+                    NodeCreationMethod method =
+                        Delegate.CreateDelegate(typeof(NodeUtils.NodeCreationMethod), methodInfo) as NodeUtils.NodeCreationMethod;
+                    yield return new NodeMenuEntry(attribute.menuTitle, methodInfo.ReturnType, method, attribute.args);
                 }
             }
         }

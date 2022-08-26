@@ -793,22 +793,22 @@ namespace GraphProcessor
             // Register the nodes that can be created from assets
             foreach (var nodeInfo in NodeProvider.GetNodeMenuEntries(graph))
             {
-                var interfaces = nodeInfo.type.GetInterfaces();
+                var interfaces = nodeInfo.NodeType.GetInterfaces();
                 var exceptInheritedInterfaces = interfaces.Except(interfaces.SelectMany(t => t.GetInterfaces()));
                 foreach (var i in exceptInheritedInterfaces)
                 {
                     if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICreateNodeFrom<>))
                     {
                         var genericArgumentType = i.GetGenericArguments()[0];
-                        var initializeFunction = nodeInfo.type.GetMethod(
+                        var initializeFunction = nodeInfo.NodeType.GetMethod(
                             nameof(ICreateNodeFrom<Object>.InitializeNodeFromObject),
                             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
                             null, new Type[] { genericArgumentType }, null
                         );
 
                         // We only add the type that implements the interface, not it's children
-                        if (initializeFunction.DeclaringType == nodeInfo.type)
-                            nodeTypePerCreateAssetType[genericArgumentType] = (nodeInfo.type, initializeFunction);
+                        if (initializeFunction.DeclaringType == nodeInfo.NodeType)
+                            nodeTypePerCreateAssetType[genericArgumentType] = (nodeInfo.NodeType, initializeFunction);
                     }
                 }
             }
@@ -1441,7 +1441,7 @@ namespace GraphProcessor
 
         protected virtual void InitializeView() { }
 
-        public virtual IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] methodArgs)> FilterCreateNodeMenuEntries()
+        public virtual IEnumerable<NodeProvider.NodeMenuEntry> FilterCreateNodeMenuEntries()
         {
             // By default we don't filter anything
             foreach (var nodeMenuItem in NodeProvider.GetNodeMenuEntries(graph))
@@ -1450,7 +1450,7 @@ namespace GraphProcessor
             // TODO: add exposed properties to this list
         }
 
-        public virtual IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] methodArgs)> FilterCreateCustomNodeMenuEntries()
+        public virtual IEnumerable<NodeProvider.NodeMenuEntry> FilterCreateCustomNodeMenuEntries()
         {
             // By default we don't filter anything
             foreach (var customMenuItem in NodeProvider.GetCustomNodeMenuEntries(graph))

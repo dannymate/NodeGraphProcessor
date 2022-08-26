@@ -65,13 +65,13 @@ namespace GraphProcessor
             // Sort menu by alphabetical order and submenus
             var nodeEntries = graphView.FilterCreateNodeMenuEntries()
                 .Concat(graphView.FilterCreateCustomNodeMenuEntries())
-                .OrderBy(k => k.path);
+                .OrderBy(k => k.Path);
 
             var titlePaths = new HashSet<string>();
 
-            foreach (var nodeMenuItem in nodeEntries)
+            foreach (var nodeEntry in nodeEntries)
             {
-                var nodePath = nodeMenuItem.path;
+                var nodePath = nodeEntry.Path;
                 var nodeName = nodePath;
                 var level = 0;
                 var parts = nodePath.Split('/');
@@ -103,7 +103,7 @@ namespace GraphProcessor
                 tree.Add(new SearchTreeEntry(new GUIContent(nodeName, icon))
                 {
                     level = level + 1,
-                    userData = new Tuple<Type, Func<Type, Vector2, object[], BaseNode>, object[]>(nodeMenuItem.type, nodeMenuItem.creationMethod, nodeMenuItem.methodArgs)
+                    userData = nodeEntry
                 });
             }
         }
@@ -115,8 +115,8 @@ namespace GraphProcessor
 
             var titlePaths = new HashSet<string>();
 
-            var customNodePaths = NodeProvider.GetCustomNodeMenuEntries(graphView.graph, cachedCustomMenuItemMethods);
-            var nodePaths = NodeProvider.GetNodeMenuEntries(graphView.graph).Concat(customNodePaths);
+            var customMenuEntries = NodeProvider.GetCustomNodeMenuEntries(graphView.graph, cachedCustomMenuItemMethods);
+            var menuEntries = NodeProvider.GetNodeMenuEntries(graphView.graph).Concat(customMenuEntries);
 
             tree.Add(new SearchTreeEntry(new GUIContent($"Relay", icon))
             {
@@ -132,25 +132,26 @@ namespace GraphProcessor
                 }
             });
 
-            var sortedMenuItems = entries.Select(port => (port, nodePaths.FirstOrDefault(kp => kp.type == port.nodeType).path)).OrderBy(e => e.path);
+            var sortedMenuItems = entries.Select(port => (port, menuEntries.FirstOrDefault(kp => kp.NodeType == port.nodeType).Path)).OrderBy(e => e.Path);
 
             // Sort menu by alphabetical order and submenus
-            foreach (var (port, path) in sortedMenuItems)
+            foreach (var menuEntry in sortedMenuItems)
             {
-                string portFieldName = port.portFieldName;
+                string portFieldName = menuEntry.port.portFieldName;
+                NodeProvider.PortDescription port = menuEntry.port;
                 Type portNodeType = port.nodeType;
                 Type portType = port.portType;
                 var filteredCustomNodePaths = NodeProvider.GetFilteredCustomNodeMenuEntries((edgeFilter.input ?? edgeFilter.output).portType, port, cachedCustomMenuItemMethods);
-                foreach (var node in nodePaths.Where(kp => kp.type == portNodeType))
+                foreach (var node in menuEntries.Where(kp => kp.NodeType == portNodeType))
                 {
-                    var nodePath = node.path;
+                    var nodePath = node.Path;
 
                     // Ignore the node if it's not in the create menu
                     if (String.IsNullOrEmpty(nodePath))
                         continue;
 
                     // Ignore the node if it has filters and it doesn't meet the requirements, contains doesn't work so we compare paths instead.
-                    if (customNodePaths.ToList().Find(x => x.path == node.path).path != null && filteredCustomNodePaths.ToList().Find(x => x.path.Equals(node.path)).path == null)
+                    if (customMenuEntries.Contains(node) && !filteredCustomNodePaths.Contains(node))
                         continue;
 
                     var nodeName = nodePath;
@@ -184,7 +185,7 @@ namespace GraphProcessor
                     tree.Add(new SearchTreeEntry(new GUIContent($"{nodeName}:  {port.portDisplayName}", icon))
                     {
                         level = level + 1,
-                        userData = new Tuple<NodeProvider.PortDescription, Func<Type, Vector2, object[], BaseNode>, object[]>(port, node.creationMethod, node.args)
+                        userData = new Tuple<NodeProvider.PortDescription, NodeProvider.NodeMenuEntry>(port, node)
                     });
                 }
             }
@@ -198,22 +199,22 @@ namespace GraphProcessor
             var windowMousePosition = windowRoot.ChangeCoordinatesTo(windowRoot.parent, context.screenMousePosition - window.position.position);
             var graphMousePosition = graphView.contentViewContainer.WorldToLocal(windowMousePosition);
 
-            if (searchTreeEntry.userData is Tuple<Type, Func<Type, Vector2, object[], BaseNode>, object[]>)
+            if (searchTreeEntry.userData is NodeProvider.NodeMenuEntry)
             {
-                Tuple<Type, Func<Type, Vector2, object[], BaseNode>, object[]> userData = searchTreeEntry.userData as Tuple<Type, Func<Type, Vector2, object[], BaseNode>, object[]>;
-                var nodeType = userData.Item1;
-                var method = userData.Item2;
-                var methodArgs = userData.Item3;
+                NodeProvider.NodeMenuEntry userData = searchTreeEntry.userData as NodeProvider.NodeMenuEntry;
+                Type nodeType = userData.NodeType;
+                NodeUtils.NodeCreationMethod method = userData.CreationMethod;
+                object[] methodArgs = userData.CreationMethodArgs;
 
                 graphView.RegisterCompleteObjectUndo("Added " + nodeType);
                 graphView.AddNode(method.Invoke(nodeType, graphMousePosition, methodArgs));
             }
-            else if (searchTreeEntry.userData is Tuple<NodeProvider.PortDescription, Func<Type, Vector2, object[], BaseNode>, object[]>)
+            else if (searchTreeEntry.userData is Tuple<NodeProvider.PortDescription, NodeProvider.NodeMenuEntry>)
             {
-                Tuple<NodeProvider.PortDescription, Func<Type, Vector2, object[], BaseNode>, object[]> userData = searchTreeEntry.userData as Tuple<NodeProvider.PortDescription, Func<Type, Vector2, object[], BaseNode>, object[]>;
-                var nodeType = userData.Item1.nodeType;
-                var method = userData.Item2;
-                var methodArgs = userData.Item3;
+                Tuple<NodeProvider.PortDescription, NodeProvider.NodeMenuEntry> userData = searchTreeEntry.userData as Tuple<NodeProvider.PortDescription, NodeProvider.NodeMenuEntry>;
+                Type nodeType = userData.Item1.nodeType;
+                NodeUtils.NodeCreationMethod method = userData.Item2.CreationMethod;
+                object[] methodArgs = userData.Item2.CreationMethodArgs;
 
                 graphView.RegisterCompleteObjectUndo("Added " + nodeType);
                 BaseNodeView view = graphView.AddNode(method.Invoke(nodeType, graphMousePosition, methodArgs));

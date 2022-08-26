@@ -259,11 +259,11 @@ namespace GraphProcessor
         /// Register the node creation method in the NodeProvider class. The node creation method will also be available in the node creation window.
         /// </summary>
         /// <param name="menuTitle">Path in the menu, use / as folder separators</param>
-        public CustomMenuItem(string menuTitle = null, object key = null, params object[] args)
+        /// <param name"key">Key to check for with other attributes like CustomMenuItemFilter</param>
+        public CustomMenuItem(string menuTitle = null, object key = null)
         {
             this.menuTitle = menuTitle;
             this.key = key;
-            this.args = args;
         }
     }
 
@@ -280,6 +280,7 @@ namespace GraphProcessor
         /// </summary>
         /// <param name="portFieldName">FieldName of the port to filter.</param>
         /// <param name="type">Type to Check For</param>
+        /// <param name"key">Key to check for with other attributes like CustomMenuItem</param>
         public CustomMenuItemFilter(string portFieldName, Type type, object key = null)
         {
             this.portFieldName = portFieldName;
@@ -299,10 +300,11 @@ namespace GraphProcessor
         public bool IsBasic => String.IsNullOrEmpty(methodName);
 
         /// <summary>
-        /// Register the node creation method in the NodeProvider class. The node creation method will also be available in the node creation window.
+        /// Automate registration of a type declaration in the NodeProvider and creation window.
         /// </summary>
         /// <param name="menuTitle">Path in the menu, use / as folder separators</param>
-        /// <param name="onlyCompatibleWithGraph">Currently does nothing.</param>
+        /// <param name="nodeType">The node to spawn.</param>
+        /// <param name"key">Key to check for with other attributes like CustomMenuItemFilter</param>
         public CustomClassMenuItem(string menuTitle, Type nodeType, object key = null)
         {
             this.menuTitle = menuTitle;
@@ -310,6 +312,14 @@ namespace GraphProcessor
             this.key = key;
         }
 
+        /// <summary>
+        /// Automate registration of a type declaration in the NodeProvider and creation window.
+        /// </summary>
+        /// <param name="menuTitle">Path in the menu, use / as folder separators</param>
+        /// <param name="methodParentClass">The class that contains methodName</param>
+        /// <param name="methodName">The name of the public static method that creates the node</param>
+        /// <param name"key">Key to check for with other attributes like CustomMenuItemFilter</param>
+        /// <param name="args">Extra args will get sent to the specified method allowing the same method to produce different results</param>
         public CustomClassMenuItem(string menuTitle, Type methodParentClass, string methodName, object key = null, params object[] args)
         {
             this.menuTitle = menuTitle;

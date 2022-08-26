@@ -354,7 +354,7 @@ namespace GraphProcessor
 
 
                 Dictionary<string, Type> filters = new();
-                foreach (var filter in methodInfo.GetCustomAttributes<CustomMenuItemFilter>(true))
+                foreach (var filter in methodInfo.GetCustomAttributes<CustomMenuItemFilter>(true).Where(x => x.key == null || x.key == attribute.key))
                     filters.Add(filter.portFieldName, filter.type);
 
                 string portFieldName = port.portFieldName;

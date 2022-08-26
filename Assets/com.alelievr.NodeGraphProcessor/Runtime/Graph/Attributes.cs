@@ -252,15 +252,17 @@ namespace GraphProcessor
     public class CustomMenuItem : Attribute
     {
         public string menuTitle;
+        public object key;
         public object[] args;
 
         /// <summary>
         /// Register the node creation method in the NodeProvider class. The node creation method will also be available in the node creation window.
         /// </summary>
         /// <param name="menuTitle">Path in the menu, use / as folder separators</param>
-        public CustomMenuItem(string menuTitle = null, params object[] args)
+        public CustomMenuItem(string menuTitle = null, object key = null, params object[] args)
         {
             this.menuTitle = menuTitle;
+            this.key = key;
             this.args = args;
         }
     }
@@ -269,6 +271,7 @@ namespace GraphProcessor
     public class CustomMenuItemFilter : Attribute
     {
         public string portFieldName;
+        public object key;
         public Type type;
 
         /// <summary>
@@ -277,10 +280,11 @@ namespace GraphProcessor
         /// </summary>
         /// <param name="portFieldName">FieldName of the port to filter.</param>
         /// <param name="type">Type to Check For</param>
-        public CustomMenuItemFilter(string portFieldName, Type type)
+        public CustomMenuItemFilter(string portFieldName, Type type, object key = null)
         {
             this.portFieldName = portFieldName;
             this.type = type;
+            this.key = key;
         }
     }
 
@@ -299,17 +303,19 @@ namespace GraphProcessor
         /// </summary>
         /// <param name="menuTitle">Path in the menu, use / as folder separators</param>
         /// <param name="onlyCompatibleWithGraph">Currently does nothing.</param>
-        public CustomClassMenuItem(string menuTitle, Type nodeType)
+        public CustomClassMenuItem(string menuTitle, Type nodeType, object key = null)
         {
             this.menuTitle = menuTitle;
             this.nodeType = nodeType;
+            this.key = key;
         }
 
-        public CustomClassMenuItem(string menuTitle, Type methodParentClass, string methodName, params object[] args)
+        public CustomClassMenuItem(string menuTitle, Type methodParentClass, string methodName, object key = null, params object[] args)
         {
             this.menuTitle = menuTitle;
             this.methodParentClass = methodParentClass;
             this.methodName = methodName;
+            this.key = key;
             this.args = args;
         }
     }

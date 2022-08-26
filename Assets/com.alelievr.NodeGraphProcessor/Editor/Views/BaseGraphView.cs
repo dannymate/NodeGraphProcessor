@@ -1441,7 +1441,7 @@ namespace GraphProcessor
 
         protected virtual void InitializeView() { }
 
-        public virtual IEnumerable<(string path, Type type, Func<Type, Vector2, BaseNode> creationMethod)> FilterCreateNodeMenuEntries()
+        public virtual IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] methodArgs)> FilterCreateNodeMenuEntries()
         {
             // By default we don't filter anything
             foreach (var nodeMenuItem in NodeProvider.GetNodeMenuEntries(graph))
@@ -1450,7 +1450,7 @@ namespace GraphProcessor
             // TODO: add exposed properties to this list
         }
 
-        public virtual IEnumerable<(string path, Type type, Func<Type, Vector2, BaseNode> creationMethod)> FilterCreateCustomNodeMenuEntries()
+        public virtual IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] methodArgs)> FilterCreateCustomNodeMenuEntries()
         {
             // By default we don't filter anything
             foreach (var customMenuItem in NodeProvider.GetCustomNodeMenuEntries(graph))

@@ -252,17 +252,16 @@ namespace GraphProcessor
     public class CustomMenuItem : Attribute
     {
         public string menuTitle;
-        public Type onlyCompatibleWithGraph;
+        public object[] args;
 
         /// <summary>
         /// Register the node creation method in the NodeProvider class. The node creation method will also be available in the node creation window.
         /// </summary>
         /// <param name="menuTitle">Path in the menu, use / as folder separators</param>
-        /// <param name="onlyCompatibleWithGraph">Currently does nothing.</param>
-        public CustomMenuItem(string menuTitle = null, Type onlyCompatibleWithGraph = null)
+        public CustomMenuItem(string menuTitle = null, params object[] args)
         {
             this.menuTitle = menuTitle;
-            this.onlyCompatibleWithGraph = onlyCompatibleWithGraph;
+            this.args = args;
         }
     }
 
@@ -282,6 +281,36 @@ namespace GraphProcessor
         {
             this.portFieldName = portFieldName;
             this.type = type;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
+    public class CustomClassMenuItem : CustomMenuItem
+    {
+        public Type nodeType;
+
+        public Type methodParentClass;
+        public string methodName;
+
+        public bool IsBasic => String.IsNullOrEmpty(methodName);
+
+        /// <summary>
+        /// Register the node creation method in the NodeProvider class. The node creation method will also be available in the node creation window.
+        /// </summary>
+        /// <param name="menuTitle">Path in the menu, use / as folder separators</param>
+        /// <param name="onlyCompatibleWithGraph">Currently does nothing.</param>
+        public CustomClassMenuItem(string menuTitle, Type nodeType)
+        {
+            this.menuTitle = menuTitle;
+            this.nodeType = nodeType;
+        }
+
+        public CustomClassMenuItem(string menuTitle, Type methodParentClass, string methodName, params object[] args)
+        {
+            this.menuTitle = menuTitle;
+            this.methodParentClass = methodParentClass;
+            this.methodName = methodName;
+            this.args = args;
         }
     }
 }

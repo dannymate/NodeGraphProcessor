@@ -12,7 +12,7 @@ namespace GraphProcessor
         /// <param name="position">position in the graph in pixels</param>
         /// <typeparam name="T">type of the node</typeparam>
         /// <returns>the node instance</returns>
-        public static T CreateFromType<T>(Vector2 position) where T : BaseNode
+        public static T CreateFromType<T>(Vector2 position, params object[] args) where T : BaseNode
         {
             return CreateFromType(typeof(T), position) as T;
         }
@@ -23,7 +23,7 @@ namespace GraphProcessor
         /// <param name="position">position in the graph in pixels</param>
         /// <typeparam name="nodeType">type of the node</typeparam>
         /// <returns>the node instance</returns>
-        public static BaseNode CreateFromType(Type nodeType, Vector2 position)
+        public static BaseNode CreateFromType(Type nodeType, Vector2 position, params object[] args)
         {
             if (!nodeType.IsSubclassOf(typeof(BaseNode)))
                 return null;

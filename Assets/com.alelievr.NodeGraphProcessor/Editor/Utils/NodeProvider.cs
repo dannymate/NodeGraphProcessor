@@ -282,70 +282,88 @@ namespace GraphProcessor
             return view;
         }
 
-        public static IEnumerable<(string path, Type type, Func<Type, Vector2, BaseNode> creationMethod)> GetNodeMenuEntries(BaseGraph graph = null)
+        public static IEnumerable<(Type type, CustomClassMenuItem attribute)> GetBasicCustomClassMenuItemEntries()
         {
-            Func<Type, Vector2, BaseNode> creationMethod = BaseNode.CreateFromType;
+            foreach (var type in TypeCache.GetTypesWithAttribute<CustomClassMenuItem>())
+            {
+                var attribute = type.GetCustomAttribute<CustomClassMenuItem>(false);
+                if (!attribute.IsBasic) continue;
+                yield return (type, attribute);
+            }
+        }
+
+        public static IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] args)> GetNodeMenuEntries(BaseGraph graph = null)
+        {
+            Func<Type, Vector2, object[], BaseNode> creationMethod = BaseNode.CreateFromType;
             foreach (var node in genericNodes.nodePerMenuTitle)
-                yield return (node.Key, node.Value, creationMethod);
+                yield return (node.Key, node.Value, creationMethod, null);
+
+            foreach (var (type, attribute) in GetBasicCustomClassMenuItemEntries())
+                yield return (attribute.menuTitle, attribute.nodeType ?? typeof(BaseNode), creationMethod, attribute.args);
 
             if (graph != null && specificNodeDescriptions.TryGetValue(graph, out var specificNodes))
             {
                 foreach (var node in specificNodes.nodePerMenuTitle)
-                    yield return (node.Key, node.Value, creationMethod);
+                    yield return (node.Key, node.Value, creationMethod, null);
             }
         }
 
-        public static IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> CustomMenuItemMethods
+        public static IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> CustomMenuItemMethods()
         {
-            get
+            foreach (var methodInfo in TypeCache.GetMethodsWithAttribute<CustomMenuItem>().Where(x => IsValidCustomNodeMenuItem(x)))
             {
-                foreach (var methodInfo in TypeCache.GetMethodsWithAttribute<CustomMenuItem>().Where(x => IsValidCustomNodeMenuItem(x)))
-                {
-                    yield return (methodInfo, methodInfo.GetCustomAttribute<CustomMenuItem>(true));
-                }
+                yield return (methodInfo, methodInfo.GetCustomAttribute<CustomMenuItem>(true));
             }
         }
 
-        public static IEnumerable<(string path, Type type, Func<Type, Vector2, BaseNode> creationMethod)> GetCustomNodeMenuEntries(
+        public static IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> GetCustomClassMenuItemMethods()
+        {
+            foreach (var type in TypeCache.GetTypesWithAttribute<CustomClassMenuItem>())
+            {
+                var attribute = type.GetCustomAttribute<CustomClassMenuItem>(false);
+                if (attribute.IsBasic) continue;
+                MethodInfo methodInfo = attribute.methodParentClass.GetMethod(attribute.methodName, BindingFlags.Static | BindingFlags.Public);
+                if (!IsValidCustomNodeMenuItem(methodInfo)) continue;
+                yield return (methodInfo, attribute);
+            }
+        }
+
+        public static IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] args)> GetCustomNodeMenuEntries(
             BaseGraph graph = null,
             IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> customMenuItems = null
         )
         {
-            foreach (var customMenuItem in customMenuItems ?? CustomMenuItemMethods)
+            foreach (var (methodInfo, attribute) in customMenuItems ?? CustomMenuItemMethods().Concat(GetCustomClassMenuItemMethods()))
             {
-                MethodInfo methodInfo = customMenuItem.methodInfo;
-                CustomMenuItem attribute = customMenuItem.attribute;
-
-                Func<Type, Vector2, BaseNode> method =
-                    Delegate.CreateDelegate(typeof(Func<Type, Vector2, BaseNode>), methodInfo) as Func<Type, Vector2, BaseNode>;
-                yield return (attribute.menuTitle, methodInfo.ReturnType, method);
+                Func<Type, Vector2, object[], BaseNode> method =
+                    Delegate.CreateDelegate(typeof(Func<Type, Vector2, object[], BaseNode>), methodInfo) as Func<Type, Vector2, object[], BaseNode>;
+                yield return (attribute.menuTitle, methodInfo.ReturnType, method, attribute.args);
             }
         }
 
-        public static IEnumerable<(string path, Type type, Func<Type, Vector2, BaseNode> creationMethod)> GetFilteredCustomNodeMenuEntries(
+        public static IEnumerable<(string path, Type type, Func<Type, Vector2, object[], BaseNode> creationMethod, object[] args)> GetFilteredCustomNodeMenuEntries(
             Type checkForType,
             PortDescription port,
             IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> customMenuItems = null
         )
         {
-            foreach (var customMenuItem in customMenuItems ?? CustomMenuItemMethods)
+            foreach (var customMenuItem in customMenuItems ?? CustomMenuItemMethods())
             {
                 MethodInfo methodInfo = customMenuItem.methodInfo;
                 CustomMenuItem attribute = customMenuItem.attribute;
 
+
                 Dictionary<string, Type> filters = new();
                 foreach (var filter in methodInfo.GetCustomAttributes<CustomMenuItemFilter>(true))
-                {
                     filters.Add(filter.portFieldName, filter.type);
-                }
 
                 string portFieldName = port.portFieldName;
                 Type portNodeType = port.nodeType;
                 if (methodInfo.ReturnType == portNodeType && (!filters.ContainsKey(portFieldName) || filters[portFieldName] == checkForType))
                 {
-                    Func<Type, Vector2, BaseNode> method =
-                        Delegate.CreateDelegate(typeof(Func<Type, Vector2, BaseNode>), methodInfo) as Func<Type, Vector2, BaseNode>;
-                    yield return (attribute.menuTitle, methodInfo.ReturnType, method);
+                    Func<Type, Vector2, object[], BaseNode> method =
+                        Delegate.CreateDelegate(typeof(Func<Type, Vector2, object[], BaseNode>), methodInfo) as Func<Type, Vector2, object[], BaseNode>;
+                    yield return (attribute.menuTitle, methodInfo.ReturnType, method, attribute.args);
                 }
             }
         }
@@ -358,9 +376,9 @@ namespace GraphProcessor
                 Debug.LogError("CustomMenuItem: " + method.Name + " is not of return type BaseNode!");
                 isValid = false;
             }
-            if (method.GetParameters().Length != 2)
+            if (method.GetParameters().Length != 3)
             {
-                Debug.LogError("CustomMenuItem: " + method.Name + " params should only be Type and Vector2!");
+                Debug.LogError("CustomMenuItem: " + method.Name + " params should only be Type, Vector2 and object[]!");
                 isValid = false;
             }
             else
@@ -373,6 +391,11 @@ namespace GraphProcessor
                 if (method.GetParameters()[1].ParameterType != typeof(Vector2))
                 {
                     Debug.LogError("CustomMenuItem: " + method.Name + " second param should be of type Vector2!");
+                    isValid = false;
+                }
+                if (method.GetParameters()[2].ParameterType != typeof(object[]))
+                {
+                    Debug.LogError("CustomMenuItem: " + method.Name + " second param should be of type params object[]!");
                     isValid = false;
                 }
             }

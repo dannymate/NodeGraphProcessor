@@ -309,15 +309,15 @@ namespace GraphProcessor
             }
         }
 
-        public static IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> CustomMenuItemMethods()
+        public static IEnumerable<NodeMenuEntryMethod> CustomMenuItemMethods()
         {
             foreach (var methodInfo in TypeCache.GetMethodsWithAttribute<CustomMenuItem>().Where(x => IsValidCustomNodeMenuItem(x)))
             {
-                yield return (methodInfo, methodInfo.GetCustomAttribute<CustomMenuItem>(true));
+                yield return new NodeMenuEntryMethod(methodInfo, methodInfo.GetCustomAttribute<CustomMenuItem>(false), methodInfo.GetCustomAttributes<CustomMenuItemFilter>(false).ToArray());
             }
         }
 
-        public static IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> GetCustomClassMenuItemMethods()
+        public static IEnumerable<NodeMenuEntryMethod> GetCustomClassMenuItemMethods()
         {
             foreach (var type in TypeCache.GetTypesWithAttribute<CustomClassMenuItem>())
             {
@@ -325,17 +325,20 @@ namespace GraphProcessor
                 if (attribute.IsBasic) continue;
                 MethodInfo methodInfo = attribute.methodParentClass.GetMethod(attribute.methodName, BindingFlags.Static | BindingFlags.Public);
                 if (!IsValidCustomNodeMenuItem(methodInfo)) continue;
-                yield return (methodInfo, attribute);
+                yield return new NodeMenuEntryMethod(methodInfo, attribute, type.GetCustomAttributes<CustomMenuItemFilter>(false).ToArray());
             }
         }
 
         public static IEnumerable<NodeMenuEntry> GetCustomNodeMenuEntries(
             BaseGraph graph = null,
-            IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> customMenuItems = null
+            IEnumerable<NodeMenuEntryMethod> customMenuItems = null
         )
         {
-            foreach (var (methodInfo, attribute) in customMenuItems ?? CustomMenuItemMethods().Concat(GetCustomClassMenuItemMethods()))
+            foreach (var nodeMenuEntryMethod in customMenuItems ?? CustomMenuItemMethods().Concat(GetCustomClassMenuItemMethods()))
             {
+                MethodInfo methodInfo = nodeMenuEntryMethod.MethodInfo;
+                CustomMenuItem attribute = nodeMenuEntryMethod.Context;
+
                 NodeCreationMethod method =
                     Delegate.CreateDelegate(typeof(NodeCreationMethod), methodInfo) as NodeCreationMethod;
                 yield return new NodeMenuEntry(attribute.menuTitle, methodInfo.ReturnType, method, attribute.args);
@@ -345,13 +348,17 @@ namespace GraphProcessor
         public static IEnumerable<NodeMenuEntry> GetFilteredCustomNodeMenuEntries(
             Type checkForType,
             PortDescription port,
-            IEnumerable<(MethodInfo methodInfo, CustomMenuItem attribute)> customMenuItems = null
+            IEnumerable<NodeMenuEntryMethod> customMenuItems = null
         )
         {
-            foreach (var (methodInfo, attribute) in customMenuItems ?? CustomMenuItemMethods())
+            foreach (var nodeMenuEntryMethod in customMenuItems ?? CustomMenuItemMethods().Concat(GetCustomClassMenuItemMethods()))
             {
+                MethodInfo methodInfo = nodeMenuEntryMethod.MethodInfo;
+                CustomMenuItem attribute = nodeMenuEntryMethod.Context;
+                CustomMenuItemFilter[] methodFilters = nodeMenuEntryMethod.Filters;
+
                 Dictionary<string, Type> filters = new();
-                foreach (var filter in methodInfo.GetCustomAttributes<CustomMenuItemFilter>(true).Where(x => x.key == null || x.key == attribute.key))
+                foreach (var filter in methodFilters.Where(x => x.key == null || x.key == attribute.key))
                     filters.Add(filter.portFieldName, filter.type);
 
                 string portFieldName = port.portFieldName;

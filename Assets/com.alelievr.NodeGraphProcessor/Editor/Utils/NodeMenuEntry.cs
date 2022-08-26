@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using static GraphProcessor.NodeUtils;
+using System.Reflection;
 
 namespace GraphProcessor
 {
@@ -29,6 +30,20 @@ namespace GraphProcessor
                 // Leave out CreationMethod and CreationMethodArgs because we only care about the above
                 return true;
             }
+        }
+
+        public class NodeMenuEntryMethod
+        {
+            public NodeMenuEntryMethod(MethodInfo methodInfo, CustomMenuItem context, CustomMenuItemFilter[] filters)
+            {
+                MethodInfo = methodInfo;
+                Context = context;
+                Filters = filters;
+            }
+
+            public MethodInfo MethodInfo { get; }
+            public CustomMenuItem Context { get; }
+            public CustomMenuItemFilter[] Filters { get; }
         }
     }
 }

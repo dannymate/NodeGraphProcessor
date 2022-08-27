@@ -704,7 +704,6 @@ namespace GraphProcessor
                 MemberInfo field = fields[i];
                 if (!portsPerFieldName.ContainsKey(field.Name))
                 {
-                    Debug.Log(field.Name);
                     if (field.HasCustomAttribute<CustomBehaviourOnly>()) continue;
                     DrawField(new MemberInfoWithPath(field), fromInspector);
                     continue;
@@ -745,7 +744,6 @@ namespace GraphProcessor
             bool serializeReference = field.HasCustomAttribute<SerializeReference>();
             if ((!field.IsPublic && !serializeField && !serializeReference) || field.IsNotSerialized)
             {
-                Debug.Log("1 " + fieldPath);
                 AddEmptyField(field, fromInspector);
                 return;
             }
@@ -753,19 +751,19 @@ namespace GraphProcessor
             //skip if the field is an input/output and not marked as SerializedField
             InputAttribute inputAttribute = field.GetCustomAttribute<InputAttribute>();
             bool hasInputAttribute = inputAttribute != null;
-            bool hasInputOrOutputAttribute = hasInputAttribute || field.HasCustomAttribute<OutputAttribute>();
-            bool showAsDrawer = !fromInspector && hasInputAttribute && (inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>());
-            showAsDrawer |= !fromInspector && (hasPortView && portView.direction == Direction.Input) && portData.showAsDrawer;
-            if (((!serializeField && !serializeReference) || isProxied) && (hasPortView || hasInputOrOutputAttribute) && !showAsDrawer)
+            bool isInput = (!hasPortView && hasInputAttribute) || (hasPortView && portView.direction == Direction.Input);
+            bool showAsDrawer = !fromInspector && isInput && (inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>());
+            showAsDrawer |= !fromInspector && isInput && portData.showAsDrawer;
+            if (((!serializeField && !serializeReference) || isProxied) && (hasPortView || hasInputAttribute) && !showAsDrawer)
             {
-                // if (fieldPath == "customInputs" || fieldPath == "customOutputs") return;
                 AddEmptyField(field, fromInspector);
                 return;
             }
 
             //skip if marked with NonSerialized or HideInInspector
-            if (field.HasCustomAttribute<System.NonSerializedAttribute>() || field.HasCustomAttribute<HideInInspector>())
+            if (field.HasCustomAttribute<NonSerializedAttribute>() || field.HasCustomAttribute<HideInInspector>())
             {
+                Debug.Log("3 " + fieldPath);
                 AddEmptyField(field, fromInspector);
                 return;
             }
@@ -774,6 +772,7 @@ namespace GraphProcessor
             var showInInspector = field.GetCustomAttribute<ShowInInspector>();
             if (!serializeField && !serializeReference && showInInspector != null && !showInInspector.showInNode && !fromInspector)
             {
+                Debug.Log("4 " + fieldPath);
                 AddEmptyField(field, fromInspector);
                 return;
             }

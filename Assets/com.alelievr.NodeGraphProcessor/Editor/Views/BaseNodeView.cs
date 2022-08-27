@@ -704,6 +704,8 @@ namespace GraphProcessor
                 MemberInfo field = fields[i];
                 if (!portsPerFieldName.ContainsKey(field.Name))
                 {
+                    Debug.Log(field.Name);
+                    if (field.HasCustomAttribute<CustomBehaviourOnly>()) continue;
                     DrawField(new MemberInfoWithPath(field), fromInspector);
                     continue;
                 }
@@ -743,6 +745,7 @@ namespace GraphProcessor
             bool serializeReference = field.HasCustomAttribute<SerializeReference>();
             if ((!field.IsPublic && !serializeField && !serializeReference) || field.IsNotSerialized)
             {
+                Debug.Log("1 " + fieldPath);
                 AddEmptyField(field, fromInspector);
                 return;
             }
@@ -755,6 +758,7 @@ namespace GraphProcessor
             showAsDrawer |= !fromInspector && (hasPortView && portView.direction == Direction.Input) && portData.showAsDrawer;
             if (((!serializeField && !serializeReference) || isProxied) && (hasPortView || hasInputOrOutputAttribute) && !showAsDrawer)
             {
+                // if (fieldPath == "customInputs" || fieldPath == "customOutputs") return;
                 AddEmptyField(field, fromInspector);
                 return;
             }

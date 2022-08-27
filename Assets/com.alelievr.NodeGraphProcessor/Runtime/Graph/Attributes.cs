@@ -245,6 +245,12 @@ namespace GraphProcessor
         }
     }
 
+    /// <summary>
+    /// Marks an input/output to only be used with custom behaviour generated ports.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class CustomBehaviourOnly : Attribute { }
+
     [AttributeUsage(AttributeTargets.Method)]
     public class IsCompatibleWithGraph : Attribute { }
 

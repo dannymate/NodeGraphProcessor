@@ -4,7 +4,7 @@ using UnityEngine;
 public static class CustomMenuEntry
 {
     [CustomMenuItem("Custom/PresetFloatNode")]
-    public static FloatNode DoCustomNodeCreation(Type type, Vector2 mouseLocation)
+    public static FloatNode DoCustomNodeCreation(Type type, Vector2 mouseLocation, params object[] args)
     {
         FloatNode node = BaseNode.CreateFromType<FloatNode>(mouseLocation);
         node.SetCustomName("Custom Creation");

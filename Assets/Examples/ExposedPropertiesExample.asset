@@ -27,6 +27,7 @@ MonoBehaviour:
   - rid: 3078690341890555936
   - rid: 3078690341890555937
   - rid: 3078690341890555938
+  - rid: 702614840213504053
   edges:
   - GUID: e945eba0-fecc-47ab-9cb2-3d7218beb383
     owner: {fileID: 11400000}
@@ -142,7 +143,7 @@ MonoBehaviour:
   - position:
       serializedVersion: 2
       x: 0
-      y: 338
+      y: 0
       width: 193
       height: 322
     opened: 1
@@ -190,13 +191,35 @@ MonoBehaviour:
       rid: -2
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: -1143, y: -515, z: 0}
-  scale: {x: 1.7490063, y: 1.7490063, z: 1}
+  position: {x: -10, y: 159, z: 0}
+  scale: {x: 0.7561437, y: 0.7561437, z: 1}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 702614840213504053
+      type: {class: SubGraphNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        GUID: 04eaa3e1-8696-4e53-96b9-a831449e9992
+        computeOrder: 13
+        position:
+          serializedVersion: 2
+          x: 830.99994
+          y: 153.99994
+          width: 162
+          height: 75
+        initialPosition:
+          serializedVersion: 2
+          x: 723.4075
+          y: 310.7875
+          width: 100
+          height: 100
+        expanded: 1
+        debug: 0
+        nodeLock: 0
+        subGraph: {fileID: 11400000, guid: f78d8631fe24b73e592c82c7f8c9d462, type: 2}
     - rid: 3078690341890555926
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
@@ -283,7 +306,7 @@ MonoBehaviour:
           y: 0
           width: 0
           height: 0
-        expanded: 0
+        expanded: 1
         debug: 0
         nodeLock: 0
         output: 12

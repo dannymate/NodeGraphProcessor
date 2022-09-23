@@ -137,7 +137,8 @@ namespace GraphProcessor
         {
             controlsContainer = new VisualElement { name = "controls" };
             controlsContainer.AddToClassList("NodeControls");
-            mainContainer.Add(controlsContainer);
+            if (!nodeTarget.HideNodeInspectorBlock)
+                mainContainer.Add(controlsContainer);
 
             rightTitleContainer = new VisualElement { name = "RightTitleContainer" };
             titleContainer.Add(rightTitleContainer);
@@ -683,6 +684,10 @@ namespace GraphProcessor
 
         protected virtual void DrawDefaultInspector(bool fromInspector = false)
         {
+            if (!fromInspector) { inputContainerElement.Clear(); controlsContainer.Clear(); }
+
+            nodeTarget.DrawControlsContainer(controlsContainer);
+
             var fields = nodeTarget.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Cast<MemberInfo>()
                 .Concat(nodeTarget.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
@@ -697,8 +702,6 @@ namespace GraphProcessor
 
         protected virtual void DrawFields(List<MemberInfo> fields, bool fromInspector = false)
         {
-            if (!fromInspector) { inputContainerElement.Clear(); controlsContainer.Clear(); }
-
             for (int i = 0; i < fields.Count; i++)
             {
                 MemberInfo field = fields[i];

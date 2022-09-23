@@ -57,6 +57,7 @@ namespace GraphProcessor
 
         /// <summary>True if the node can be deleted, false otherwise</summary>
         public virtual bool deletable => true;
+        public virtual bool HideNodeInspectorBlock => false;
 
         /// <summary>
         /// Container of input ports

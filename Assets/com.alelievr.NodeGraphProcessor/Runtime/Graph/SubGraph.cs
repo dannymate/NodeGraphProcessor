@@ -117,7 +117,7 @@ namespace GraphProcessor
         {
             VisualElement inputData = new PropertyField(InputDataSerialized);
             VisualElement outputData = new PropertyField(OutputDataSerialized);
-            VisualElement updatePortsButton = new Button(() => PortsUpdated?.Invoke()) { text = "UPDATE PORTS" };
+            VisualElement updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE PORTS" };
 
             inputData.Bind(ThisSerialized);
             outputData.Bind(ThisSerialized);
@@ -125,6 +125,11 @@ namespace GraphProcessor
             root.Add(inputData);
             root.Add(outputData);
             root.Add(updatePortsButton);
+        }
+
+        public void NotifyPortsChanged()
+        {
+            PortsUpdated?.Invoke();
         }
 
         public event Notify PortsUpdated; // event

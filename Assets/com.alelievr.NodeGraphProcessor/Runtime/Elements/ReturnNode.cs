@@ -3,6 +3,7 @@ using GraphProcessor;
 using UnityEngine;
 using TypeReferences;
 using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 
 namespace GraphProcessor
 {
@@ -19,6 +20,8 @@ namespace GraphProcessor
         private List<PortDataRef> ReturnPorts => SubGraph.outputData;
 
         public override bool deletable => true;
+        public override bool needsInspector => true;
+        public override bool HideNodeInspectorBlock => true;
 
         public override void InitializePorts()
         {
@@ -65,8 +68,15 @@ namespace GraphProcessor
         public override void DrawControlsContainer(VisualElement root)
         {
             base.DrawControlsContainer(root);
-        }
 
+            var outputsField = new PropertyField(SubGraph.OutputDataSerialized);
+            var updateButton = new Button(() => SubGraph.NotifyPortsChanged()) { text = "UPDATE PORTS" };
+
+            outputsField.Bind(SubGraph.ThisSerialized);
+
+            root.Add(outputsField);
+            root.Add(updateButton);
+        }
     }
 }
 
@@ -85,6 +95,8 @@ namespace GraphProcessor
         private List<PortDataRef> IngressPorts => SubGraph.inputData;
 
         public override bool deletable => true;
+        public override bool needsInspector => true;
+        public override bool HideNodeInspectorBlock => true;
 
         public override void InitializePorts()
         {
@@ -133,6 +145,14 @@ namespace GraphProcessor
         public override void DrawControlsContainer(VisualElement root)
         {
             base.DrawControlsContainer(root);
+
+            var inputsField = new PropertyField(SubGraph.InputDataSerialized);
+            var updateButton = new Button(() => SubGraph.NotifyPortsChanged()) { text = "UPDATE PORTS" };
+
+            inputsField.Bind(SubGraph.ThisSerialized);
+
+            root.Add(inputsField);
+            root.Add(updateButton);
         }
     }
 }

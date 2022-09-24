@@ -33,7 +33,6 @@ public class SubGraphNode : BaseNode
 
         var processor = new ProcessSubGraphProcessor(subGraph);
         processor.Run(passThroughBuffer);
-        Debug.Log(passThroughBuffer.Count);
     }
 
     public override void InitializePorts()
@@ -78,9 +77,14 @@ public class SubGraphNode : BaseNode
     [CustomPortInput(nameof(outputs), typeof(object))]
     protected void PushOutputs(List<SerializableEdge> connectedEdges)
     {
+        if (connectedEdges.Count == 0) return;
+
+        PortDataRef portRef = OutputData.Find(x => x.Equals(connectedEdges[0].outputPort.portData));
+        Dictionary<PortDataRef, object> returnedData = subGraph.ReturnNode.GetReturnValue();
         foreach (var edge in connectedEdges)
         {
-            edge.passThroughBuffer = subGraph.ReturnNode.GetReturnValue()[OutputData.Find(x => x.Equals(edge.outputPort.portData))];
+            if (returnedData.ContainsKey(portRef))
+                edge.passThroughBuffer = returnedData[portRef];
         }
     }
 

@@ -12,19 +12,37 @@ namespace GraphProcessor
     [Serializable]
     public class SubGraph : BaseGraph
     {
-        // Port creation here instead of SubGraphNode
-        // Creation of a node that returns values externally (Return)
-        // Creation of a node that brings in values externally (Start)
-        // It may be useful to have multiple places to edit the ports, Start Return Graph SubGraphNode
-        // Custom process function that takes inputs and returns the values
         // Possibly create GUI methods for nodes to use like in FlowCanvas
-        // Split show inspector and node inspector because its annoying
 
         [SerializeField]
-        public List<PortData> inputData;
+        private List<PortData> localInputData;
 
         [SerializeField]
-        public List<PortData> outputData;
+        private List<PortData> localOutputData;
+
+        [SerializeField]
+        private SubGraphPortSchema schema;
+
+        public List<PortData> InputData
+        {
+            get
+            {
+                var portData = new List<PortData>(schema.inputData);
+                portData.AddRange(localInputData);
+                return portData;
+            }
+        }
+
+        public List<PortData> OutputData
+        {
+            get
+            {
+                var portData = new List<PortData>(schema.outputData);
+                portData.AddRange(localOutputData);
+                return portData;
+            }
+        }
+
 
         [SerializeField, HideInInspector]
         public IngressNode IngressNode => nodes.Find(x => x.GetType() == typeof(IngressNode)) as IngressNode;
@@ -52,7 +70,7 @@ namespace GraphProcessor
             {
                 if (_inputDataSerialized == null)
                 {
-                    _inputDataSerialized = ThisSerialized.FindProperty(nameof(inputData));
+                    _inputDataSerialized = ThisSerialized.FindProperty(nameof(localInputData));
                 }
                 return _inputDataSerialized;
             }
@@ -65,22 +83,29 @@ namespace GraphProcessor
             {
                 if (_outputDataSerialized == null)
                 {
-                    _outputDataSerialized = ThisSerialized.FindProperty(nameof(outputData));
+                    _outputDataSerialized = ThisSerialized.FindProperty(nameof(localOutputData));
                 }
                 return _outputDataSerialized;
             }
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            schema?.AddUpdatePortsListener(NotifyPortsChanged);
+        }
+
         public override void Initialize()
         {
             base.Initialize();
-            if (inputData.Count > 0 && IngressNode == null)//
+
+            if (localInputData.Count > 0 && IngressNode == null)//
             {
                 var ingressNode = BaseNode.CreateFromType<IngressNode>(Vector2.zero);
                 AddNode(ingressNode);
             }
 
-            if (outputData.Count > 0 && (ReturnNode == null))
+            if (localOutputData.Count > 0 && (ReturnNode == null))
             {
                 var returnNode = BaseNode.CreateFromType<ReturnNode>(Vector2.zero);
                 AddNode(returnNode);
@@ -89,18 +114,21 @@ namespace GraphProcessor
 
         public void AddIngressPort(PortData portData)
         {
-            inputData.Add(portData);
+            localInputData.Add(portData);
         }
 
         public void AddReturnPort(PortData portData)
         {
-            outputData.Add(portData);
+            localOutputData.Add(portData);
         }
 
         public override void CreateInspectorGUI(VisualElement root)
         {
             base.CreateInspectorGUI(root);
             DrawPortSelectionGUI(root);
+            VisualElement schemaField = new PropertyField(ThisSerialized.FindProperty(nameof(schema)));
+            schemaField.Bind(ThisSerialized);
+            root.Add(schemaField);
         }
 
         public void AddUpdatePortsListener(Notify listener)
@@ -115,6 +143,10 @@ namespace GraphProcessor
 
         public void DrawPortSelectionGUI(VisualElement root)
         {
+            VisualElement portSelectionFoldout = new Foldout()
+            {
+                text = "Port Selection"
+            };
             VisualElement inputData = new PropertyField(InputDataSerialized);
             VisualElement outputData = new PropertyField(OutputDataSerialized);
             VisualElement updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE PORTS" };
@@ -122,9 +154,11 @@ namespace GraphProcessor
             inputData.Bind(ThisSerialized);
             outputData.Bind(ThisSerialized);
 
-            root.Add(inputData);
-            root.Add(outputData);
-            root.Add(updatePortsButton);
+            portSelectionFoldout.Add(inputData);
+            portSelectionFoldout.Add(outputData);
+            portSelectionFoldout.Add(updatePortsButton);
+
+            root.Add(portSelectionFoldout);
         }
 
         public void NotifyPortsChanged()
@@ -133,6 +167,5 @@ namespace GraphProcessor
         }
 
         public event Notify PortsUpdated; // event
-        public delegate void Notify();  // delegate
     }
 }

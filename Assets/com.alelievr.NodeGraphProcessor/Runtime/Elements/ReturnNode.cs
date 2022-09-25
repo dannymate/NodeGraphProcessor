@@ -17,7 +17,7 @@ namespace GraphProcessor
         Dictionary<PortData, object> outputDict = new();
 
         SubGraph SubGraph => graph as SubGraph;
-        private List<PortData> ReturnPorts => SubGraph.outputData;
+        private List<PortData> ReturnPorts => SubGraph.OutputData;
 
         public override bool deletable => true;
         public override bool needsInspector => true;
@@ -84,7 +84,7 @@ namespace GraphProcessor
         Dictionary<PortData, object> passThroughBuffer = new();
 
         SubGraph SubGraph => graph as SubGraph;
-        private List<PortData> IngressPorts => SubGraph.inputData;
+        private List<PortData> IngressPorts => SubGraph.InputData;
 
         public override bool deletable => true;
         public override bool needsInspector => true;
@@ -96,7 +96,10 @@ namespace GraphProcessor
             SubGraph.AddUpdatePortsListener(OnPortsListUpdated);
             passThroughBuffer.Clear();
         }
-        public void OnPortsListUpdated() => UpdateAllPortsLocal();
+        public void OnPortsListUpdated()
+        {
+            UpdateAllPortsLocal();
+        }
 
         public void PullIngress(Dictionary<PortData, object> ingress)
         {
@@ -120,7 +123,7 @@ namespace GraphProcessor
         {
             if (IngressPorts == null) yield break;
 
-            foreach (var portData in IngressPorts) // Doesn't work if we have multiple of the same type
+            foreach (var portData in IngressPorts)
             {
                 yield return portData;
             }

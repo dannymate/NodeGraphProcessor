@@ -23,8 +23,8 @@ public class SubGraphNode : BaseNode
 
     Dictionary<PortData, object> passThroughBuffer = new();
 
-    private List<PortData> InputData => subGraph?.inputData;
-    private List<PortData> OutputData => subGraph?.outputData;
+    private List<PortData> InputData => subGraph?.InputData;
+    private List<PortData> OutputData => subGraph?.OutputData;
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
 

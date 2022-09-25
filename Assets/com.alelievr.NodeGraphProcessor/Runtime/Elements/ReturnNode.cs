@@ -61,13 +61,37 @@ namespace GraphProcessor
         {
             base.DrawControlsContainer(root);
 
-            var outputsField = new PropertyField(SubGraph.OutputDataSerialized);
-            var updateButton = new Button(() => SubGraph.NotifyPortsChanged()) { text = "UPDATE PORTS" };
+            DrawSubGraphControlsContainer(root);
 
-            outputsField.Bind(SubGraph.ThisSerialized);
+            if (SubGraph.Schema != null)
+                DrawSchemaControlsContainer(root);
+        }
 
-            root.Add(outputsField);
-            root.Add(updateButton);
+        public void DrawSubGraphControlsContainer(VisualElement root)
+        {
+            var subgraphPortFoldout = new Foldout()
+            {
+                text = "Local SubGraph Port Selection"
+            };
+
+            SubGraph.DrawOutputDataGUI(subgraphPortFoldout);
+            SubGraph.DrawUpdateSchemaButtonGUI(subgraphPortFoldout);
+
+            root.Add(subgraphPortFoldout);
+
+        }
+
+        public void DrawSchemaControlsContainer(VisualElement root)
+        {
+            var schemaFoldout = new Foldout()
+            {
+                text = "Schema Port Selection"
+            };
+
+            SubGraph.Schema?.DrawOutputDataGUI(schemaFoldout);
+            SubGraph.Schema?.DrawUpdateSchemaButtonGUI(schemaFoldout);
+
+            root.Add(schemaFoldout);
         }
     }
 }
@@ -133,13 +157,37 @@ namespace GraphProcessor
         {
             base.DrawControlsContainer(root);
 
-            var inputsField = new PropertyField(SubGraph.InputDataSerialized);
-            var updateButton = new Button(() => SubGraph.NotifyPortsChanged()) { text = "UPDATE PORTS" };
+            DrawSubGraphControlsGUI(root);
 
-            inputsField.Bind(SubGraph.ThisSerialized);
+            if (SubGraph.Schema != null)
+                DrawSchemaControlsGUI(root);
+        }
 
-            root.Add(inputsField);
-            root.Add(updateButton);
+        public void DrawSubGraphControlsGUI(VisualElement root)
+        {
+            var subgraphPortFoldout = new Foldout()
+            {
+                text = "Local SubGraph Port Selection"
+            };
+
+            SubGraph.DrawInputDataGUI(subgraphPortFoldout);
+            SubGraph.DrawUpdateSchemaButtonGUI(subgraphPortFoldout);
+
+            root.Add(subgraphPortFoldout);
+
+        }
+
+        public void DrawSchemaControlsGUI(VisualElement root)
+        {
+            var schemaFoldout = new Foldout()
+            {
+                text = "Schema Port Selection"
+            };
+
+            SubGraph.Schema?.DrawInputDataGUI(schemaFoldout);
+            SubGraph.Schema?.DrawUpdateSchemaButtonGUI(schemaFoldout);
+
+            root.Add(schemaFoldout);
         }
     }
 }

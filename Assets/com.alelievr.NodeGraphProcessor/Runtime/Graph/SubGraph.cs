@@ -13,6 +13,8 @@ namespace GraphProcessor
     public class SubGraph : BaseGraph
     {
         // Possibly create GUI methods for nodes to use like in FlowCanvas
+        public event Notify OnPortsUpdated;
+
 
         [SerializeField]
         private List<PortData> localInputData;
@@ -22,6 +24,8 @@ namespace GraphProcessor
 
         [SerializeField]
         private SubGraphPortSchema schema;
+
+        public SubGraphPortSchema Schema => schema;
 
         public List<PortData> InputData
         {
@@ -122,23 +126,42 @@ namespace GraphProcessor
             localOutputData.Add(portData);
         }
 
-        public override void CreateInspectorGUI(VisualElement root)
-        {
-            base.CreateInspectorGUI(root);
-            DrawPortSelectionGUI(root);
-            VisualElement schemaField = new PropertyField(ThisSerialized.FindProperty(nameof(schema)));
-            schemaField.Bind(ThisSerialized);
-            root.Add(schemaField);
-        }
-
         public void AddUpdatePortsListener(Notify listener)
         {
-            this.PortsUpdated += listener;
+            this.OnPortsUpdated += listener;
         }
 
         public void RemoveUpdatePortsListener(Notify listener)
         {
-            this.PortsUpdated -= listener;
+            this.OnPortsUpdated -= listener;
+        }
+
+        public override void CreateInspectorGUI(VisualElement root)
+        {
+            base.CreateInspectorGUI(root);
+
+            DrawPortSelectionGUI(root);
+            DrawSchemaControlGUI(root);
+        }
+
+        private void DrawSchemaControlGUI(VisualElement root)
+        {
+            VisualElement schemaControlsFoldout = new Foldout()
+            {
+                text = "Schema Controls"
+            };
+
+            DrawSchemaFieldGUI(schemaControlsFoldout);
+            schema?.DrawControlGUI(schemaControlsFoldout);
+
+            root.Add(schemaControlsFoldout);
+        }
+
+        public void DrawSchemaFieldGUI(VisualElement root)
+        {
+            VisualElement schemaField = new PropertyField(ThisSerialized.FindProperty(nameof(schema)));
+            schemaField.Bind(ThisSerialized);
+            root.Add(schemaField);
         }
 
         public void DrawPortSelectionGUI(VisualElement root)
@@ -147,25 +170,37 @@ namespace GraphProcessor
             {
                 text = "Port Selection"
             };
-            VisualElement inputData = new PropertyField(InputDataSerialized);
-            VisualElement outputData = new PropertyField(OutputDataSerialized);
-            VisualElement updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE PORTS" };
 
-            inputData.Bind(ThisSerialized);
-            outputData.Bind(ThisSerialized);
-
-            portSelectionFoldout.Add(inputData);
-            portSelectionFoldout.Add(outputData);
-            portSelectionFoldout.Add(updatePortsButton);
+            DrawInputDataGUI(portSelectionFoldout);
+            DrawOutputDataGUI(portSelectionFoldout);
+            DrawUpdateSchemaButtonGUI(portSelectionFoldout);
 
             root.Add(portSelectionFoldout);
         }
 
-        public void NotifyPortsChanged()
+        public void DrawInputDataGUI(VisualElement root)
         {
-            PortsUpdated?.Invoke();
+            VisualElement inputData = new PropertyField(InputDataSerialized);
+            inputData.Bind(ThisSerialized);
+            root.Add(inputData);
         }
 
-        public event Notify PortsUpdated; // event
+        public void DrawOutputDataGUI(VisualElement root)
+        {
+            VisualElement outputData = new PropertyField(OutputDataSerialized);
+            outputData.Bind(ThisSerialized);
+            root.Add(outputData);
+        }
+
+        public void DrawUpdateSchemaButtonGUI(VisualElement root)
+        {
+            VisualElement updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE PORTS" };
+            root.Add(updatePortsButton);
+        }
+
+        public void NotifyPortsChanged()
+        {
+            OnPortsUpdated?.Invoke();
+        }
     }
 }

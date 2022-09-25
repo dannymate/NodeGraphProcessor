@@ -73,15 +73,28 @@ namespace GraphProcessor
 
         public void DrawControlGUI(VisualElement root)
         {
+            DrawInputDataGUI(root);
+            DrawOutputDataGUI(root);
+            DrawUpdateSchemaButtonGUI(root);
+        }
+
+        public void DrawInputDataGUI(VisualElement root)
+        {
             VisualElement inputData = new PropertyField(InputDataSerialized);
-            VisualElement outputData = new PropertyField(OutputDataSerialized);
-            VisualElement updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE PORTS" };
-
             inputData.Bind(ThisSerialized);
-            outputData.Bind(ThisSerialized);
-
             root.Add(inputData);
+        }
+
+        public void DrawOutputDataGUI(VisualElement root)
+        {
+            VisualElement outputData = new PropertyField(OutputDataSerialized);
+            outputData.Bind(ThisSerialized);
             root.Add(outputData);
+        }
+
+        public void DrawUpdateSchemaButtonGUI(VisualElement root)
+        {
+            VisualElement updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE SCHEMA" };
             root.Add(updatePortsButton);
         }
     }

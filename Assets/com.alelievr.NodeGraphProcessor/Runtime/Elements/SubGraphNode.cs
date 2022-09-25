@@ -102,7 +102,7 @@ public class SubGraphNode : BaseNode
 
         if (subGraph == null) return;
 
-        subGraph.DrawPortSelectionGUI(root);
+        subGraph.CreateInspectorGUI(root);
     }
 
     public void OnPortsListUpdated() => UpdateAllPortsLocal();

@@ -13,8 +13,22 @@ MonoBehaviour:
   m_Name: SubGraphPortSchema
   m_EditorClassIdentifier: 
   inputData:
-  - identifier: Input
-    displayName: jhh
+  - identifier: Float IN
+    displayName: Float IN
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: System.Single, mscorlib
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0
+  outputData:
+  - identifier: String OUT
+    displayName: String OUT
     displayType:
       GuidAssignmentFailed: 0
       GUID: 
@@ -26,4 +40,3 @@ MonoBehaviour:
     sizeInPixel: 0
     tooltip: 
     vertical: 0
-  outputData: []

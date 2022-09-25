@@ -13,7 +13,7 @@ namespace GraphProcessor
     /// Class that describe port attributes for it's creation
     /// </summary>
     [Serializable]
-    public class PortData : IEquatable<PortData>
+    public class PortData : IEquatable<PortData>, ICloneable
     {
         /// <summary>
         /// Unique identifier for the port
@@ -101,6 +101,11 @@ namespace GraphProcessor
             proxiedFieldPath = other.proxiedFieldPath;
             tooltip = other.tooltip;
             vertical = other.vertical;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 

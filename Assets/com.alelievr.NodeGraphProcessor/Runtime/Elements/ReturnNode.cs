@@ -41,7 +41,7 @@ namespace GraphProcessor
             outputDict.Add(ReturnPorts.Find(x => x.Equals(connectedEdges[0].inputPort.portData)), connectedEdges[0].passThroughBuffer);
         }
 
-        [CustomPortBehavior(nameof(inputs))]
+        [CustomPortBehavior(nameof(inputs), cloneResults: true)]
         protected IEnumerable<PortData> CreateInputs(List<SerializableEdge> edges)
         {
             if (ReturnPorts == null) yield break;
@@ -118,7 +118,7 @@ namespace GraphProcessor
             }
         }
 
-        [CustomPortBehavior(nameof(outputs))]
+        [CustomPortBehavior(nameof(outputs), cloneResults: true)]
         protected IEnumerable<PortData> CreateOutputs(List<SerializableEdge> edges)
         {
             if (IngressPorts == null) yield break;

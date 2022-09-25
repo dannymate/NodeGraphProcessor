@@ -12,7 +12,7 @@ namespace GraphProcessor
             var schema = target as SubGraphPortSchema;
 
             // Create a new VisualElement to be the root of our inspector UI
-            VisualElement root = new VisualElement();
+            VisualElement root = new();
 
             // Add a simple label
             schema.DrawControlGUI(root);

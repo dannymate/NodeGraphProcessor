@@ -1,16 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Reflection;
-using Unity.Jobs;
 using System.Linq;
+using static GraphProcessor.NodeDelegates;
 
 namespace GraphProcessor
 {
-    public delegate IEnumerable<PortData> CustomPortBehaviorDelegate(List<SerializableEdge> edges);
-    public delegate IEnumerable<PortData> CustomPortTypeBehaviorDelegate(string fieldName, string displayName, object value);
-
     [Serializable]
     public abstract partial class BaseNode
     {
@@ -135,10 +131,10 @@ namespace GraphProcessor
         public bool createdWithinGroup { get; internal set; } = false;
 
         [NonSerialized]
-        internal Dictionary<string, NodeFieldInformation> nodeFields = new Dictionary<string, NodeFieldInformation>();
+        internal Dictionary<string, NodeFieldInformation> nodeFields = new();
 
         [NonSerialized]
-        internal Dictionary<Type, CustomPortTypeBehaviorDelegate> customPortTypeBehaviorMap = new Dictionary<Type, CustomPortTypeBehaviorDelegate>();
+        internal Dictionary<Type, CustomPortTypeBehaviorDelegateInfo> customPortTypeBehaviorMap = new();
 
         [NonSerialized]
         List<string> messages = new List<string>();
@@ -188,7 +184,7 @@ namespace GraphProcessor
                     }
 
                     foreach (var typeBehavior in typeBehaviors)
-                        customPortTypeBehaviorMap[typeBehavior.type] = deleg;
+                        customPortTypeBehaviorMap[typeBehavior.type] = new CustomPortTypeBehaviorDelegateInfo(deleg, typeBehavior.cloneResults);
                 }
 
                 // Try to also find private methods in the base class
@@ -318,25 +314,25 @@ namespace GraphProcessor
 
             var portCollection = fieldInfo.input ? (NodePortContainer)inputPorts : outputPorts;
 
-            // Gather all fields for this port (before to modify them)
+            // Gather all ports for this field (before to modify them)
             var nodePorts = portCollection.Where(p => p.fieldName == fieldName);
-            // Gather all edges connected to these fields:
+            // Gather all edges connected to these ports:
             var edges = nodePorts.SelectMany(n => n.GetEdges()).ToList();
 
             if (fieldInfo.behavior != null)
             {
-                foreach (var portData in fieldInfo.behavior(edges))
+                foreach (var portData in fieldInfo.behavior.Delegate(edges))
                 {
                     if (portData != null)
-                        AddPortData(portData);
+                        AddPortData(!fieldInfo.behavior.CloneResults ? portData : portData.Clone() as PortData);
                 }
             }
             else
             {
                 var customPortTypeBehavior = customPortTypeBehaviorMap[fieldInfo.info.GetUnderlyingType()];
 
-                foreach (var portData in customPortTypeBehavior(fieldName, fieldInfo.name, fieldInfo.info.GetValue(this)))
-                    AddPortData(portData);
+                foreach (var portData in customPortTypeBehavior.Delegate(fieldName, fieldInfo.name, fieldInfo.info.GetValue(this)))
+                    AddPortData(!customPortTypeBehavior.CloneResults ? portData : portData.Clone() as PortData);
             }
 
             void AddPortData(PortData portData)
@@ -358,7 +354,7 @@ namespace GraphProcessor
                     }
 
                     // patch the port data
-                    if (port.portData != portData)
+                    if (!port.portData.Equals(portData))
                     {
                         port.portData.CopyFrom(portData);
                         changed = true;
@@ -531,7 +527,7 @@ namespace GraphProcessor
             foreach (var method in methods)
             {
                 var customPortBehaviorAttribute = method.GetCustomAttribute<CustomPortBehaviorAttribute>();
-                CustomPortBehaviorDelegate behavior = null;
+                CustomPortBehaviorDelegate deleg = null;
 
                 if (customPortBehaviorAttribute == null)
                     continue;
@@ -540,7 +536,7 @@ namespace GraphProcessor
                 try
                 {
                     var referenceType = typeof(CustomPortBehaviorDelegate);
-                    behavior = (CustomPortBehaviorDelegate)Delegate.CreateDelegate(referenceType, this, method, true);
+                    deleg = (CustomPortBehaviorDelegate)Delegate.CreateDelegate(referenceType, this, method, true);
                 }
                 catch
                 {
@@ -548,7 +544,7 @@ namespace GraphProcessor
                 }
 
                 if (nodeFields.ContainsKey(customPortBehaviorAttribute.fieldName))
-                    nodeFields[customPortBehaviorAttribute.fieldName].behavior = behavior;
+                    nodeFields[customPortBehaviorAttribute.fieldName].behavior = new CustomPortBehaviorDelegateInfo(deleg, customPortBehaviorAttribute.cloneResults);
                 else
                     Debug.LogError("Invalid field name for custom port behavior: " + method + ", " + customPortBehaviorAttribute.fieldName);
             }

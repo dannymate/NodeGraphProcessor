@@ -41,9 +41,7 @@ public class SubGraphNode : BaseNode
         base.InitializePorts();
 
         passThroughBuffer?.Clear();
-
-        if (subGraph)
-            subGraph.AddUpdatePortsListener(OnPortsListUpdated);
+        subGraph?.AddUpdatePortsListener(OnPortsListUpdated);
     }
 
 
@@ -56,7 +54,7 @@ public class SubGraphNode : BaseNode
         passThroughBuffer[portData] = connectedEdges[0].passThroughBuffer;
     }
 
-    [CustomPortBehavior(nameof(inputs))]
+    [CustomPortBehavior(nameof(inputs), cloneResults: true)]
     protected IEnumerable<PortData> CreateInputs(List<SerializableEdge> edges)
     {
         if (InputData == null) yield break;
@@ -84,7 +82,7 @@ public class SubGraphNode : BaseNode
         }
     }
 
-    [CustomPortBehavior(nameof(outputs))]
+    [CustomPortBehavior(nameof(outputs), cloneResults: true)]
     protected IEnumerable<PortData> CreateOutputs(List<SerializableEdge> edges)
     {
         if (OutputData == null) yield break;

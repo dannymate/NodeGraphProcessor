@@ -153,6 +153,7 @@ namespace GraphProcessor
     public class CustomPortBehaviorAttribute : Attribute
     {
         public string fieldName;
+        public bool cloneResults;
 
         /// <summary>
         /// Allow you to modify the generated port view from a field. Can be used to generate multiple ports from one field.
@@ -162,9 +163,11 @@ namespace GraphProcessor
         /// </code>
         /// </summary>
         /// <param name="fieldName">local node field name</param>
-        public CustomPortBehaviorAttribute(string fieldName)
+        /// <param name="cloneResults">Whether to create a memberwise clone. Used to avoid reference to PortData conflicts when checking changes.</param>
+        public CustomPortBehaviorAttribute(string fieldName, bool cloneResults = false)
         {
             this.fieldName = fieldName;
+            this.cloneResults = cloneResults;
         }
     }
 
@@ -178,10 +181,12 @@ namespace GraphProcessor
         /// Target type
         /// </summary>
         public Type type;
+        public bool cloneResults;
 
-        public CustomPortTypeBehavior(Type type)
+        public CustomPortTypeBehavior(Type type, bool cloneResults = false)
         {
             this.type = type;
+            this.cloneResults = cloneResults;
         }
     }
 

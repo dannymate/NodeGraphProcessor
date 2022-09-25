@@ -153,6 +153,38 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: input
     outputPortIdentifier: 
+  - GUID: b68c1b37-b2c5-4e39-85f4-86679d2cbc66
+    owner: {fileID: 11400000}
+    inputNodeGUID: 84d2dfdf-be89-43cf-b778-7c3a179d6b57
+    outputNodeGUID: 9507ec9e-d3ca-4798-bd18-c83bc7336327
+    inputFieldName: inputs
+    outputFieldName: output
+    inputPortIdentifier: Float IN
+    outputPortIdentifier: 
+  - GUID: f1e3a0e6-1ec1-4ad4-a778-5a365f4648dc
+    owner: {fileID: 11400000}
+    inputNodeGUID: e277d5c6-386e-4f6b-bd63-af2353f3e4d8
+    outputNodeGUID: 84d2dfdf-be89-43cf-b778-7c3a179d6b57
+    inputFieldName: obj
+    outputFieldName: outputs
+    inputPortIdentifier: 
+    outputPortIdentifier: String OUT
+  - GUID: 4ba7778f-b90e-4a04-9dc7-57ca0bc6cc12
+    owner: {fileID: 11400000}
+    inputNodeGUID: 5bd8c4cc-65ed-40e8-a6d9-0c02cfafd786
+    outputNodeGUID: e75f2672-5689-4067-98a9-e10e1427d571
+    inputFieldName: inputs
+    outputFieldName: output
+    inputPortIdentifier: Float IN
+    outputPortIdentifier: 
+  - GUID: 2e899aaa-23eb-473e-9e5b-43c52ec6ee70
+    owner: {fileID: 11400000}
+    inputNodeGUID: ded58d16-ff3b-42f9-aba2-581f1b21cff0
+    outputNodeGUID: 5bd8c4cc-65ed-40e8-a6d9-0c02cfafd786
+    inputFieldName: obj
+    outputFieldName: outputs
+    inputPortIdentifier: 
+    outputPortIdentifier: String OUT
   groups:
   - title: New Comment Block
     color: {r: 0, g: 0, b: 0, a: 0}
@@ -542,7 +574,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: e277d5c6-386e-4f6b-bd63-af2353f3e4d8
-        computeOrder: 10
+        computeOrder: 12
         position:
           serializedVersion: 2
           x: -130.50009
@@ -586,7 +618,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: b14b2e69-b835-4b73-ae8e-6f7f986575bb
-        computeOrder: 11
+        computeOrder: 13
         position:
           serializedVersion: 2
           x: -124.79325
@@ -610,7 +642,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 42bd42f7-7c33-4d6c-8cff-24e051b0e644
-        computeOrder: 12
+        computeOrder: 14
         position:
           serializedVersion: 2
           x: 88.17013
@@ -631,7 +663,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: c647797a-972a-442d-86fe-327825c1fe11
-        computeOrder: 13
+        computeOrder: 15
         position:
           serializedVersion: 2
           x: 347.81113
@@ -654,7 +686,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: acf42c0b-dc50-476f-8d14-b9e756fd1e2d
-        computeOrder: 14
+        computeOrder: 16
         position:
           serializedVersion: 2
           x: 605.984
@@ -676,7 +708,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: ea0aaa89-4654-402b-9518-0c8d3b0a0be7
-        computeOrder: 15
+        computeOrder: 17
         position:
           serializedVersion: 2
           x: 850.10004
@@ -697,7 +729,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: d0c72054-62bf-409c-a49f-4230da5526d5
-        computeOrder: 16
+        computeOrder: 18
         position:
           serializedVersion: 2
           x: 1248
@@ -719,7 +751,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 0bb81f44-19ac-4b15-a7a6-f0f319a6d5c7
-        computeOrder: 17
+        computeOrder: 19
         position:
           serializedVersion: 2
           x: 1584
@@ -741,7 +773,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: a93ff68f-3bcb-4234-815f-f44501daf144
-        computeOrder: 18
+        computeOrder: 20
         position:
           serializedVersion: 2
           x: 578
@@ -783,7 +815,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: fc76049e-5e1f-422a-a991-b02e5ed5ee67
-        computeOrder: 19
+        computeOrder: 21
         position:
           serializedVersion: 2
           x: 991.95654
@@ -808,7 +840,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: ac9a5d83-a834-41cb-89cf-eb5239cc0868
-        computeOrder: 20
+        computeOrder: 22
         position:
           serializedVersion: 2
           x: 922
@@ -850,7 +882,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 14b82653-ebb2-4fe6-98c3-5a7f87047b3f
-        computeOrder: 21
+        computeOrder: 23
         position:
           serializedVersion: 2
           x: 87
@@ -873,7 +905,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: fca11789-0eba-4f38-a9cb-4f6f829515d0
-        computeOrder: 22
+        computeOrder: 24
         position:
           serializedVersion: 2
           x: -405.48395
@@ -895,7 +927,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: a72964c7-8c86-4c52-808e-3d88920df180
-        computeOrder: 23
+        computeOrder: 25
         position:
           serializedVersion: 2
           x: 77.5
@@ -951,7 +983,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 84d2dfdf-be89-43cf-b778-7c3a179d6b57
-        computeOrder: 29
+        computeOrder: 11
         position:
           serializedVersion: 2
           x: -347.00006
@@ -973,7 +1005,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 1b4adbc1-0744-47d6-b450-8e0ab99429e6
-        computeOrder: 25
+        computeOrder: 27
         position:
           serializedVersion: 2
           x: -751
@@ -997,7 +1029,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 9507ec9e-d3ca-4798-bd18-c83bc7336327
-        computeOrder: 30
+        computeOrder: 10
         position:
           serializedVersion: 2
           x: -512
@@ -1020,7 +1052,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: ded58d16-ff3b-42f9-aba2-581f1b21cff0
-        computeOrder: 31
+        computeOrder: 33
         position:
           serializedVersion: 2
           x: -130.00002
@@ -1063,7 +1095,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: e75f2672-5689-4067-98a9-e10e1427d571
-        computeOrder: 33
+        computeOrder: 31
         position:
           serializedVersion: 2
           x: -512
@@ -1086,7 +1118,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: c8d89035-6a0f-4046-8735-16c760df589b
-        computeOrder: 24
+        computeOrder: 26
         position:
           serializedVersion: 2
           x: -516.50006
@@ -1136,7 +1168,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: d327ef65-ed6e-46f1-bce4-16a6b7d4f61f
-        computeOrder: 26
+        computeOrder: 28
         position:
           serializedVersion: 2
           x: -671.99994
@@ -1159,7 +1191,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: c1b521a8-e1a6-4eb1-a376-b6b22f5699ed
-        computeOrder: 27
+        computeOrder: 29
         position:
           serializedVersion: 2
           x: -709
@@ -1182,7 +1214,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 9c96984e-f0ca-46dc-95cc-de99b8360f93
-        computeOrder: 28
+        computeOrder: 30
         position:
           serializedVersion: 2
           x: -632.5

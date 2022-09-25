@@ -17,7 +17,23 @@ MonoBehaviour:
   - rid: 702614852466115403
   - rid: 702614852466115404
   - rid: 702614852466115457
-  edges: []
+  edges:
+  - GUID: 87a069a4-799c-4274-844b-182dea22eae4
+    owner: {fileID: 11400000}
+    inputNodeGUID: b92ccf2f-6fcb-498d-a736-15dcccc4382b
+    outputNodeGUID: 364a4493-99a0-4836-a698-ce30121e1003
+    inputFieldName: input
+    outputFieldName: outputs
+    inputPortIdentifier: 
+    outputPortIdentifier: Float IN
+  - GUID: 66ac87bc-2c88-4ba2-837f-f2c8d3c4f725
+    owner: {fileID: 11400000}
+    inputNodeGUID: 77d41ded-940c-467e-94e2-881f15456554
+    outputNodeGUID: b92ccf2f-6fcb-498d-a736-15dcccc4382b
+    inputFieldName: inputs
+    outputFieldName: output
+    inputPortIdentifier: String OUT
+    outputPortIdentifier: 
   groups: []
   stackNodes: []
   pinnedElements: []
@@ -27,20 +43,7 @@ MonoBehaviour:
   nodeInspectorReference: {fileID: 0}
   position: {x: 400, y: 321, z: 0}
   scale: {x: 1.15, y: 1.15, z: 1}
-  localInputData:
-  - identifier: test
-    displayName: test2
-    displayType:
-      GuidAssignmentFailed: 0
-      GUID: 
-      _typeNameAndAssembly: System.Object, mscorlib
-      _suppressLogs: 0
-    showAsDrawer: 0
-    acceptMultipleEdges: 0
-    proxiedFieldPath: 
-    sizeInPixel: 0
-    tooltip: 
-    vertical: 0
+  localInputData: []
   localOutputData: []
   schema: {fileID: 11400000, guid: 8af34e3b8c41eb42d9bfab8fe2fbfc89, type: 2}
   references:
@@ -54,10 +57,10 @@ MonoBehaviour:
         computeOrder: 0
         position:
           serializedVersion: 2
-          x: 67.99997
-          y: -21.8261
+          x: -201.56525
+          y: -13.500002
           width: 115
-          height: 75
+          height: 99
         initialPosition:
           serializedVersion: 2
           x: 0
@@ -72,7 +75,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 77d41ded-940c-467e-94e2-881f15456554
-        computeOrder: 1
+        computeOrder: 2
         position:
           serializedVersion: 2
           x: 381.73914
@@ -93,7 +96,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: b92ccf2f-6fcb-498d-a736-15dcccc4382b
-        computeOrder: 2
+        computeOrder: 1
         position:
           serializedVersion: 2
           x: 182.60869

@@ -18,14 +18,22 @@ MonoBehaviour:
   - rid: 702614852466115404
   - rid: 702614852466115457
   edges:
-  - GUID: 70ef3cad-4627-4d5d-9a35-b2d17dd04ba7
+  - GUID: ee0a8992-e38f-41d5-8927-acc990bff538
     owner: {fileID: 11400000}
     inputNodeGUID: b92ccf2f-6fcb-498d-a736-15dcccc4382b
     outputNodeGUID: 364a4493-99a0-4836-a698-ce30121e1003
     inputFieldName: input
     outputFieldName: outputs
     inputPortIdentifier: 
-    outputPortIdentifier: 0
+    outputPortIdentifier: Float IN
+  - GUID: 175643dc-c20b-435f-99ec-cbd4ae14a60f
+    owner: {fileID: 11400000}
+    inputNodeGUID: 77d41ded-940c-467e-94e2-881f15456554
+    outputNodeGUID: b92ccf2f-6fcb-498d-a736-15dcccc4382b
+    inputFieldName: inputs
+    outputFieldName: output
+    inputPortIdentifier: String OUT
+    outputPortIdentifier: 
   groups: []
   stackNodes: []
   pinnedElements: []
@@ -36,34 +44,33 @@ MonoBehaviour:
   position: {x: 400, y: 321, z: 0}
   scale: {x: 1.15, y: 1.15, z: 1}
   inputData:
-  - label: Float IN
-    showAsDrawer: 0
-    displayTypeRef:
+  - identifier: Float IN
+    displayName: Float IN
+    displayType:
       GuidAssignmentFailed: 0
       GUID: 
       _typeNameAndAssembly: System.Single, mscorlib
       _suppressLogs: 0
-    vertical: 0
-    acceptMultipleEdges: 0
-  - label: 234
     showAsDrawer: 0
-    displayTypeRef:
-      GuidAssignmentFailed: 0
-      GUID: 
-      _typeNameAndAssembly: System.Single, mscorlib
-      _suppressLogs: 0
-    vertical: 0
     acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0
   outputData:
-  - label: String OUT
-    showAsDrawer: 0
-    displayTypeRef:
+  - identifier: String OUT
+    displayName: String OUT
+    displayType:
       GuidAssignmentFailed: 0
       GUID: 
-      _typeNameAndAssembly: System.Int32, mscorlib
+      _typeNameAndAssembly: System.String, mscorlib
       _suppressLogs: 0
-    vertical: 0
+    showAsDrawer: 0
     acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0
   references:
     version: 2
     RefIds:
@@ -93,7 +100,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 77d41ded-940c-467e-94e2-881f15456554
-        computeOrder: 1
+        computeOrder: 2
         position:
           serializedVersion: 2
           x: 381.73914
@@ -114,7 +121,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: b92ccf2f-6fcb-498d-a736-15dcccc4382b
-        computeOrder: 2
+        computeOrder: 1
         position:
           serializedVersion: 2
           x: 182.60869
@@ -130,6 +137,6 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        input: 100
+        input: 0
         decimalPlaces: 2
         output: 100.00

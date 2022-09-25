@@ -351,7 +351,7 @@ namespace GraphProcessor
                 else
                 {
                     // in case the port type have changed for an incompatible type, we disconnect all the edges attached to this port
-                    if (!BaseGraph.TypesAreConnectable(port.portData.displayType, portData.displayType))
+                    if (!BaseGraph.TypesAreConnectable(port.portData.DisplayType, portData.DisplayType))
                     {
                         foreach (var edge in port.GetEdges().ToList())
                             graph.Disconnect(edge.GUID);
@@ -636,8 +636,8 @@ namespace GraphProcessor
         public void AddPort(bool input, string fieldName, PortData portData)
         {
             // Fixup port data info if needed:
-            if (portData.displayType == null)
-                portData.displayType = nodeFields[fieldName].info.GetUnderlyingType();
+            if (portData.DisplayType == null)
+                portData.DisplayType = nodeFields[fieldName].info.GetUnderlyingType();
 
             if (input)
                 inputPorts.Add(new NodePort(this, fieldName, portData));

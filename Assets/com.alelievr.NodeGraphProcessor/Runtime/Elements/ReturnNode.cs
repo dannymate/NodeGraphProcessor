@@ -14,10 +14,10 @@ namespace GraphProcessor
         [CustomBehaviourOnly]
         object inputs;
 
-        Dictionary<PortDataRef, object> outputDict = new();
+        Dictionary<PortData, object> outputDict = new();
 
         SubGraph SubGraph => graph as SubGraph;
-        private List<PortDataRef> ReturnPorts => SubGraph.outputData;
+        private List<PortData> ReturnPorts => SubGraph.outputData;
 
         public override bool deletable => true;
         public override bool needsInspector => true;
@@ -46,21 +46,13 @@ namespace GraphProcessor
         {
             if (ReturnPorts == null) yield break;
 
-            foreach (var port in ReturnPorts) // Doesn't work if we have multiple of the same type
+            foreach (var portData in ReturnPorts) // Doesn't work if we have multiple of the same type
             {
-                yield return new PortData
-                {
-                    identifier = ReturnPorts.IndexOf(port).ToString(),
-                    displayName = port.Label,
-                    displayType = port.DisplayType,
-                    vertical = port.Vertical,
-                    acceptMultipleEdges = port.AcceptMultipleEdges,
-                    showAsDrawer = port.ShowAsDrawer
-                };
+                yield return portData;
             }
         }
 
-        public Dictionary<PortDataRef, object> GetReturnValue()
+        public Dictionary<PortData, object> GetReturnValue()
         {
             return outputDict;
         }
@@ -89,10 +81,10 @@ namespace GraphProcessor
         [CustomBehaviourOnly]
         object outputs;
 
-        Dictionary<PortDataRef, object> passThroughBuffer = new();
+        Dictionary<PortData, object> passThroughBuffer = new();
 
         SubGraph SubGraph => graph as SubGraph;
-        private List<PortDataRef> IngressPorts => SubGraph.inputData;
+        private List<PortData> IngressPorts => SubGraph.inputData;
 
         public override bool deletable => true;
         public override bool needsInspector => true;
@@ -106,7 +98,7 @@ namespace GraphProcessor
         }
         public void OnPortsListUpdated() => UpdateAllPortsLocal();
 
-        public void PullIngress(Dictionary<PortDataRef, object> ingress)
+        public void PullIngress(Dictionary<PortData, object> ingress)
         {
             this.passThroughBuffer = ingress;
         }
@@ -128,17 +120,9 @@ namespace GraphProcessor
         {
             if (IngressPorts == null) yield break;
 
-            foreach (var port in IngressPorts) // Doesn't work if we have multiple of the same type
+            foreach (var portData in IngressPorts) // Doesn't work if we have multiple of the same type
             {
-                yield return new PortData
-                {
-                    identifier = IngressPorts.IndexOf(port).ToString(),
-                    displayName = port.Label,
-                    displayType = port.DisplayType,
-                    vertical = port.Vertical,
-                    acceptMultipleEdges = port.AcceptMultipleEdges,
-                    showAsDrawer = port.ShowAsDrawer
-                };
+                yield return portData;
             }
         }
 

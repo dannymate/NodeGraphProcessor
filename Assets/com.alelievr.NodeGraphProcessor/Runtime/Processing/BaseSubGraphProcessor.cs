@@ -23,6 +23,6 @@ namespace GraphProcessor
         /// <summary>
         /// Schedule the graph into the job system
         /// </summary>
-        public abstract void Run(Dictionary<PortDataRef, object> ingress);
+        public abstract void Run(Dictionary<PortData, object> ingress);
     }
 }

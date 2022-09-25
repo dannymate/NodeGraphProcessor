@@ -1216,7 +1216,7 @@ namespace GraphProcessor
             edgeView.input = inputPortView;
             edgeView.output = outputPortView;
 
-            if (ConversionNodeAdapter.AreAssignable(outputPort.portData.displayType, inputPort.portData.displayType))
+            if (ConversionNodeAdapter.AreAssignable(outputPort.portData.DisplayType, inputPort.portData.DisplayType))
             {
                 return ConnectConvertable(edgeView, autoDisconnectInputs);
             }
@@ -1244,7 +1244,7 @@ namespace GraphProcessor
             var inputPort = inputNodeView.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.identifier);
             var outputPort = outputNodeView.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.identifier);
 
-            Type conversionNodeType = ConversionNodeAdapter.GetConversionNode(outputPort.portData.displayType, inputPort.portData.displayType);
+            Type conversionNodeType = ConversionNodeAdapter.GetConversionNode(outputPort.portData.DisplayType, inputPort.portData.DisplayType);
             if (conversionNodeType != null)
             {
                 var nodePosition = (inputPort.owner.View.GetRect().center + outputPort.owner.View.GetRect().center) / 2.0f;

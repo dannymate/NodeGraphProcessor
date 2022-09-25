@@ -5,6 +5,7 @@ using TypeReferences;
 using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
+using System;
 
 [System.Serializable, NodeMenuItem("Subgraph")]
 public class SubGraphNode : BaseNode
@@ -20,10 +21,10 @@ public class SubGraphNode : BaseNode
     [SerializeField]
     SubGraph subGraph;
 
-    Dictionary<PortDataRef, object> passThroughBuffer = new();
+    Dictionary<PortData, object> passThroughBuffer = new();
 
-    private List<PortDataRef> InputData => subGraph?.inputData;
-    private List<PortDataRef> OutputData => subGraph?.outputData;
+    private List<PortData> InputData => subGraph?.inputData;
+    private List<PortData> OutputData => subGraph?.outputData;
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
 
@@ -51,8 +52,8 @@ public class SubGraphNode : BaseNode
     {
         if (connectedEdges.Count == 0) return;
 
-        var portDataRef = InputData.Find(x => x.Equals(connectedEdges[0].inputPort.portData));
-        passThroughBuffer[portDataRef] = connectedEdges[0].passThroughBuffer;
+        PortData portData = InputData.Find(x => x.Equals(connectedEdges[0].inputPort.portData));
+        passThroughBuffer[portData] = connectedEdges[0].passThroughBuffer;
     }
 
     [CustomPortBehavior(nameof(inputs))]
@@ -60,17 +61,12 @@ public class SubGraphNode : BaseNode
     {
         if (InputData == null) yield break;
 
-        foreach (var input in InputData) // Doesn't work if we have multiple of the same type
+        foreach (var input in InputData)
         {
-            yield return new PortData
-            {
-                identifier = InputData.IndexOf(input).ToString(),
-                displayName = input.Label,
-                displayType = input.DisplayType,
-                vertical = input.Vertical,
-                acceptMultipleEdges = input.AcceptMultipleEdges,
-                showAsDrawer = input.ShowAsDrawer
-            };
+            if (String.IsNullOrEmpty(input.identifier))
+                input.identifier = input.displayName;
+
+            yield return input;
         }
     }
 
@@ -79,12 +75,12 @@ public class SubGraphNode : BaseNode
     {
         if (connectedEdges.Count == 0) return;
 
-        PortDataRef portRef = OutputData.Find(x => x.Equals(connectedEdges[0].outputPort.portData));
-        Dictionary<PortDataRef, object> returnedData = subGraph.ReturnNode.GetReturnValue();
+        PortData portData = OutputData.Find(x => x.Equals(connectedEdges[0].outputPort.portData));
+        Dictionary<PortData, object> returnedData = subGraph.ReturnNode.GetReturnValue();
         foreach (var edge in connectedEdges)
         {
-            if (returnedData.ContainsKey(portRef))
-                edge.passThroughBuffer = returnedData[portRef];
+            if (returnedData.ContainsKey(portData))
+                edge.passThroughBuffer = returnedData[portData];
         }
     }
 
@@ -93,17 +89,12 @@ public class SubGraphNode : BaseNode
     {
         if (OutputData == null) yield break;
 
-        foreach (var output in OutputData) // Doesn't work if we have multiple of the same type
+        foreach (var output in OutputData)
         {
-            yield return new PortData
-            {
-                identifier = OutputData.IndexOf(output).ToString(),
-                displayName = output.Label,
-                displayType = output.DisplayType,
-                vertical = output.Vertical,
-                acceptMultipleEdges = output.AcceptMultipleEdges,
-                showAsDrawer = output.ShowAsDrawer
-            };
+            if (String.IsNullOrEmpty(output.identifier))
+                output.identifier = output.displayName;
+
+            yield return output;
         }
     }
 

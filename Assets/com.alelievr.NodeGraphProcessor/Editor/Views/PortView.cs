@@ -31,11 +31,11 @@ namespace GraphProcessor
         readonly string portStyle = "GraphProcessorStyles/PortView";
 
         protected PortView(Direction direction, MemberInfo fieldInfo, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
-            : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.displayType ?? fieldInfo.GetUnderlyingType())
+            : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.DisplayType ?? fieldInfo.GetUnderlyingType())
         {
             this.fieldInfo = fieldInfo;
             this.listener = edgeConnectorListener;
-            this.portType = portData.displayType ?? fieldInfo.GetUnderlyingType();
+            this.portType = portData.DisplayType ?? fieldInfo.GetUnderlyingType();
             this.portData = portData;
             this.portName = fieldName;
 
@@ -102,7 +102,7 @@ namespace GraphProcessor
 
             // Correct port type if port accept multiple values (and so is a container)
             if (direction == Direction.Input && portData.acceptMultipleEdges && portType == fieldType) // If the user haven't set a custom field type
-            {
+            {//
                 if (fieldType.GetGenericArguments().Length > 0)
                     portType = fieldType.GetGenericArguments()[0];
             }
@@ -148,10 +148,10 @@ namespace GraphProcessor
 
         public void UpdatePortView(PortData data)
         {
-            if (data.displayType != null)
+            if (data.DisplayType != null)
             {
-                base.portType = data.displayType;
-                portType = data.displayType;
+                base.portType = data.DisplayType;
+                portType = data.DisplayType;
                 visualClass = "Port_" + portType.Name;
             }
             if (!String.IsNullOrEmpty(data.displayName))

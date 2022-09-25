@@ -25,7 +25,7 @@ namespace GraphProcessor
         /// <summary>
         /// Process all the nodes following the compute order.
         /// </summary>
-        public override void Run(Dictionary<PortDataRef, object> ingress)
+        public override void Run(Dictionary<PortData, object> ingress)
         {
             int count = processList.Count;
 

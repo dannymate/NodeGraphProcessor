@@ -1,5 +1,3 @@
-// #define DEBUG_LAMBDA
-
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
@@ -7,50 +5,75 @@ using UnityEngine;
 using System.Reflection;
 using System.Linq.Expressions;
 using System;
+using TypeReferences;
 
 namespace GraphProcessor
 {
     /// <summary>
     /// Class that describe port attributes for it's creation
     /// </summary>
+    [Serializable]
     public class PortData : IEquatable<PortData>
     {
         /// <summary>
         /// Unique identifier for the port
         /// </summary>
+        [SerializeField]
         public string identifier;
         /// <summary>
         /// Display name on the node
         /// </summary>
+        [SerializeField]
         public string displayName;
         /// <summary>
         /// The type that will be used for coloring with the type stylesheet
         /// </summary>
-        public Type displayType;
+        [SerializeField, TypeOptions(ShowAllTypes = true)]
+        public TypeReference displayType = new();
         /// <summary>
         /// Whether to show a property drawer with this port (only for input)
         /// </summary>
-		public bool showAsDrawer;
+        [SerializeField]
+        public bool showAsDrawer;
         /// <summary>
         /// If the port accept multiple connection
         /// </summary>
+        [SerializeField]
         public bool acceptMultipleEdges;
         /// <summary>
         /// The field the port is proxying if using custombehavior
         /// </summary>
+        [SerializeField, HideInInspector]
         public string proxiedFieldPath;
         /// <summary>
         /// Port size, will also affect the size of the connected edge
         /// </summary>
+        [SerializeField, HideInInspector]
         public int sizeInPixel;
         /// <summary>
         /// Tooltip of the port
         /// </summary>
+        [SerializeField]
         public string tooltip;
         /// <summary>
         /// Is the port vertical
         /// </summary>
+        [SerializeField]
         public bool vertical;
+
+        // Need to decide whether to switch over the properties.
+        #region SwitchToProperties
+        /// Replace "set" with "init" when Unity supports https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#init-only-setters
+        // public string Identifier { get => identifier; set => identifier = value; }
+        // public string DisplayName { get => displayName; set => displayName = value; }
+        public Type DisplayType { get => displayType.Type; set => displayType = value; }
+        // public bool ShowAsDrawer { get => showAsDrawer; set => showAsDrawer = value; }
+        // public bool AcceptMultipleEdges { get => acceptMultipleEdges; set => acceptMultipleEdges = value; }
+        // public string ProxiedFieldPath { get => proxiedFieldPath; set => proxiedFieldPath = value; }
+        // public int SizeInPixel { get => sizeInPixel; set => sizeInPixel = value; }
+        // public string Tooltip { get => tooltip; set => tooltip = value; }
+        // public bool Vertical { get => vertical; set => vertical = value; }
+        #endregion
 
         public bool IsProxied => !String.IsNullOrEmpty(proxiedFieldPath);
 
@@ -58,7 +81,7 @@ namespace GraphProcessor
         {
             return identifier == other.identifier
                 && displayName == other.displayName
-                && displayType == other.displayType
+                && DisplayType == other.DisplayType
                 && showAsDrawer == other.showAsDrawer
                 && acceptMultipleEdges == other.acceptMultipleEdges
                 && sizeInPixel == other.sizeInPixel
@@ -227,8 +250,8 @@ namespace GraphProcessor
                 Expression inputParamField = Expression.PropertyOrField(Expression.Constant(edge.inputNode), inputField.Name);
                 Expression outputParamField = Expression.PropertyOrField(Expression.Constant(edge.outputNode), outputField.Name);
 
-                inType = edge.inputPort.portData.displayType ?? inputField.GetUnderlyingType();
-                outType = edge.outputPort.portData.displayType ?? outputField.GetUnderlyingType();
+                inType = edge.inputPort.portData.DisplayType ?? inputField.GetUnderlyingType();
+                outType = edge.outputPort.portData.DisplayType ?? outputField.GetUnderlyingType();
 
                 // If there is a user defined conversion function, then we call it
                 if (TypeAdapter.AreAssignable(outType, inType))

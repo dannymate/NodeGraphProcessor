@@ -21,10 +21,10 @@ namespace GraphProcessor
         // Split show inspector and node inspector because its annoying
 
         [SerializeField]
-        public List<PortDataRef> inputData;
+        public List<PortData> inputData;
 
         [SerializeField]
-        public List<PortDataRef> outputData;
+        public List<PortData> outputData;
 
         [SerializeField, HideInInspector]
         public IngressNode IngressNode => nodes.Find(x => x.GetType() == typeof(IngressNode)) as IngressNode;
@@ -87,14 +87,14 @@ namespace GraphProcessor
             }
         }
 
-        public void AddIngressPort(PortDataRef portDataRef)
+        public void AddIngressPort(PortData portData)
         {
-            inputData.Add(portDataRef);
+            inputData.Add(portData);
         }
 
-        public void AddReturnPort(PortDataRef portDataRef)
+        public void AddReturnPort(PortData portData)
         {
-            outputData.Add(portDataRef);
+            outputData.Add(portData);
         }
 
         public override void CreateInspectorGUI(VisualElement root)
@@ -134,36 +134,5 @@ namespace GraphProcessor
 
         public event Notify PortsUpdated; // event
         public delegate void Notify();  // delegate
-    }
-}
-
-[System.Serializable]
-public class PortDataRef : IEquatable<PortData>
-{
-    [SerializeField]
-    string label = "LABEL";
-    [SerializeField]
-    bool showAsDrawer = false;
-    [SerializeField, TypeOptions(ShowAllTypes = true)]
-    TypeReference displayTypeRef;
-    [SerializeField]
-    bool vertical = false;
-    [SerializeField]
-    bool acceptMultipleEdges = false;
-
-    public string Label => label;
-    public bool ShowAsDrawer => showAsDrawer;
-    public TypeReference DisplayType => displayTypeRef;
-    public bool Vertical => vertical;
-    public bool AcceptMultipleEdges => acceptMultipleEdges;
-
-    public bool Equals(PortData other)
-    {
-        return
-            this.label == other.displayName &&
-            this.showAsDrawer == other.showAsDrawer &&
-            this.displayTypeRef.Equals(other.displayType) &&
-            this.vertical == other.vertical &&
-            this.acceptMultipleEdges == other.acceptMultipleEdges;
     }
 }

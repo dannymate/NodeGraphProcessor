@@ -201,7 +201,7 @@ namespace GraphProcessor
                 targetDescription.nodeCreatePortDescription.Add(new PortDescription
                 {
                     nodeType = nodeType,
-                    portType = p.portData.displayType ?? p.fieldInfo.GetUnderlyingType(),
+                    portType = p.portData.DisplayType ?? p.fieldInfo.GetUnderlyingType(),
                     isInput = input,
                     portFieldName = p.fieldName,
                     portDisplayName = p.portData.displayName ?? p.fieldName,

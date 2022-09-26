@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using GraphProcessor;
 using UnityEngine;
-using TypeReferences;
 using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 
 namespace GraphProcessor
 {
@@ -74,8 +71,8 @@ namespace GraphProcessor
                 text = "Local SubGraph Port Selection"
             };
 
-            SubGraph.DrawOutputDataGUI(subgraphPortFoldout);
-            SubGraph.DrawUpdateSchemaButtonGUI(subgraphPortFoldout);
+            subgraphPortFoldout.Add(SubGraph.DrawOutputDataGUI());
+            subgraphPortFoldout.Add(SubGraph.DrawUpdateSchemaButtonGUI());
 
             root.Add(subgraphPortFoldout);
 
@@ -88,8 +85,8 @@ namespace GraphProcessor
                 text = "Schema Port Selection"
             };
 
-            SubGraph.Schema?.DrawOutputDataGUI(schemaFoldout);
-            SubGraph.Schema?.DrawUpdateSchemaButtonGUI(schemaFoldout);
+            schemaFoldout.Add(SubGraph.Schema?.DrawOutputDataGUI());
+            schemaFoldout.Add(SubGraph.Schema?.DrawUpdateSchemaButtonGUI());
 
             root.Add(schemaFoldout);
         }
@@ -170,8 +167,8 @@ namespace GraphProcessor
                 text = "Local SubGraph Port Selection"
             };
 
-            SubGraph.DrawInputDataGUI(subgraphPortFoldout);
-            SubGraph.DrawUpdateSchemaButtonGUI(subgraphPortFoldout);
+            subgraphPortFoldout.Add(SubGraph.DrawInputDataGUI());
+            subgraphPortFoldout.Add(SubGraph.DrawUpdateSchemaButtonGUI());
 
             root.Add(subgraphPortFoldout);
 
@@ -184,8 +181,8 @@ namespace GraphProcessor
                 text = "Schema Port Selection"
             };
 
-            SubGraph.Schema?.DrawInputDataGUI(schemaFoldout);
-            SubGraph.Schema?.DrawUpdateSchemaButtonGUI(schemaFoldout);
+            schemaFoldout.Add(SubGraph.Schema?.DrawInputDataGUI());
+            schemaFoldout.Add(SubGraph.Schema?.DrawUpdateSchemaButtonGUI());
 
             root.Add(schemaFoldout);
         }

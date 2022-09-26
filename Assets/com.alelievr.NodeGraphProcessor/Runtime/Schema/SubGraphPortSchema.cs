@@ -71,31 +71,37 @@ namespace GraphProcessor
             OnPortsUpdated -= listener;
         }
 
-        public void DrawControlGUI(VisualElement root)
+        public VisualElement DrawControlGUI()
         {
-            DrawInputDataGUI(root);
-            DrawOutputDataGUI(root);
-            DrawUpdateSchemaButtonGUI(root);
+            var root = new VisualElement();
+
+            root.Add(DrawInputDataGUI(bind: false));
+            root.Add(DrawOutputDataGUI(bind: false));
+            root.Add(DrawUpdateSchemaButtonGUI());
+
+            root.Bind(ThisSerialized);
+
+            return root;
         }
 
-        public void DrawInputDataGUI(VisualElement root)
+        public PropertyField DrawInputDataGUI(bool bind = true)
         {
-            VisualElement inputData = new PropertyField(InputDataSerialized);
-            inputData.Bind(ThisSerialized);
-            root.Add(inputData);
+            var inputData = new PropertyField(InputDataSerialized);
+            if (bind) inputData.Bind(ThisSerialized);
+            return inputData;
         }
 
-        public void DrawOutputDataGUI(VisualElement root)
+        public PropertyField DrawOutputDataGUI(bool bind = true)
         {
-            VisualElement outputData = new PropertyField(OutputDataSerialized);
-            outputData.Bind(ThisSerialized);
-            root.Add(outputData);
+            var outputData = new PropertyField(OutputDataSerialized);
+            if (bind) outputData.Bind(ThisSerialized);
+            return outputData;
         }
 
-        public void DrawUpdateSchemaButtonGUI(VisualElement root)
+        public Button DrawUpdateSchemaButtonGUI()
         {
-            VisualElement updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE SCHEMA" };
-            root.Add(updatePortsButton);
+            var updateSchemaButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE SCHEMA" };
+            return updateSchemaButton;
         }
     }
 }

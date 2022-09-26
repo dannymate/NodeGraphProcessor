@@ -1,11 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
-using TypeReferences;
 using System;
 using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
-using GraphProcessor;
 
 namespace GraphProcessor
 {
@@ -140,62 +138,83 @@ namespace GraphProcessor
         {
             base.CreateInspectorGUI(root);
 
-            DrawPortSelectionGUI(root);
-            DrawSchemaControlGUI(root);
+            root.Add(DrawPortSelectionGUI());
+            root.Add(DrawSchemaControlGUI());
         }
 
-        private void DrawSchemaControlGUI(VisualElement root)
+        private VisualElement DrawSchemaControlGUI()
         {
             VisualElement schemaControlsFoldout = new Foldout()
             {
                 text = "Schema Controls"
             };
 
-            DrawSchemaFieldGUI(schemaControlsFoldout);
-            schema?.DrawControlGUI(schemaControlsFoldout);
+            VisualElement schemaControls = new();
+            schemaControls.Add(schema?.DrawControlGUI());
 
-            root.Add(schemaControlsFoldout);
+            PropertyField schemaField = DrawSchemaFieldGUI();
+            schemaField.RegisterValueChangeCallback((prop) =>
+            {
+                // We sanity check visibility due to this callback being called twice
+                if (schemaControls.visible && schema == null)
+                {
+                    schemaControls.visible = false;
+                    schemaControls.Clear();
+                }
+                else if (!schemaControls.visible && schema != null)
+                {
+                    schemaControls.Add(schema.DrawControlGUI());
+                    schemaControls.visible = true;
+                }
+            });
+
+            schemaControlsFoldout.Add(schemaControls);
+            schemaControlsFoldout.Add(schemaField);
+
+            return schemaControlsFoldout;
         }
 
-        public void DrawSchemaFieldGUI(VisualElement root)
+        public PropertyField DrawSchemaFieldGUI()
         {
-            VisualElement schemaField = new PropertyField(ThisSerialized.FindProperty(nameof(schema)));
+            var schemaField = new PropertyField(ThisSerialized.FindProperty(nameof(schema)));
             schemaField.Bind(ThisSerialized);
-            root.Add(schemaField);
+            return schemaField;
         }
 
-        public void DrawPortSelectionGUI(VisualElement root)
+        public VisualElement DrawPortSelectionGUI()
         {
             VisualElement portSelectionFoldout = new Foldout()
             {
                 text = "Port Selection"
             };
 
-            DrawInputDataGUI(portSelectionFoldout);
-            DrawOutputDataGUI(portSelectionFoldout);
-            DrawUpdateSchemaButtonGUI(portSelectionFoldout);
+            portSelectionFoldout.Add(DrawInputDataGUI(bind: false));
+            portSelectionFoldout.Add(DrawOutputDataGUI(bind: false));
+            portSelectionFoldout.Add(DrawUpdateSchemaButtonGUI());
 
-            root.Add(portSelectionFoldout);
+            portSelectionFoldout.Bind(ThisSerialized);
+
+            return portSelectionFoldout;
         }
 
-        public void DrawInputDataGUI(VisualElement root)
+        public PropertyField DrawInputDataGUI(bool bind = true)
         {
-            VisualElement inputData = new PropertyField(InputDataSerialized);
-            inputData.Bind(ThisSerialized);
-            root.Add(inputData);
+            var inputDataField = new PropertyField(InputDataSerialized);
+            if (bind) inputDataField.Bind(ThisSerialized);
+            return inputDataField;
         }
 
-        public void DrawOutputDataGUI(VisualElement root)
+        public PropertyField DrawOutputDataGUI(bool bind = true)
         {
-            VisualElement outputData = new PropertyField(OutputDataSerialized);
-            outputData.Bind(ThisSerialized);
-            root.Add(outputData);
+            var outputDataField = new PropertyField(OutputDataSerialized);
+            if (bind) outputDataField.Bind(ThisSerialized);
+            return outputDataField;
         }
 
-        public void DrawUpdateSchemaButtonGUI(VisualElement root)
+        public Button DrawUpdateSchemaButtonGUI()
         {
-            VisualElement updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE PORTS" };
-            root.Add(updatePortsButton);
+            var updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE PORTS" };
+            return updatePortsButton;
         }
 
         public void NotifyPortsChanged()

@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace GraphProcessor
@@ -15,7 +14,7 @@ namespace GraphProcessor
             VisualElement root = new();
 
             // Add a simple label
-            schema.DrawControlGUI(root);
+            root.Add(schema.DrawControlGUI());
 
             // Return the finished inspector UI
             return root;

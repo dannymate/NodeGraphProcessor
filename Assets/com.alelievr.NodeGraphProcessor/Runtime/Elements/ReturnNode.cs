@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -58,13 +59,12 @@ namespace GraphProcessor
         {
             base.DrawControlsContainer(root);
 
-            DrawSubGraphControlsContainer(root);
+            DrawSubGraphControlsGUI(root);
 
-            if (SubGraph.Schema != null)
-                DrawSchemaControlsContainer(root);
+            root.Add(DrawSchemaControlsGUI());
         }
 
-        public void DrawSubGraphControlsContainer(VisualElement root)
+        public void DrawSubGraphControlsGUI(VisualElement root)
         {
             var subgraphPortFoldout = new Foldout()
             {
@@ -78,17 +78,38 @@ namespace GraphProcessor
 
         }
 
-        public void DrawSchemaControlsContainer(VisualElement root)
+        public VisualElement DrawSchemaControlsGUI()
         {
             var schemaFoldout = new Foldout()
             {
                 text = "Schema Port Selection"
             };
+            VisualElement schemaControls = new();
 
-            schemaFoldout.Add(SubGraph.Schema?.DrawOutputDataGUI());
-            schemaFoldout.Add(SubGraph.Schema?.DrawUpdateSchemaButtonGUI());
+            PropertyField schemaField = SubGraph.DrawSchemaFieldGUI();
+            schemaField.visible = false;
+            schemaField.style.height = 0;
+            schemaField.RegisterValueChangeCallback((prop) =>
+            {
+                if (schemaFoldout.visible && SubGraph.Schema == null)
+                {
+                    schemaFoldout.visible = false;
+                    schemaControls.Clear();
+                }
+                else if (!schemaFoldout.visible && SubGraph.Schema != null)
+                {
+                    schemaControls.Add(SubGraph.Schema.DrawOutputDataGUI());
+                    schemaControls.Add(SubGraph.Schema.DrawUpdateSchemaButtonGUI());
+                    schemaFoldout.visible = true;
+                }
+            });
+            schemaControls.Add(SubGraph.Schema?.DrawOutputDataGUI());
+            schemaControls.Add(SubGraph.Schema?.DrawUpdateSchemaButtonGUI());
 
-            root.Add(schemaFoldout);
+            schemaFoldout.Add(schemaField);
+            schemaFoldout.Add(schemaControls);
+
+            return schemaFoldout;
         }
     }
 }
@@ -156,8 +177,7 @@ namespace GraphProcessor
 
             DrawSubGraphControlsGUI(root);
 
-            if (SubGraph.Schema != null)
-                DrawSchemaControlsGUI(root);
+            root.Add(DrawSchemaControlsGUI());
         }
 
         public void DrawSubGraphControlsGUI(VisualElement root)
@@ -174,17 +194,38 @@ namespace GraphProcessor
 
         }
 
-        public void DrawSchemaControlsGUI(VisualElement root)
+        public VisualElement DrawSchemaControlsGUI()
         {
             var schemaFoldout = new Foldout()
             {
                 text = "Schema Port Selection"
             };
+            VisualElement schemaControls = new();
 
-            schemaFoldout.Add(SubGraph.Schema?.DrawInputDataGUI());
-            schemaFoldout.Add(SubGraph.Schema?.DrawUpdateSchemaButtonGUI());
+            PropertyField schemaField = SubGraph.DrawSchemaFieldGUI();
+            schemaField.visible = false;
+            schemaField.style.height = 0;
+            schemaField.RegisterValueChangeCallback((prop) =>
+            {
+                if (schemaFoldout.visible && SubGraph.Schema == null)
+                {
+                    schemaFoldout.visible = false;
+                    schemaControls.Clear();
+                }
+                else if (!schemaFoldout.visible && SubGraph.Schema != null)
+                {
+                    schemaControls.Add(SubGraph.Schema.DrawInputDataGUI());
+                    schemaControls.Add(SubGraph.Schema.DrawUpdateSchemaButtonGUI());
+                    schemaFoldout.visible = true;
+                }
+            });
+            schemaControls.Add(SubGraph.Schema?.DrawInputDataGUI());
+            schemaControls.Add(SubGraph.Schema?.DrawUpdateSchemaButtonGUI());
 
-            root.Add(schemaFoldout);
+            schemaFoldout.Add(schemaField);
+            schemaFoldout.Add(schemaControls);
+
+            return schemaFoldout;
         }
     }
 }

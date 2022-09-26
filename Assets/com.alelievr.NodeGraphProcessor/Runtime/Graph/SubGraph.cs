@@ -15,21 +15,21 @@ namespace GraphProcessor
 
 
         [SerializeField]
-        private List<PortData> localInputData;
+        private List<PortData> localInputData = new();
 
         [SerializeField]
-        private List<PortData> localOutputData;
+        private List<PortData> localOutputData = new();
 
         [SerializeField]
         private SubGraphPortSchema schema;
-
         public SubGraphPortSchema Schema => schema;
 
         public List<PortData> InputData
         {
             get
             {
-                var portData = new List<PortData>(schema.inputData);
+                var portData = new List<PortData>();
+                if (schema) portData.AddRange(schema.inputData);
                 portData.AddRange(localInputData);
                 return portData;
             }
@@ -39,57 +39,32 @@ namespace GraphProcessor
         {
             get
             {
-                var portData = new List<PortData>(schema.outputData);
+                var portData = new List<PortData>();
+                if (schema) portData.AddRange(schema.outputData);
                 portData.AddRange(localOutputData);
                 return portData;
             }
         }
 
+        private SubGraphIngressNode _ingressNode;
+        public SubGraphIngressNode IngressNode =>
+            PropertyUtils.LazyLoad(ref _ingressNode, () => GraphUtils.FindNodeInGraphOfType<SubGraphIngressNode>(this));
 
-        [SerializeField, HideInInspector]
-        public IngressNode IngressNode => nodes.Find(x => x.GetType() == typeof(IngressNode)) as IngressNode;
-
-        [SerializeField, HideInInspector]
-        public ReturnNode ReturnNode => nodes.Find(x => x.GetType() == typeof(ReturnNode)) as ReturnNode;
+        private SubGraphEgressNode _egressNode;
+        public SubGraphEgressNode EgressNode =>
+            PropertyUtils.LazyLoad(ref _egressNode, () => GraphUtils.FindNodeInGraphOfType<SubGraphEgressNode>(this));
 
         SerializedObject _thisSerialized;
-        public SerializedObject ThisSerialized
-        {
-            get
-            {
-                if (_thisSerialized == null)
-                {
-                    _thisSerialized = new SerializedObject(this);
-                }
-                return _thisSerialized;
-            }
-        }
+        public SerializedObject ThisSerialized =>
+            PropertyUtils.LazyLoad(ref _thisSerialized, () => new SerializedObject(this));
 
         SerializedProperty _inputDataSerialized;
-        public SerializedProperty InputDataSerialized
-        {
-            get
-            {
-                if (_inputDataSerialized == null)
-                {
-                    _inputDataSerialized = ThisSerialized.FindProperty(nameof(localInputData));
-                }
-                return _inputDataSerialized;
-            }
-        }
+        public SerializedProperty InputDataSerialized =>
+            PropertyUtils.LazyLoad(ref _inputDataSerialized, () => ThisSerialized.FindProperty(nameof(localInputData)));
 
         SerializedProperty _outputDataSerialized;
-        public SerializedProperty OutputDataSerialized
-        {
-            get
-            {
-                if (_outputDataSerialized == null)
-                {
-                    _outputDataSerialized = ThisSerialized.FindProperty(nameof(localOutputData));
-                }
-                return _outputDataSerialized;
-            }
-        }
+        public SerializedProperty OutputDataSerialized =>
+            PropertyUtils.LazyLoad(ref _outputDataSerialized, () => ThisSerialized.FindProperty(nameof(localOutputData)));
 
         protected override void OnEnable()
         {
@@ -101,16 +76,16 @@ namespace GraphProcessor
         {
             base.Initialize();
 
-            if (localInputData.Count > 0 && IngressNode == null)//
+            if (IngressNode == null)
             {
-                var ingressNode = BaseNode.CreateFromType<IngressNode>(Vector2.zero);
-                AddNode(ingressNode);
+                _ingressNode = BaseNode.CreateFromType<SubGraphIngressNode>(Vector2.zero);
+                AddNode(_ingressNode);
             }
 
-            if (localOutputData.Count > 0 && (ReturnNode == null))
+            if (EgressNode == null)
             {
-                var returnNode = BaseNode.CreateFromType<ReturnNode>(Vector2.zero);
-                AddNode(returnNode);
+                _egressNode = BaseNode.CreateFromType<SubGraphEgressNode>(Vector2.zero);
+                AddNode(_egressNode);
             }
         }
 

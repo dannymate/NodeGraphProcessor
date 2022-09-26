@@ -21,10 +21,11 @@ public class SubGraphNode : BaseNode
     [SerializeField]
     SubGraph subGraph;
 
-    Dictionary<PortData, object> passThroughBuffer = new();
+    Dictionary<PortData, object> passThroughBufferByPort = new();
 
-    private List<PortData> InputData => subGraph?.InputData;
-    private List<PortData> OutputData => subGraph?.OutputData;
+    private List<PortData> InputData => subGraph != null ? subGraph.InputData : new List<PortData>();
+    private List<PortData> OutputData => subGraph != null ? subGraph.OutputData : new List<PortData>();
+
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
 
@@ -33,14 +34,14 @@ public class SubGraphNode : BaseNode
         base.Process();
 
         var processor = new ProcessSubGraphProcessor(subGraph);
-        processor.Run(passThroughBuffer);
+        processor.Run(passThroughBufferByPort);
     }
 
     public override void InitializePorts()
     {
         base.InitializePorts();
 
-        passThroughBuffer?.Clear();
+        passThroughBufferByPort?.Clear();
         subGraph?.AddUpdatePortsListener(OnPortsListUpdated);
     }
 
@@ -51,7 +52,7 @@ public class SubGraphNode : BaseNode
         if (connectedEdges.Count == 0) return;
 
         PortData portData = InputData.Find(x => x.Equals(connectedEdges[0].inputPort.portData));
-        passThroughBuffer[portData] = connectedEdges[0].passThroughBuffer;
+        passThroughBufferByPort[portData] = connectedEdges[0].passThroughBuffer;
     }
 
     [CustomPortBehavior(nameof(inputs), cloneResults: true)]
@@ -74,7 +75,7 @@ public class SubGraphNode : BaseNode
         if (connectedEdges.Count == 0) return;
 
         PortData portData = OutputData.Find(x => x.Equals(connectedEdges[0].outputPort.portData));
-        Dictionary<PortData, object> returnedData = subGraph.ReturnNode.GetReturnValue();
+        Dictionary<PortData, object> returnedData = subGraph.EgressNode.PushEgress();
         foreach (var edge in connectedEdges)
         {
             if (returnedData.ContainsKey(portData))

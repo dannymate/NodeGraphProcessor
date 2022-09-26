@@ -756,7 +756,7 @@ namespace GraphProcessor
             bool hasInputAttribute = inputAttribute != null;
             bool isInput = (!hasPortView && hasInputAttribute) || (hasPortView && portView.direction == Direction.Input);
             bool showAsDrawer = !fromInspector && isInput && (inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>());
-            showAsDrawer |= !fromInspector && isInput && portData.showAsDrawer;
+            showAsDrawer |= !fromInspector && isInput && hasPortView && portData.showAsDrawer;
             if (((!serializeField && !serializeReference) || isProxied) && (hasPortView || hasInputAttribute) && !showAsDrawer)
             {
                 AddEmptyField(field, fromInspector);

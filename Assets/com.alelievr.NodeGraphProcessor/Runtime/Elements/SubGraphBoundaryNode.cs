@@ -7,14 +7,14 @@ namespace GraphProcessor
     {
         protected Dictionary<PortData, object> passThroughBufferByPort = new();
 
-
-        protected abstract List<PortData> Ports { get; }
-        public SubGraph SubGraph => graph as SubGraph;
-
         public override bool isRenamable => false;
         public override bool deletable => false;
         public override bool needsInspector => true;
         public override bool HideNodeInspectorBlock => true;
+
+        public SubGraph SubGraph => graph as SubGraph;
+
+        protected abstract List<PortData> Ports { get; }
 
         public sealed override void InitializePorts()
         {

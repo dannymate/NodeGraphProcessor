@@ -16,7 +16,24 @@ MonoBehaviour:
   nodes:
   - rid: 702614925759480022
   - rid: 702614925759480023
-  edges: []
+  - rid: 702614929662542285
+  edges:
+  - GUID: 624d0e9c-beac-475b-9b49-457822735080
+    owner: {fileID: 11400000}
+    inputNodeGUID: 80a59d14-304a-4f5b-8c1c-e0ce54b5f24e
+    outputNodeGUID: 12ba6134-3bfc-43dd-a1f8-d5590aa38499
+    inputFieldName: input
+    outputFieldName: _ingress
+    inputPortIdentifier: 
+    outputPortIdentifier: Float IN
+  - GUID: 4875fc21-921f-4362-bb9f-6941c055d287
+    owner: {fileID: 11400000}
+    inputNodeGUID: 216ddc00-b93a-45a2-9670-b7e22281d1dd
+    outputNodeGUID: 80a59d14-304a-4f5b-8c1c-e0ce54b5f24e
+    inputFieldName: _egress
+    outputFieldName: output
+    inputPortIdentifier: String OUT
+    outputPortIdentifier: 
   groups: []
   stackNodes: []
   pinnedElements: []
@@ -26,8 +43,8 @@ MonoBehaviour:
   nodeInspectorReference: {fileID: 0}
   position: {x: 678, y: 271, z: 0}
   scale: {x: 1.3225, y: 1.3225, z: 1}
-  localInputData: []
-  localOutputData: []
+  ingressPortData: []
+  egressPortData: []
   schema: {fileID: 11400000, guid: 8af34e3b8c41eb42d9bfab8fe2fbfc89, type: 2}
   references:
     version: 2
@@ -58,7 +75,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 216ddc00-b93a-45a2-9670-b7e22281d1dd
-        computeOrder: 1
+        computeOrder: 2
         position:
           serializedVersion: 2
           x: 90.09264
@@ -74,3 +91,27 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
+    - rid: 702614929662542285
+      type: {class: FloatToStringsNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: 80a59d14-304a-4f5b-8c1c-e0ce54b5f24e
+        computeOrder: 1
+        position:
+          serializedVersion: 2
+          x: -105.880936
+          y: 161.14552
+          width: 179
+          height: 95
+        initialPosition:
+          serializedVersion: 2
+          x: -58.979214
+          y: 173.91304
+          width: 100
+          height: 100
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        input: 0
+        decimalPlaces: 2
+        output: 0.00

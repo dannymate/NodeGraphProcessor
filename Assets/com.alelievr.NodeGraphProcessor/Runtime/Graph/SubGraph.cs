@@ -10,15 +10,19 @@ namespace GraphProcessor
     [Serializable]
     public class SubGraph : BaseGraph
     {
+        public const string IngressPortDataFieldName = nameof(ingressPortData);
+        public const string EgressPortDataFieldName = nameof(egressPortData);
+        public const string SchemaFieldName = nameof(schema);
+
         // Possibly create GUI methods for nodes to use like in FlowCanvas
         public event Notify OnPortsUpdated;
 
 
         [SerializeField]
-        private List<PortData> localInputData = new();
+        private List<PortData> ingressPortData = new();
 
         [SerializeField]
-        private List<PortData> localOutputData = new();
+        private List<PortData> egressPortData = new();
 
         [SerializeField]
         private SubGraphPortSchema schema;
@@ -29,8 +33,8 @@ namespace GraphProcessor
             get
             {
                 var portData = new List<PortData>();
-                if (schema) portData.AddRange(schema.inputData);
-                portData.AddRange(localInputData);
+                if (schema) portData.AddRange(schema.ingressPortData);
+                portData.AddRange(ingressPortData);
                 return portData;
             }
         }
@@ -40,8 +44,8 @@ namespace GraphProcessor
             get
             {
                 var portData = new List<PortData>();
-                if (schema) portData.AddRange(schema.outputData);
-                portData.AddRange(localOutputData);
+                if (schema) portData.AddRange(schema.egressPortData);
+                portData.AddRange(egressPortData);
                 return portData;
             }
         }
@@ -53,18 +57,6 @@ namespace GraphProcessor
         private SubGraphEgressNode _egressNode;
         public SubGraphEgressNode EgressNode =>
             PropertyUtils.LazyLoad(ref _egressNode, () => GraphUtils.FindNodeInGraphOfType<SubGraphEgressNode>(this));
-
-        SerializedObject _thisSerialized;
-        public SerializedObject ThisSerialized =>
-            PropertyUtils.LazyLoad(ref _thisSerialized, () => new SerializedObject(this));
-
-        SerializedProperty _inputDataSerialized;
-        public SerializedProperty InputDataSerialized =>
-            PropertyUtils.LazyLoad(ref _inputDataSerialized, () => ThisSerialized.FindProperty(nameof(localInputData)));
-
-        SerializedProperty _outputDataSerialized;
-        public SerializedProperty OutputDataSerialized =>
-            PropertyUtils.LazyLoad(ref _outputDataSerialized, () => ThisSerialized.FindProperty(nameof(localOutputData)));
 
         protected override void OnEnable()
         {
@@ -91,12 +83,12 @@ namespace GraphProcessor
 
         public void AddIngressPort(PortData portData)
         {
-            localInputData.Add(portData);
+            ingressPortData.Add(portData);
         }
 
         public void AddReturnPort(PortData portData)
         {
-            localOutputData.Add(portData);
+            egressPortData.Add(portData);
         }
 
         public void AddUpdatePortsListener(Notify listener)
@@ -107,89 +99,6 @@ namespace GraphProcessor
         public void RemoveUpdatePortsListener(Notify listener)
         {
             this.OnPortsUpdated -= listener;
-        }
-
-        public override void CreateInspectorGUI(VisualElement root)
-        {
-            base.CreateInspectorGUI(root);
-
-            root.Add(DrawPortSelectionGUI());
-            root.Add(DrawSchemaControlGUI());
-        }
-
-        private VisualElement DrawSchemaControlGUI()
-        {
-            VisualElement schemaControlsFoldout = new Foldout()
-            {
-                text = "Schema Controls"
-            };
-
-            VisualElement schemaControls = new();
-            schemaControls.Add(schema?.DrawControlGUI());
-
-            PropertyField schemaField = DrawSchemaFieldGUI();
-            schemaField.RegisterValueChangeCallback((prop) =>
-            {
-                // We sanity check visibility due to this callback being called twice
-                if (schemaControls.visible && schema == null)
-                {
-                    schemaControls.visible = false;
-                    schemaControls.Clear();
-                }
-                else if (!schemaControls.visible && schema != null)
-                {
-                    schemaControls.Add(schema.DrawControlGUI());
-                    schemaControls.visible = true;
-                }
-            });
-
-            schemaControlsFoldout.Add(schemaControls);
-            schemaControlsFoldout.Add(schemaField);
-
-            return schemaControlsFoldout;
-        }
-
-        public PropertyField DrawSchemaFieldGUI()
-        {
-            var schemaField = new PropertyField(ThisSerialized.FindProperty(nameof(schema)));
-            schemaField.Bind(ThisSerialized);
-            return schemaField;
-        }
-
-        public VisualElement DrawPortSelectionGUI()
-        {
-            VisualElement portSelectionFoldout = new Foldout()
-            {
-                text = "Port Selection"
-            };
-
-            portSelectionFoldout.Add(DrawInputDataGUI(bind: false));
-            portSelectionFoldout.Add(DrawOutputDataGUI(bind: false));
-            portSelectionFoldout.Add(DrawUpdateSchemaButtonGUI());
-
-            portSelectionFoldout.Bind(ThisSerialized);
-
-            return portSelectionFoldout;
-        }
-
-        public PropertyField DrawInputDataGUI(bool bind = true)
-        {
-            var inputDataField = new PropertyField(InputDataSerialized);
-            if (bind) inputDataField.Bind(ThisSerialized);
-            return inputDataField;
-        }
-
-        public PropertyField DrawOutputDataGUI(bool bind = true)
-        {
-            var outputDataField = new PropertyField(OutputDataSerialized);
-            if (bind) outputDataField.Bind(ThisSerialized);
-            return outputDataField;
-        }
-
-        public Button DrawUpdateSchemaButtonGUI()
-        {
-            var updatePortsButton = new Button(() => NotifyPortsChanged()) { text = "UPDATE PORTS" };
-            return updatePortsButton;
         }
 
         public void NotifyPortsChanged()

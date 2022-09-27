@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19c80a5ff257fe3de96984fb18d3ebb8, type: 3}
   m_Name: SubGraphPortSchema
   m_EditorClassIdentifier: 
-  inputData:
+  ingressPortData:
   - identifier: Float IN
     displayName: Float IN
     displayType:
@@ -26,7 +26,7 @@ MonoBehaviour:
     sizeInPixel: 0
     tooltip: 
     vertical: 0
-  outputData:
+  egressPortData:
   - identifier: String OUT
     displayName: String OUT
     displayType:

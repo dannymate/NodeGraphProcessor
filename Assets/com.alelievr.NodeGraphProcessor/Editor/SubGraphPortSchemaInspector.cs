@@ -6,6 +6,14 @@ namespace GraphProcessor
     [CustomEditor(typeof(SubGraphPortSchema))]
     public class SubGraphPortSchema_Inspector : Editor
     {
+        SubGraphPortSchema Schema => target as SubGraphPortSchema;
+
+
+        SubGraphSchemaSerializer _schemaSerializer;
+        SubGraphSchemaSerializer SchemaSerializer =>
+            PropertyUtils.LazyLoad(ref _schemaSerializer, () => new(Schema));
+
+
         public override VisualElement CreateInspectorGUI()
         {
             var schema = target as SubGraphPortSchema;
@@ -14,7 +22,7 @@ namespace GraphProcessor
             VisualElement root = new();
 
             // Add a simple label
-            root.Add(schema.DrawControlGUI());
+            root.Add(SchemaSerializer.DrawFullSchemaGUI());
 
             // Return the finished inspector UI
             return root;

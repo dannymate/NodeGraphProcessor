@@ -9,6 +9,9 @@ namespace GraphProcessor.View
         SubGraphEgressNode Target => this.nodeTarget as SubGraphEgressNode;
         SubGraph SubGraph => Target.SubGraph;
 
+        SubGraphSerializerUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
+
+
         protected override void DrawDefaultInspector(bool fromInspector = false)
         {
             controlsContainer.Add(DrawSubGraphControlsGUI());
@@ -22,8 +25,8 @@ namespace GraphProcessor.View
                 text = "Local SubGraph Port Selection"
             };
 
-            subgraphPortFoldout.Add(SubGraph.DrawOutputDataGUI());
-            subgraphPortFoldout.Add(SubGraph.DrawUpdateSchemaButtonGUI());
+            subgraphPortFoldout.Add(SubGraphSerializer.DrawEgressPortSelectorGUI());
+            subgraphPortFoldout.Add(SubGraphSerializer.DrawPortUpdaterButtonGUI());
 
             return subgraphPortFoldout;
 
@@ -37,10 +40,7 @@ namespace GraphProcessor.View
             };
             VisualElement schemaControls = new();
 
-            PropertyField schemaField = SubGraph.DrawSchemaFieldGUI();
-            schemaField.visible = false;
-            schemaField.style.height = 0;
-            schemaField.RegisterValueChangeCallback((prop) =>
+            PropertyField schemaField = SubGraphSerializer.DrawSchemaFieldWithCallback((prop) =>
             {
                 if (schemaFoldout.visible && SubGraph.Schema == null)
                 {
@@ -49,13 +49,13 @@ namespace GraphProcessor.View
                 }
                 else if (!schemaFoldout.visible && SubGraph.Schema != null)
                 {
-                    schemaControls.Add(SubGraph.Schema.DrawOutputDataGUI());
-                    schemaControls.Add(SubGraph.Schema.DrawUpdateSchemaButtonGUI());
+                    schemaControls.Add(SubGraphSerializer.SchemaSerializer.DrawEgressPortSelectorGUI());
+                    schemaControls.Add(SubGraphSerializer.SchemaSerializer.DrawSchemaUpdaterButtonGUI());
                     schemaFoldout.visible = true;
                 }
-            });
-            schemaControls.Add(SubGraph.Schema?.DrawOutputDataGUI());
-            schemaControls.Add(SubGraph.Schema?.DrawUpdateSchemaButtonGUI());
+            }, visible: false);
+            schemaControls.Add(SubGraphSerializer.SchemaSerializer?.DrawEgressPortSelectorGUI());
+            schemaControls.Add(SubGraphSerializer.SchemaSerializer?.DrawSchemaUpdaterButtonGUI());
 
             schemaFoldout.Add(schemaField);
             schemaFoldout.Add(schemaControls);

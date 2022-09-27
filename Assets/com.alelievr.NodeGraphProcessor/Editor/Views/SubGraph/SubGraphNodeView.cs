@@ -10,19 +10,37 @@ namespace GraphProcessor.View
         SubGraphNode Target => nodeTarget as SubGraphNode;
         SubGraph SubGraph => Target.SubGraph;
 
+        SubGraphSerializerUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
+
         protected override void DrawDefaultInspector(bool fromInspector = false)
         {
-            controlsContainer.Add(DrawSubGraphControlsGUI());
+            controlsContainer.Add(SubGraphSerializer?.DrawFullSubGraphGUI());
+            controlsContainer.Add(DrawSchemaControls());
+
             base.DrawDefaultInspector(fromInspector);
         }
 
-        public VisualElement DrawSubGraphControlsGUI()
+        protected VisualElement DrawSchemaControls()
         {
-            if (SubGraph == null) return new VisualElement();
+            VisualElement schemaControls = new();
+            PropertyField schemaField = SubGraphSerializer.DrawSchemaFieldWithCallback((prop) =>
+            {
+                // We sanity check visibility due to this callback being called twice
+                if (schemaControls.visible && SubGraph.Schema == null)
+                {
+                    schemaControls.visible = false;
+                    schemaControls.Clear();
+                }
+                else if (!schemaControls.visible && SubGraph.Schema != null)
+                {
+                    schemaControls.Add(SubGraphSerializer.SchemaSerializer.DrawFullSchemaGUI());
+                    schemaControls.visible = true;
+                }
+            }, visible: false);
+            schemaControls.Add(schemaField);
+            schemaControls.Add(SubGraphSerializer.SchemaSerializer?.DrawFullSchemaGUI());
 
-            SubGraph.CreateInspectorGUI(controlsContainer);
-
-            return new VisualElement();
+            return schemaControls;
         }
     }
 }

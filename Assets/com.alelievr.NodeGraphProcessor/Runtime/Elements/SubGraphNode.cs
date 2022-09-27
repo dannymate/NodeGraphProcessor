@@ -7,19 +7,22 @@ using System;
 [System.Serializable, NodeMenuItem("Subgraph")]
 public class SubGraphNode : BaseNode
 {
+
     [Input, CustomBehaviourOnly]
     private object _inputs;
 
     [Output, CustomBehaviourOnly]
     private object _outputs;
 
+    private Dictionary<PortData, object> _passThroughBufferByPort = new();
+
     [SerializeField]
     private SubGraph subGraph;
 
-    private Dictionary<PortData, object> passThroughBufferByPort = new();
-
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
+
+    public SubGraph SubGraph => subGraph;
 
     private List<PortData> InputData => subGraph != null ? subGraph.InputData : new List<PortData>();
     private List<PortData> OutputData => subGraph != null ? subGraph.OutputData : new List<PortData>();
@@ -28,17 +31,8 @@ public class SubGraphNode : BaseNode
     {
         base.InitializePorts();
 
-        passThroughBufferByPort?.Clear();
+        _passThroughBufferByPort?.Clear();
         subGraph?.AddUpdatePortsListener(OnPortsListUpdated);
-    }
-
-    public override void DrawControlsContainer(VisualElement root)
-    {
-        base.DrawControlsContainer(root);
-
-        if (subGraph == null) return;
-
-        subGraph.CreateInspectorGUI(root);
     }
 
     protected override void Process()
@@ -46,7 +40,7 @@ public class SubGraphNode : BaseNode
         base.Process();
 
         var processor = new ProcessSubGraphProcessor(subGraph);
-        processor.Run(passThroughBufferByPort);
+        processor.Run(_passThroughBufferByPort);
     }
 
     [CustomPortInput(nameof(_inputs), typeof(object))]
@@ -55,7 +49,7 @@ public class SubGraphNode : BaseNode
         if (connectedEdges.Count == 0) return;
 
         PortData portData = InputData.Find(x => x.Equals(connectedEdges[0].inputPort.portData));
-        passThroughBufferByPort[portData] = connectedEdges[0].passThroughBuffer;
+        _passThroughBufferByPort[portData] = connectedEdges[0].passThroughBuffer;
     }
 
     [CustomPortBehavior(nameof(_inputs), cloneResults: true)]

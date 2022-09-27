@@ -40,8 +40,8 @@ MonoBehaviour:
         computeOrder: 0
         position:
           serializedVersion: 2
-          x: -161.05482
-          y: 83.61059
+          x: -211.61815
+          y: 126.56143
           width: 84
           height: 75
         initialPosition:
@@ -61,10 +61,10 @@ MonoBehaviour:
         computeOrder: 1
         position:
           serializedVersion: 2
-          x: 214.32137
-          y: 91.00002
-          width: 81
-          height: 42
+          x: 90.09264
+          y: 126.999985
+          width: 98
+          height: 75
         initialPosition:
           serializedVersion: 2
           x: 0

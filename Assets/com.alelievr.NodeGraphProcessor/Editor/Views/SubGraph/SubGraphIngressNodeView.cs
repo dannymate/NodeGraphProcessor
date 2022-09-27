@@ -9,7 +9,7 @@ namespace GraphProcessor.View
         SubGraphIngressNode Target => this.nodeTarget as SubGraphIngressNode;
         SubGraph SubGraph => Target.SubGraph;
 
-        public override void Enable()
+        protected override void DrawDefaultInspector(bool fromInspector = false)
         {
             controlsContainer.Add(DrawSubGraphControlsGUI());
             controlsContainer.Add(DrawSchemaControlsGUI());

@@ -1,41 +1,28 @@
 using System.Collections.Generic;
 using GraphProcessor;
 using UnityEngine;
-using TypeReferences;
 using UnityEngine.UIElements;
-using UnityEditor;
-using UnityEditor.UIElements;
 using System;
 
 [System.Serializable, NodeMenuItem("Subgraph")]
 public class SubGraphNode : BaseNode
 {
-    [Input("Inputs")]
-    [CustomBehaviourOnly]
-    object inputs;
+    [Input, CustomBehaviourOnly]
+    private object _inputs;
 
-    [Output]
-    [CustomBehaviourOnly]
-    object outputs;
+    [Output, CustomBehaviourOnly]
+    private object _outputs;
 
     [SerializeField]
-    SubGraph subGraph;
+    private SubGraph subGraph;
 
-    Dictionary<PortData, object> passThroughBufferByPort = new();
-
-    private List<PortData> InputData => subGraph != null ? subGraph.InputData : new List<PortData>();
-    private List<PortData> OutputData => subGraph != null ? subGraph.OutputData : new List<PortData>();
+    private Dictionary<PortData, object> passThroughBufferByPort = new();
 
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
 
-    protected override void Process()
-    {
-        base.Process();
-
-        var processor = new ProcessSubGraphProcessor(subGraph);
-        processor.Run(passThroughBufferByPort);
-    }
+    private List<PortData> InputData => subGraph != null ? subGraph.InputData : new List<PortData>();
+    private List<PortData> OutputData => subGraph != null ? subGraph.OutputData : new List<PortData>();
 
     public override void InitializePorts()
     {
@@ -45,9 +32,25 @@ public class SubGraphNode : BaseNode
         subGraph?.AddUpdatePortsListener(OnPortsListUpdated);
     }
 
+    public override void DrawControlsContainer(VisualElement root)
+    {
+        base.DrawControlsContainer(root);
 
-    [CustomPortInput(nameof(inputs), typeof(object))]
-    protected void PullInputs(List<SerializableEdge> connectedEdges)
+        if (subGraph == null) return;
+
+        subGraph.CreateInspectorGUI(root);
+    }
+
+    protected override void Process()
+    {
+        base.Process();
+
+        var processor = new ProcessSubGraphProcessor(subGraph);
+        processor.Run(passThroughBufferByPort);
+    }
+
+    [CustomPortInput(nameof(_inputs), typeof(object))]
+    protected void PullIngress(List<SerializableEdge> connectedEdges)
     {
         if (connectedEdges.Count == 0) return;
 
@@ -55,8 +58,8 @@ public class SubGraphNode : BaseNode
         passThroughBufferByPort[portData] = connectedEdges[0].passThroughBuffer;
     }
 
-    [CustomPortBehavior(nameof(inputs), cloneResults: true)]
-    protected IEnumerable<PortData> CreateInputs(List<SerializableEdge> edges)
+    [CustomPortBehavior(nameof(_inputs), cloneResults: true)]
+    protected IEnumerable<PortData> CreateIngressPorts(List<SerializableEdge> edges)
     {
         if (InputData == null) yield break;
 
@@ -69,8 +72,8 @@ public class SubGraphNode : BaseNode
         }
     }
 
-    [CustomPortInput(nameof(outputs), typeof(object))]
-    protected void PushOutputs(List<SerializableEdge> connectedEdges)
+    [CustomPortInput(nameof(_outputs), typeof(object))]
+    protected void PushEgress(List<SerializableEdge> connectedEdges)
     {
         if (connectedEdges.Count == 0) return;
 
@@ -83,8 +86,8 @@ public class SubGraphNode : BaseNode
         }
     }
 
-    [CustomPortBehavior(nameof(outputs), cloneResults: true)]
-    protected IEnumerable<PortData> CreateOutputs(List<SerializableEdge> edges)
+    [CustomPortBehavior(nameof(_outputs), cloneResults: true)]
+    protected IEnumerable<PortData> CreateEgressPorts(List<SerializableEdge> edges)
     {
         if (OutputData == null) yield break;
 
@@ -97,14 +100,5 @@ public class SubGraphNode : BaseNode
         }
     }
 
-    public override void DrawControlsContainer(VisualElement root)
-    {
-        base.DrawControlsContainer(root);
-
-        if (subGraph == null) return;
-
-        subGraph.CreateInspectorGUI(root);
-    }
-
-    public void OnPortsListUpdated() => UpdateAllPortsLocal();
+    private void OnPortsListUpdated() => UpdateAllPortsLocal();
 }

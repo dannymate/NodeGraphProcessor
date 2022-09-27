@@ -5,12 +5,16 @@ namespace GraphProcessor
     [System.Serializable]
     public class SubGraphEgressNode : SubGraphBoundaryNode
     {
-        [Input]
-        [CustomBehaviourOnly]
+        [Input, CustomBehaviourOnly]
         private object _egress;
 
         public override string name => "Egress";
         protected override List<PortData> Ports => SubGraph.OutputData;
+
+        public Dictionary<PortData, object> PushEgress()
+        {
+            return passThroughBufferByPort;
+        }
 
         [CustomPortInput(nameof(_egress), typeof(object))]
         protected void PullEgressPorts(List<SerializableEdge> connectedEdges)
@@ -32,11 +36,5 @@ namespace GraphProcessor
                 yield return portData;
             }
         }
-
-        public Dictionary<PortData, object> PushEgress()
-        {
-            return passThroughBufferByPort;
-        }
-
     }
 }

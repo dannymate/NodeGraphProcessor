@@ -8,8 +8,7 @@ namespace GraphProcessor
     [System.Serializable]
     public class SubGraphIngressNode : SubGraphBoundaryNode
     {
-        [Output]
-        [CustomBehaviourOnly]
+        [Output, CustomBehaviourOnly]
         private object _ingress;
 
         public override string name => "Ingress";

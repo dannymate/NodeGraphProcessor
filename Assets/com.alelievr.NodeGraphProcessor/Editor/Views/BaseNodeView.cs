@@ -413,16 +413,28 @@ namespace GraphProcessor
             if (portView.direction == Direction.Input)
             {
                 if (portView.portData.vertical)
-                    topPortContainer.Insert(index, portView);
+                {
+                    int position = topPortContainer.childCount < index ? topPortContainer.childCount : index;
+                    topPortContainer.Insert(position, portView);
+                }
                 else
-                    inputContainer.Insert(index, portView);
+                {
+                    int position = inputContainer.childCount < index ? inputContainer.childCount : index;
+                    inputContainer.Insert(position, portView);
+                }
             }
             else
             {
                 if (portView.portData.vertical)
-                    bottomPortContainer.Insert(index, portView);
+                {
+                    int position = bottomPortContainer.childCount < index ? bottomPortContainer.childCount : index;
+                    bottomPortContainer.Insert(position, portView);
+                }
                 else
-                    outputContainer.Insert(index, portView);
+                {
+                    int position = outputContainer.childCount < index ? outputContainer.childCount : index;
+                    outputContainer.Insert(position, portView);
+                }
             }
         }
 

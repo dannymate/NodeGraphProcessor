@@ -358,16 +358,8 @@ namespace GraphProcessor
         {
             foreach (var macro in GetMacros())
             {
-                yield return new NodeMenuEntry(macro.MenuLocation, typeof(MacroNode), InstantiateMacro, new object[] { macro });
+                yield return new NodeMenuEntry(macro.MenuLocation, typeof(MacroNode), MacroNode.InstantiateMacro, new object[] { macro });
             }
-        }
-
-        public static BaseNode InstantiateMacro(Type nodeType, Vector2 position, params object[] args)
-        {
-            SubGraph macro = args[0] as SubGraph;
-            MacroNode macroNode = BaseNode.CreateFromType(nodeType, position, args) as MacroNode;
-            macroNode.SetMacro(macro);
-            return macroNode;
         }
 
         public static IEnumerable<NodeMenuEntry> GetFilteredCustomNodeMenuEntries(

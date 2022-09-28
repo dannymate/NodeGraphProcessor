@@ -13,10 +13,16 @@ namespace GraphProcessor
         public const string IngressPortDataFieldName = nameof(ingressPortData);
         public const string EgressPortDataFieldName = nameof(egressPortData);
         public const string SchemaFieldName = nameof(schema);
+        public const string IsMacroFieldName = nameof(isMacro);
+        public const string MenuLocationFieldName = nameof(menuLocation);
 
         // Possibly create GUI methods for nodes to use like in FlowCanvas
         public event Notify OnPortsUpdated;
 
+        [SerializeField]
+        private bool isMacro = false;
+        [SerializeField]
+        private string menuLocation;
 
         [SerializeField]
         private List<PortData> ingressPortData = new();
@@ -26,6 +32,10 @@ namespace GraphProcessor
 
         [SerializeField]
         private SubGraphPortSchema schema;
+
+
+        public bool IsMacro => isMacro;
+        public string MenuLocation => menuLocation;
         public SubGraphPortSchema Schema => schema;
 
         public List<PortData> IngressPortData

@@ -20,6 +20,7 @@ namespace GraphProcessor
 
             root.Add(SubGraphSerializer.DrawFullSubGraphGUI());
             root.Add(DrawSchemaControlGUI());
+            root.Add(SubGraphSerializer.DrawMacroGUI());
         }
 
         private VisualElement DrawSchemaControlGUI()

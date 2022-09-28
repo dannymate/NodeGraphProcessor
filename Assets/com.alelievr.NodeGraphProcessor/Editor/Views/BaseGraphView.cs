@@ -1457,6 +1457,13 @@ namespace GraphProcessor
                 yield return customMenuItem;
         }
 
+        public virtual IEnumerable<NodeProvider.NodeMenuEntry> FilterMacroMenuEntries()
+        {
+            // By default we don't filter anything
+            foreach (var macroMenuItem in NodeProvider.GetMacroNodeMenuEntries())
+                yield return macroMenuItem;
+        }
+
         public RelayNodeView AddRelayNode(PortView inputPort, PortView outputPort, Vector2 position)
         {
             var relayNode = BaseNode.CreateFromType<RelayNode>(position);

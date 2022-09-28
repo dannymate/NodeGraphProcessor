@@ -9,23 +9,23 @@ public class SubGraphNode : BaseNode
 {
 
     [SerializeField]
-    private SubGraph subGraph;
+    protected SubGraph subGraph;
 
     [Input, CustomBehaviourOnly]
-    private object _ingress;
+    protected object _ingress;
 
     [Output, CustomBehaviourOnly]
-    private object _egress;
+    protected object _egress;
 
-    private Dictionary<PortData, object> _passThroughBufferByPort = new();
+    protected Dictionary<PortData, object> _passThroughBufferByPort = new();
 
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
 
     public SubGraph SubGraph => subGraph;
 
-    private List<PortData> IngressPortData => SubGraph?.IngressPortData ?? new List<PortData>();
-    private List<PortData> EgressPortData => SubGraph?.EgressPortData ?? new List<PortData>();
+    protected List<PortData> IngressPortData => SubGraph?.IngressPortData ?? new List<PortData>();
+    protected List<PortData> EgressPortData => SubGraph?.EgressPortData ?? new List<PortData>();
 
     public override void InitializePorts()
     {

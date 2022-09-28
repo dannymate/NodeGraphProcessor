@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using UnityEditor.Experimental.GraphView;
 using static GraphProcessor.NodeUtils;
+using GraphProcessor.Utils;
 
 namespace GraphProcessor
 {
@@ -343,6 +344,32 @@ namespace GraphProcessor
                     Delegate.CreateDelegate(typeof(NodeCreationMethod), methodInfo) as NodeCreationMethod;
                 yield return new NodeMenuEntry(attribute.menuTitle, methodInfo.ReturnType, method, attribute.args);
             }
+        }
+
+        public static IEnumerable<SubGraph> GetMacros()
+        {
+            foreach (var subGraph in ScriptableObjectUtils.GetAllInstances<SubGraph>())
+            {
+                if (subGraph.IsMacro) yield return subGraph;
+            }
+        }
+
+        public static IEnumerable<NodeMenuEntry> GetMacroNodeMenuEntries()
+        {
+            Debug.Log("GET MACROS");
+            foreach (var macro in GetMacros())
+            {
+                Debug.Log(macro.MenuLocation);
+                yield return new NodeMenuEntry(macro.MenuLocation, typeof(MacroNode), InstantiateMacro, new object[] { macro });
+            }
+        }
+
+        public static BaseNode InstantiateMacro(Type nodeType, Vector2 position, params object[] args)
+        {
+            SubGraph macro = args[0] as SubGraph;
+            MacroNode macroNode = BaseNode.CreateFromType(nodeType, position, args) as MacroNode;
+            macroNode.SetMacro(macro);
+            return macroNode;
         }
 
         public static IEnumerable<NodeMenuEntry> GetFilteredCustomNodeMenuEntries(

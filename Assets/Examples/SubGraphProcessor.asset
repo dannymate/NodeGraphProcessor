@@ -49,8 +49,36 @@ MonoBehaviour:
   nodeInspectorReference: {fileID: 0}
   position: {x: 505, y: 330, z: 0}
   scale: {x: 1.3225, y: 1.3225, z: 1}
-  ingressPortData: []
-  egressPortData: []
+  isMacro: 0
+  menuLocation: 
+  ingressPortData:
+  - identifier: input
+    displayName: input
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: System.String, mscorlib
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0
+  egressPortData:
+  - identifier: out
+    displayName: out
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: System.String, mscorlib
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 1
   schema: {fileID: 11400000, guid: 8af34e3b8c41eb42d9bfab8fe2fbfc89, type: 2}
   references:
     version: 2
@@ -77,7 +105,7 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        input: 0
+        input: 100
         decimalPlaces: 2
         output: 100.00
     - rid: 702614953389457875

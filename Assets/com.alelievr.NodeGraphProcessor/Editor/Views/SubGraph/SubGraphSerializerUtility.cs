@@ -11,6 +11,8 @@ namespace GraphProcessor
         SerializedProperty _ingressPortDataSerialized;
         SerializedProperty _egressPortDataSerialized;
         SerializedProperty _schemaSerialized;
+        SerializedProperty _isMacro;
+        SerializedProperty _menuLocation;
 
         public SubGraphSerializerUtility(SubGraph subGraph)
         {
@@ -43,6 +45,18 @@ namespace GraphProcessor
             PropertyUtils.LazyLoad(
                 ref _schemaSerialized,
                 () => SubGraphObject.FindProperty(SubGraph.SchemaFieldName)
+            );
+
+        public SerializedProperty IsMacro =>
+            PropertyUtils.LazyLoad(
+                ref _isMacro,
+                () => SubGraphObject.FindProperty(SubGraph.IsMacroFieldName)
+            );
+
+        public SerializedProperty MenuLocation =>
+            PropertyUtils.LazyLoad(
+                ref _menuLocation,
+                () => SubGraphObject.FindProperty(SubGraph.MenuLocationFieldName)
             );
 
         public VisualElement DrawFullSubGraphGUI()
@@ -98,6 +112,41 @@ namespace GraphProcessor
         {
             var updateSchemaButton = new Button(() => SubGraph.NotifyPortsChanged()) { text = "UPDATE PORTS" };
             return updateSchemaButton;
+        }
+
+        public Foldout DrawMacroGUI()
+        {
+            var macroFoldout = new Foldout()
+            {
+                text = "Macro Options"
+            };
+
+            VisualElement macroOptions = new();
+
+            var isMacroField = new PropertyField(IsMacro);
+            isMacroField.RegisterValueChangeCallback((prop) =>
+            {
+                if (macroOptions.visible == true && !SubGraph.IsMacro)
+                {
+                    macroOptions.visible = false;
+                }
+                else if (macroOptions.visible == false && SubGraph.IsMacro)
+                {
+                    macroOptions.visible = true;
+                }
+            });
+
+            var menuLocationField = new PropertyField(MenuLocation);
+
+            isMacroField.Bind(SubGraphObject);
+            menuLocationField.Bind(SubGraphObject);
+
+            macroOptions.Add(menuLocationField);
+
+            macroFoldout.Add(isMacroField);
+            macroFoldout.Add(macroOptions);
+
+            return macroFoldout;
         }
     }
 }

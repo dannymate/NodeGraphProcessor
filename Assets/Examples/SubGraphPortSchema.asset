@@ -40,3 +40,16 @@ MonoBehaviour:
     sizeInPixel: 0
     tooltip: 
     vertical: 0
+  - identifier: String OUT2
+    displayName: String OUT2
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: System.String, mscorlib
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 1

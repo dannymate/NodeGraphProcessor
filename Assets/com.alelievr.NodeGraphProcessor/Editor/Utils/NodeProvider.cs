@@ -356,10 +356,8 @@ namespace GraphProcessor
 
         public static IEnumerable<NodeMenuEntry> GetMacroNodeMenuEntries()
         {
-            Debug.Log("GET MACROS");
             foreach (var macro in GetMacros())
             {
-                Debug.Log(macro.MenuLocation);
                 yield return new NodeMenuEntry(macro.MenuLocation, typeof(MacroNode), InstantiateMacro, new object[] { macro });
             }
         }

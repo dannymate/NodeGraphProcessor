@@ -30,7 +30,7 @@ MonoBehaviour:
     inputPortIdentifier: String OUT
     outputPortIdentifier: 
   - _guid:
-      Value: 9da6aded-eb6f-4e21-9d6a-d3e12645ff4e
+      Value: 62f83251-10df-42e4-97e5-86c496902516
     owner: {fileID: 11400000}
     inputNodeGUID:
       Value: 7248bc3b-e4b0-4feb-841d-e1050938a375
@@ -77,7 +77,7 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        input: 100
+        input: 0
         decimalPlaces: 2
         output: 100.00
     - rid: 702614953389457875

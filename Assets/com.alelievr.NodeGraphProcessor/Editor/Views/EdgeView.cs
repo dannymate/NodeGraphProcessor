@@ -63,5 +63,22 @@ namespace GraphProcessor
                 owner.AddRelayNode(input as PortView, output as PortView, mousePos);
             }
         }
+
+        public override bool UpdateEdgeControl()
+        {
+            if (InputPort != null)
+            {
+                bool isInputPortVertical = InputPort.portData.vertical;
+                edgeControl.inputOrientation = isInputPortVertical ? Orientation.Vertical : Orientation.Horizontal;
+            }
+
+            if (OutputPort != null)
+            {
+                bool isOutputPortVertical = OutputPort.portData.vertical;
+                edgeControl.outputOrientation = isOutputPortVertical ? Orientation.Vertical : Orientation.Horizontal;
+            }
+
+            return base.UpdateEdgeControl();
+        }
     }
 }

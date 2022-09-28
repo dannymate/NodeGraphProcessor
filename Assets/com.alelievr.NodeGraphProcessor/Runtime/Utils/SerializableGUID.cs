@@ -10,6 +10,8 @@ public struct SerializableGuid : IComparable, IComparable<SerializableGuid>, IEq
         Value = value;
     }
 
+    public bool HasValue => !string.IsNullOrEmpty(Value);
+
     public static implicit operator SerializableGuid(Guid guid)
     {
         return new SerializableGuid(guid.ToString());
@@ -25,7 +27,7 @@ public struct SerializableGuid : IComparable, IComparable<SerializableGuid>, IEq
         if (value == null)
             return 1;
 
-        if (!(value is SerializableGuid))
+        if (value is not SerializableGuid)
             throw new ArgumentException("Must be SerializableGuid");
 
         SerializableGuid guid = (SerializableGuid)value;
@@ -55,5 +57,15 @@ public struct SerializableGuid : IComparable, IComparable<SerializableGuid>, IEq
     public override string ToString()
     {
         return Value != null ? new Guid(Value).ToString() : string.Empty;
+    }
+
+    public static bool operator ==(SerializableGuid lhs, SerializableGuid rhs)
+    {
+        return lhs.Equals(rhs);
+    }
+
+    public static bool operator !=(SerializableGuid lhs, SerializableGuid rhs)
+    {
+        return !lhs.Equals(rhs);
     }
 }

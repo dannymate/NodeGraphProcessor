@@ -41,7 +41,18 @@ namespace GraphProcessor
         public virtual bool isLocked => nodeLock;
 
         //id
-        public string GUID;
+        [SerializeField]
+        private SerializableGuid _guid;
+        public SerializableGuid GUID
+        {
+            get
+            {
+                if (!_guid.HasValue)
+                    _guid = Guid.NewGuid();
+
+                return _guid;
+            }
+        }
 
         public int computeOrder = -1;
 
@@ -474,7 +485,7 @@ namespace GraphProcessor
         /// <summary>
         /// Called only when the node is created, not when instantiated
         /// </summary>
-        public virtual void OnNodeCreated() => GUID = Guid.NewGuid().ToString();
+        public virtual void OnNodeCreated() => _guid = Guid.NewGuid();
 
         public virtual FieldInfo[] GetNodeFields()
             => GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);

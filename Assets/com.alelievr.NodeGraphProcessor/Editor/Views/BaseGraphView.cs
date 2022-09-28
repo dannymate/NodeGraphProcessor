@@ -234,7 +234,7 @@ namespace GraphProcessor
 
             RegisterCompleteObjectUndo(operationName);
 
-            Dictionary<string, BaseNode> copiedNodesMap = new Dictionary<string, BaseNode>();
+            Dictionary<SerializableGuid, BaseNode> copiedNodesMap = new();
 
             var unserializedGroups = data.copiedGroups.Select(g => JsonSerializer.Deserialize<Group>(g)).ToList();
 
@@ -245,7 +245,7 @@ namespace GraphProcessor
                 if (node == null)
                     continue;
 
-                string sourceGUID = node.GUID;
+                SerializableGuid sourceGUID = node.GUID;
                 graph.nodesPerGUID.TryGetValue(sourceGUID, out var sourceNode);
                 //Call OnNodeCreated on the new fresh copied node
                 node.createdFromDuplication = true;
@@ -708,7 +708,7 @@ namespace GraphProcessor
             graph.Deserialize();
 
             // Get selected nodes
-            var selectedNodeGUIDs = new List<string>();
+            var selectedNodeGUIDs = new List<SerializableGuid>();
             foreach (var e in selection)
             {
                 if (e is BaseNodeView v && this.Contains(v))

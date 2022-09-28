@@ -10,6 +10,8 @@ namespace GraphProcessor
 {
     public class PortView : Port
     {
+        public const string VerticalClass = "Vertical";
+
         public string fieldName => fieldInfo.Name;
         public Type fieldType => fieldInfo.GetUnderlyingType();
         public new Type portType;
@@ -48,7 +50,7 @@ namespace GraphProcessor
                 styleSheets.Add(userPortStyle);
 
             if (portData.vertical)
-                AddToClassList("Vertical");
+                AddToClassList(VerticalClass);
 
             this.tooltip = portData.tooltip;
         }
@@ -156,6 +158,21 @@ namespace GraphProcessor
             }
             if (!String.IsNullOrEmpty(data.displayName))
                 base.portName = data.displayName;
+
+            var portLabel = this.Q("type");
+            if (portLabel != null)
+            {
+                if (data.vertical)
+                {
+                    portLabel.style.display = DisplayStyle.None;
+                    this.AddToClassList(VerticalClass);
+                }
+                else
+                {
+                    portLabel.style.display = DisplayStyle.Flex;
+                    this.RemoveFromClassList(VerticalClass);//
+                }
+            }
 
             portData = data;
 

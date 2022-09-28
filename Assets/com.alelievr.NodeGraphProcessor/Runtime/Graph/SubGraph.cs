@@ -28,7 +28,7 @@ namespace GraphProcessor
         private SubGraphPortSchema schema;
         public SubGraphPortSchema Schema => schema;
 
-        public List<PortData> InputData
+        public List<PortData> IngressPortData
         {
             get
             {
@@ -39,7 +39,7 @@ namespace GraphProcessor
             }
         }
 
-        public List<PortData> OutputData
+        public List<PortData> EgressPortData
         {
             get
             {
@@ -50,10 +50,13 @@ namespace GraphProcessor
             }
         }
 
+        [NonSerialized]
         private SubGraphIngressNode _ingressNode;
         public SubGraphIngressNode IngressNode =>
-            PropertyUtils.LazyLoad(ref _ingressNode, () => GraphUtils.FindNodeInGraphOfType<SubGraphIngressNode>(this));
+                    PropertyUtils.LazyLoad(ref _ingressNode, () => GraphUtils.FindNodeInGraphOfType<SubGraphIngressNode>(this));
 
+
+        [NonSerialized]
         private SubGraphEgressNode _egressNode;
         public SubGraphEgressNode EgressNode =>
             PropertyUtils.LazyLoad(ref _egressNode, () => GraphUtils.FindNodeInGraphOfType<SubGraphEgressNode>(this));
@@ -68,14 +71,21 @@ namespace GraphProcessor
         {
             base.Initialize();
 
-            if (IngressNode == null)
+            if (IngressNode == null || !nodesPerGUID.ContainsKey(IngressNode.GUID))
             {
+                if (IngressNode != null)
+                    this.RemoveNode(IngressNode);
+
                 _ingressNode = BaseNode.CreateFromType<SubGraphIngressNode>(Vector2.zero);
                 AddNode(_ingressNode);
             }
 
-            if (EgressNode == null)
+            if (EgressNode == null || !nodesPerGUID.ContainsKey(EgressNode.GUID))
             {
+                if (EgressNode != null)
+                    this.RemoveNode(EgressNode);
+
+
                 _egressNode = BaseNode.CreateFromType<SubGraphEgressNode>(Vector2.zero);
                 AddNode(_egressNode);
             }

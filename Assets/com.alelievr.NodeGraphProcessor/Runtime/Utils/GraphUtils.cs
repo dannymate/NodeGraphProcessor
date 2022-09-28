@@ -128,7 +128,7 @@ namespace GraphProcessor
 
         public static T FindNodeInGraphOfType<T>(BaseGraph graph) where T : BaseNode
         {
-            return graph.nodes.Find(x => x.GetType() == typeof(T)) as T;
+            return graph.nodes.Find(x => x is T) as T;
         }
     }
 }

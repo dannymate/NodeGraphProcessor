@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,17 +13,17 @@ namespace GraphProcessor
         private object _ingress;
 
         public override string name => "Ingress";
-        protected override List<PortData> Ports => SubGraph.InputData;
+        protected override List<PortData> Ports => SubGraph.IngressPortData;
 
         public void PullIngress(Dictionary<PortData, object> ingress)
         {
-            this.passThroughBufferByPort = ingress;
+            passThroughBufferByPort = ingress;
         }
 
         [CustomPortOutput(nameof(_ingress), typeof(object))]
         protected void PushIngress(List<SerializableEdge> connectedEdges)
         {
-            if (connectedEdges.Count == 0) return;
+            if (connectedEdges.Count == 0 || passThroughBufferByPort.Count == 0) return;
 
             var value = passThroughBufferByPort[connectedEdges[0].outputPort.portData];
             foreach (var edge in connectedEdges)

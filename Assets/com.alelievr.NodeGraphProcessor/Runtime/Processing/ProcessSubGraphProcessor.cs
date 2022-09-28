@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GraphProcessor
 {
@@ -15,7 +16,11 @@ namespace GraphProcessor
         /// Manage graph scheduling and processing
         /// </summary>
         /// <param name="graph">Graph to be processed</param>
-        public ProcessSubGraphProcessor(SubGraph graph) : base(graph) { }
+        public ProcessSubGraphProcessor(SubGraph graph) : base(graph)
+        {
+            // Later on if there's interference issues when a SubGraph is run before returning its results
+            // this.graph = ScriptableObject.Instantiate(graph);
+        }
 
         public override void UpdateComputeOrder()
         {

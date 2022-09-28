@@ -27,95 +27,7 @@ MonoBehaviour:
   - rid: 3078690341890555936
   - rid: 3078690341890555937
   - rid: 3078690341890555938
-  edges:
-  - GUID: e945eba0-fecc-47ab-9cb2-3d7218beb383
-    owner: {fileID: 11400000}
-    inputNodeGUID: e33a42d0-53e3-410d-a7ea-ef8351352617
-    outputNodeGUID: e21d7285-83cc-47ce-9699-4f8e38c4b914
-    inputFieldName: inputA
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: ae143222-12f6-4f13-af26-c61b81888849
-    owner: {fileID: 11400000}
-    inputNodeGUID: e33a42d0-53e3-410d-a7ea-ef8351352617
-    outputNodeGUID: 45ce896a-3bab-4e35-919e-6b1a7f8d79cf
-    inputFieldName: inputB
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: 41f6eb52-351c-4930-8048-388d591afc39
-    owner: {fileID: 11400000}
-    inputNodeGUID: d1c3d6b0-0d2d-46a8-a228-31bf445a8cc0
-    outputNodeGUID: e33a42d0-53e3-410d-a7ea-ef8351352617
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: 10d9f771-80cc-4e13-845a-578c842dc0d1
-    owner: {fileID: 11400000}
-    inputNodeGUID: d1c3d6b0-0d2d-46a8-a228-31bf445a8cc0
-    outputNodeGUID: 45ce896a-3bab-4e35-919e-6b1a7f8d79cf
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: c82bcfab-4601-4233-a0fa-2d8b8d808d40
-    owner: {fileID: 11400000}
-    inputNodeGUID: d1c3d6b0-0d2d-46a8-a228-31bf445a8cc0
-    outputNodeGUID: bf75d265-c047-4dc4-bc93-396c0dbcb46d
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: aef603aa-72ad-4970-a260-5d9e81776e96
-    owner: {fileID: 11400000}
-    inputNodeGUID: 63ddb789-8781-4b97-aeea-c855faf58161
-    outputNodeGUID: d1c3d6b0-0d2d-46a8-a228-31bf445a8cc0
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: 775cf1a0-cb0e-4654-a22d-5993b33d654a
-    owner: {fileID: 11400000}
-    inputNodeGUID: a3fcf900-8e8d-4d28-a37e-9d63389f3026
-    outputNodeGUID: 63ddb789-8781-4b97-aeea-c855faf58161
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: 363b9c43-02b1-4022-b45c-c841bbd83c8e
-    owner: {fileID: 11400000}
-    inputNodeGUID: 7214d6aa-9cf9-4b8a-9ce3-b0d9d6340571
-    outputNodeGUID: a3fcf900-8e8d-4d28-a37e-9d63389f3026
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: 4481c06d-95c9-4ad1-a8a9-37d7b8e37138
-    owner: {fileID: 11400000}
-    inputNodeGUID: aa611275-269c-4013-9127-a70b437716a8
-    outputNodeGUID: ce1c4a79-51a1-4007-9210-e74a93f65ee8
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: 97d44f60-3645-4d3b-b187-50dff33ffc67
-    owner: {fileID: 11400000}
-    inputNodeGUID: 39fdf09f-b7ff-49f5-bfe5-c59e221c30b6
-    outputNodeGUID: 7214d6aa-9cf9-4b8a-9ce3-b0d9d6340571
-    inputFieldName: obj
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 2
-  - GUID: 2749f430-259b-4dc3-9c31-f894a1c5f330
-    owner: {fileID: 11400000}
-    inputNodeGUID: ce1c4a79-51a1-4007-9210-e74a93f65ee8
-    outputNodeGUID: 7214d6aa-9cf9-4b8a-9ce3-b0d9d6340571
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: _Pack
+  edges: []
   groups: []
   stackNodes: []
   pinnedElements:
@@ -201,8 +113,9 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: 39fdf09f-b7ff-49f5-bfe5-c59e221c30b6
-        computeOrder: 8
+        _guid:
+          Value: 6cba8fac-21e7-4e99-a4bf-75b007e45f05
+        computeOrder: 0
         position:
           serializedVersion: 2
           x: 1189.4581
@@ -222,8 +135,9 @@ MonoBehaviour:
       type: {class: SubNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: e33a42d0-53e3-410d-a7ea-ef8351352617
-        computeOrder: 2
+        _guid:
+          Value: 40feb156-a45a-419c-bda2-e1d4fec6dd50
+        computeOrder: 1
         position:
           serializedVersion: 2
           x: 348.07034
@@ -246,8 +160,9 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: e21d7285-83cc-47ce-9699-4f8e38c4b914
-        computeOrder: 1
+        _guid:
+          Value: 2e9274e5-6f88-4932-b04c-d4119f46bf11
+        computeOrder: 2
         position:
           serializedVersion: 2
           x: 225.07033
@@ -269,8 +184,9 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: 45ce896a-3bab-4e35-919e-6b1a7f8d79cf
-        computeOrder: 0
+        _guid:
+          Value: fce4e266-de73-4379-8f7a-511a9691136e
+        computeOrder: 3
         position:
           serializedVersion: 2
           x: 224.07034
@@ -292,7 +208,8 @@ MonoBehaviour:
       type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        GUID: d1c3d6b0-0d2d-46a8-a228-31bf445a8cc0
+        _guid:
+          Value: 3d90406c-ec35-43d4-9232-677685991fa8
         computeOrder: 4
         position:
           serializedVersion: 2
@@ -316,8 +233,9 @@ MonoBehaviour:
       type: {class: TextNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: bf75d265-c047-4dc4-bc93-396c0dbcb46d
-        computeOrder: 3
+        _guid:
+          Value: bad61b98-6ef3-4bdc-a413-077ba18f0940
+        computeOrder: 5
         position:
           serializedVersion: 2
           x: 215.05003
@@ -338,8 +256,9 @@ MonoBehaviour:
       type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        GUID: 63ddb789-8781-4b97-aeea-c855faf58161
-        computeOrder: 5
+        _guid:
+          Value: d4b7f55e-f67f-46e9-9171-93e1fae77641
+        computeOrder: 6
         position:
           serializedVersion: 2
           x: 727.20013
@@ -362,8 +281,9 @@ MonoBehaviour:
       type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        GUID: a3fcf900-8e8d-4d28-a37e-9d63389f3026
-        computeOrder: 6
+        _guid:
+          Value: b8991874-9fd5-4f57-b02a-8fc05c972c5f
+        computeOrder: 7
         position:
           serializedVersion: 2
           x: 847.90015
@@ -386,8 +306,9 @@ MonoBehaviour:
       type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        GUID: 7214d6aa-9cf9-4b8a-9ce3-b0d9d6340571
-        computeOrder: 7
+        _guid:
+          Value: 02364963-cfac-4fd7-b271-9f884d16899f
+        computeOrder: 8
         position:
           serializedVersion: 2
           x: 992.70013
@@ -410,7 +331,8 @@ MonoBehaviour:
       type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        GUID: ce1c4a79-51a1-4007-9210-e74a93f65ee8
+        _guid:
+          Value: 8a6283bb-bd0e-45f0-b8a6-48876c0184bb
         computeOrder: 9
         position:
           serializedVersion: 2
@@ -434,7 +356,8 @@ MonoBehaviour:
       type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        GUID: aa611275-269c-4013-9127-a70b437716a8
+        _guid:
+          Value: 8bc7c639-70b0-46ff-a945-fce9974d1b40
         computeOrder: 10
         position:
           serializedVersion: 2
@@ -458,7 +381,8 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: b4e61a3f-cfe6-4222-98b7-e7d345f74af5
+        _guid:
+          Value: c2a7dce9-0d90-4427-8aa5-947c91950a8f
         computeOrder: 11
         position:
           serializedVersion: 2
@@ -479,7 +403,8 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: d68885b2-82de-4c6b-8575-1cbadd7c33cc
+        _guid:
+          Value: 4c05cb9d-57e0-4918-83f9-ca54d357526e
         computeOrder: 12
         position:
           serializedVersion: 2

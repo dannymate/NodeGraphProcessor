@@ -79,7 +79,8 @@ namespace GraphProcessor
 
         public bool Equals(PortData other)
         {
-            return identifier == other.identifier
+            return other != null
+                && identifier == other.identifier
                 && displayName == other.displayName
                 && DisplayType == other.DisplayType
                 && showAsDrawer == other.showAsDrawer
@@ -88,6 +89,19 @@ namespace GraphProcessor
                 && proxiedFieldPath == other.proxiedFieldPath
                 && tooltip == other.tooltip
                 && vertical == other.vertical;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            return Equals(obj as PortData);
+        }
+
+        public override int GetHashCode()
+        {
+            return identifier?.GetHashCode() ?? 0;
         }
 
         public void CopyFrom(PortData other)
@@ -106,6 +120,19 @@ namespace GraphProcessor
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public static bool operator ==(PortData lhs, PortData rhs)
+        {
+            if (lhs is null && rhs is null) return true;
+            else if (lhs is null || rhs is null) return false;
+
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(PortData lhs, PortData rhs)
+        {
+            return !(lhs == rhs);
         }
     }
 

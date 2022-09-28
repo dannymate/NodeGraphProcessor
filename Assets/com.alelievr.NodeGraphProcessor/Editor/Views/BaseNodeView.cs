@@ -766,7 +766,7 @@ namespace GraphProcessor
             //skip if marked with NonSerialized or HideInInspector
             if (field.HasCustomAttribute<NonSerializedAttribute>() || field.HasCustomAttribute<HideInInspector>())
             {
-                Debug.Log("3 " + fieldPath);
+                // Debug.Log("3 " + fieldPath);
                 AddEmptyField(field, fromInspector);
                 return;
             }
@@ -775,7 +775,7 @@ namespace GraphProcessor
             var showInInspector = field.GetCustomAttribute<ShowInInspector>();
             if (!serializeField && !serializeReference && showInInspector != null && !showInInspector.showInNode && !fromInspector)
             {
-                Debug.Log("4 " + fieldPath);
+                // Debug.Log("4 " + fieldPath);
                 AddEmptyField(field, fromInspector);
                 return;
             }

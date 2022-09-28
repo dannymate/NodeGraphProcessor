@@ -8,56 +8,56 @@ using System;
 public class SubGraphNode : BaseNode
 {
 
-    [Input, CustomBehaviourOnly]
-    private object _inputs;
-
-    [Output, CustomBehaviourOnly]
-    private object _outputs;
-
-    private Dictionary<PortData, object> _passThroughBufferByPort = new();
-
     [SerializeField]
     private SubGraph subGraph;
+
+    [Input, CustomBehaviourOnly]
+    private object _ingress;
+
+    [Output, CustomBehaviourOnly]
+    private object _egress;
+
+    private Dictionary<PortData, object> _passThroughBufferByPort = new();
 
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
 
     public SubGraph SubGraph => subGraph;
 
-    private List<PortData> InputData => subGraph != null ? subGraph.InputData : new List<PortData>();
-    private List<PortData> OutputData => subGraph != null ? subGraph.OutputData : new List<PortData>();
+    private List<PortData> IngressPortData => SubGraph?.IngressPortData ?? new List<PortData>();
+    private List<PortData> EgressPortData => SubGraph?.EgressPortData ?? new List<PortData>();
 
     public override void InitializePorts()
     {
         base.InitializePorts();
 
         _passThroughBufferByPort?.Clear();
-        subGraph?.AddUpdatePortsListener(OnPortsListUpdated);
+        SubGraph?.AddUpdatePortsListener(OnPortsListUpdated);
     }
 
     protected override void Process()
     {
         base.Process();
 
-        var processor = new ProcessSubGraphProcessor(subGraph);
+        var processor = new ProcessSubGraphProcessor(SubGraph);
         processor.Run(_passThroughBufferByPort);
     }
 
-    [CustomPortInput(nameof(_inputs), typeof(object))]
+    [CustomPortInput(nameof(_ingress), typeof(object))]
     protected void PullIngress(List<SerializableEdge> connectedEdges)
     {
         if (connectedEdges.Count == 0) return;
 
-        PortData portData = InputData.Find(x => x.Equals(connectedEdges[0].inputPort.portData));
+        PortData portData = IngressPortData.Find(x => x.Equals(connectedEdges[0].inputPort.portData));
         _passThroughBufferByPort[portData] = connectedEdges[0].passThroughBuffer;
     }
 
-    [CustomPortBehavior(nameof(_inputs), cloneResults: true)]
+    [CustomPortBehavior(nameof(_ingress), cloneResults: true)]
     protected IEnumerable<PortData> CreateIngressPorts(List<SerializableEdge> edges)
     {
-        if (InputData == null) yield break;
+        if (IngressPortData == null) yield break;
 
-        foreach (var input in InputData)
+        foreach (var input in IngressPortData)
         {
             if (String.IsNullOrEmpty(input.identifier))
                 input.identifier = input.displayName;
@@ -66,13 +66,13 @@ public class SubGraphNode : BaseNode
         }
     }
 
-    [CustomPortInput(nameof(_outputs), typeof(object))]
+    [CustomPortInput(nameof(_egress), typeof(object))]
     protected void PushEgress(List<SerializableEdge> connectedEdges)
     {
         if (connectedEdges.Count == 0) return;
 
-        PortData portData = OutputData.Find(x => x.Equals(connectedEdges[0].outputPort.portData));
-        Dictionary<PortData, object> returnedData = subGraph.EgressNode.PushEgress();
+        PortData portData = EgressPortData.Find(x => x.Equals(connectedEdges[0].outputPort.portData));
+        Dictionary<PortData, object> returnedData = SubGraph.EgressNode.PushEgress();
         foreach (var edge in connectedEdges)
         {
             if (returnedData.ContainsKey(portData))
@@ -80,12 +80,12 @@ public class SubGraphNode : BaseNode
         }
     }
 
-    [CustomPortBehavior(nameof(_outputs), cloneResults: true)]
+    [CustomPortBehavior(nameof(_egress), cloneResults: true)]
     protected IEnumerable<PortData> CreateEgressPorts(List<SerializableEdge> edges)
     {
-        if (OutputData == null) yield break;
+        if (EgressPortData == null) yield break;
 
-        foreach (var output in OutputData)
+        foreach (var output in EgressPortData)
         {
             if (String.IsNullOrEmpty(output.identifier))
                 output.identifier = output.displayName;

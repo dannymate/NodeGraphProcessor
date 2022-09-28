@@ -14,26 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serializedNodes: []
   nodes:
-  - rid: 702614925759480022
-  - rid: 702614925759480023
   - rid: 702614929662542285
+  - rid: 702614953389457875
+  - rid: 702614953389457900
   edges:
-  - GUID: 624d0e9c-beac-475b-9b49-457822735080
+  - _guid:
+      Value: a9d7be19-db7e-4d82-bf24-4b4ccf8f9876
     owner: {fileID: 11400000}
-    inputNodeGUID: 80a59d14-304a-4f5b-8c1c-e0ce54b5f24e
-    outputNodeGUID: 12ba6134-3bfc-43dd-a1f8-d5590aa38499
-    inputFieldName: input
-    outputFieldName: _ingress
-    inputPortIdentifier: 
-    outputPortIdentifier: Float IN
-  - GUID: 4875fc21-921f-4362-bb9f-6941c055d287
-    owner: {fileID: 11400000}
-    inputNodeGUID: 216ddc00-b93a-45a2-9670-b7e22281d1dd
-    outputNodeGUID: 80a59d14-304a-4f5b-8c1c-e0ce54b5f24e
+    inputNodeGUID:
+      Value: 2219c2b0-d129-4cdf-8811-83a98c0a76d8
+    outputNodeGUID:
+      Value: 7248bc3b-e4b0-4feb-841d-e1050938a375
     inputFieldName: _egress
     outputFieldName: output
     inputPortIdentifier: String OUT
     outputPortIdentifier: 
+  - _guid:
+      Value: 9da6aded-eb6f-4e21-9d6a-d3e12645ff4e
+    owner: {fileID: 11400000}
+    inputNodeGUID:
+      Value: 7248bc3b-e4b0-4feb-841d-e1050938a375
+    outputNodeGUID:
+      Value: cffba5ed-acdb-41a5-bfa8-bd4ad2de1136
+    inputFieldName: input
+    outputFieldName: _ingress
+    inputPortIdentifier: 
+    outputPortIdentifier: Float IN
   groups: []
   stackNodes: []
   pinnedElements: []
@@ -41,7 +47,7 @@ MonoBehaviour:
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 678, y: 271, z: 0}
+  position: {x: 505, y: 330, z: 0}
   scale: {x: 1.3225, y: 1.3225, z: 1}
   ingressPortData: []
   egressPortData: []
@@ -49,58 +55,17 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 702614925759480022
-      type: {class: SubGraphIngressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
-      data:
-        nodeCustomName: 
-        GUID: 12ba6134-3bfc-43dd-a1f8-d5590aa38499
-        computeOrder: 0
-        position:
-          serializedVersion: 2
-          x: -211.61815
-          y: 126.56143
-          width: 84
-          height: 75
-        initialPosition:
-          serializedVersion: 2
-          x: 0
-          y: 0
-          width: 100
-          height: 100
-        expanded: 0
-        debug: 0
-        nodeLock: 0
-    - rid: 702614925759480023
-      type: {class: SubGraphEgressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
-      data:
-        nodeCustomName: 
-        GUID: 216ddc00-b93a-45a2-9670-b7e22281d1dd
-        computeOrder: 2
-        position:
-          serializedVersion: 2
-          x: 90.09264
-          y: 126.999985
-          width: 98
-          height: 75
-        initialPosition:
-          serializedVersion: 2
-          x: 0
-          y: 0
-          width: 100
-          height: 100
-        expanded: 0
-        debug: 0
-        nodeLock: 0
     - rid: 702614929662542285
       type: {class: FloatToStringsNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: 80a59d14-304a-4f5b-8c1c-e0ce54b5f24e
+        _guid:
+          Value: 7248bc3b-e4b0-4feb-841d-e1050938a375
         computeOrder: 1
         position:
           serializedVersion: 2
-          x: -105.880936
-          y: 161.14552
+          x: 34.536858
+          y: 18.000004
           width: 179
           height: 95
         initialPosition:
@@ -112,6 +77,50 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        input: 0
+        input: 100
         decimalPlaces: 2
-        output: 0.00
+        output: 100.00
+    - rid: 702614953389457875
+      type: {class: SubGraphEgressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid:
+          Value: 2219c2b0-d129-4cdf-8811-83a98c0a76d8
+        computeOrder: 2
+        position:
+          serializedVersion: 2
+          x: 290.55768
+          y: -56.514233
+          width: 98
+          height: 75
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 100
+          height: 100
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+    - rid: 702614953389457900
+      type: {class: SubGraphIngressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: Ingress
+        _guid:
+          Value: cffba5ed-acdb-41a5-bfa8-bd4ad2de1136
+        computeOrder: 0
+        position:
+          serializedVersion: 2
+          x: -119.48582
+          y: -64.41776
+          width: 84
+          height: 75
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 100
+          height: 100
+        expanded: 0
+        debug: 0
+        nodeLock: 0

@@ -9,7 +9,7 @@ namespace GraphProcessor
         private object _egress;
 
         public override string name => "Egress";
-        protected override List<PortData> Ports => SubGraph.OutputData;
+        protected override List<PortData> Ports => SubGraph.EgressPortData;
 
         public Dictionary<PortData, object> PushEgress()
         {

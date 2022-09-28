@@ -9,8 +9,9 @@ namespace GraphProcessor.View
         SubGraphIngressNode Target => this.nodeTarget as SubGraphIngressNode;
         SubGraph SubGraph => Target.SubGraph;
 
-        SubGraphSerializerUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
-
+        SubGraphSerializerUtility _subGraphSerializer;
+        SubGraphSerializerUtility SubGraphSerializer =>
+            PropertyUtils.LazyLoad(ref _subGraphSerializer, () => new(SubGraph));
 
         protected override void DrawDefaultInspector(bool fromInspector = false)
         {

@@ -9,7 +9,9 @@ namespace GraphProcessor.View
         SubGraphEgressNode Target => this.nodeTarget as SubGraphEgressNode;
         SubGraph SubGraph => Target.SubGraph;
 
-        SubGraphSerializerUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
+        SubGraphSerializerUtility _subGraphSerializer;
+        SubGraphSerializerUtility SubGraphSerializer =>
+            PropertyUtils.LazyLoad(ref _subGraphSerializer, () => new(SubGraph));
 
 
         protected override void DrawDefaultInspector(bool fromInspector = false)
@@ -22,7 +24,7 @@ namespace GraphProcessor.View
         {
             var subgraphPortFoldout = new Foldout()
             {
-                text = "Local SubGraph Port Selection"
+                text = "SubGraph Port Selection"
             };
 
             subgraphPortFoldout.Add(SubGraphSerializer.DrawEgressPortSelectorGUI());

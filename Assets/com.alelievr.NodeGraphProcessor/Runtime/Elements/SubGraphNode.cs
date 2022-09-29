@@ -9,6 +9,7 @@ public class SubGraphNode : BaseNode
 {
     public const string IngressPortsField = nameof(_ingress);
     public const string EgressPortsField = nameof(_egress);
+    public const string SubGraphField = nameof(subGraph);
 
     [SerializeField]
     protected SubGraph subGraph;

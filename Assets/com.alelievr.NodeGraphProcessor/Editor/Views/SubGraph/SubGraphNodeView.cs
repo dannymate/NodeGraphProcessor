@@ -1,6 +1,7 @@
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using UnityEditor;
+using GraphProcessor.Utils;
 
 namespace GraphProcessor.View
 {
@@ -12,12 +13,32 @@ namespace GraphProcessor.View
 
         SubGraphSerializerUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
 
+        public override void OnDoubleClicked()
+        {
+            if (SubGraph == null) return;
+
+            EditorWindow.GetWindow<SubGraphWindow>().InitializeGraph(SubGraph);
+        }
+
         protected override void DrawDefaultInspector(bool fromInspector = false)
         {
-            controlsContainer.Add(SubGraphSerializer?.DrawFullSubGraphGUI());
-            controlsContainer.Add(DrawSchemaControls());
+            VisualElement subGraphGUIContainer = new();
+            if (SubGraph != null)
+                subGraphGUIContainer.Add(DrawSubGraphGUI());
 
-            base.DrawDefaultInspector(fromInspector);
+
+            controlsContainer.Add(subGraphGUIContainer);
+            controlsContainer.Add(DrawSubGraphField(subGraphGUIContainer));
+        }
+
+        protected VisualElement DrawSubGraphGUI()
+        {
+            VisualElement subGraphGUIContainer = new();
+
+            subGraphGUIContainer.Add(SubGraphSerializer?.DrawFullSubGraphGUI());
+            subGraphGUIContainer.Add(DrawSchemaControls());
+
+            return subGraphGUIContainer;
         }
 
         protected VisualElement DrawSchemaControls()
@@ -43,11 +64,31 @@ namespace GraphProcessor.View
             return schemaControls;
         }
 
-        public override void OnDoubleClicked()
+        protected VisualElement DrawSubGraphField(VisualElement subGraphGUIContainer)
         {
-            if (SubGraph == null) return;
+            ObjectField subGraphField = new("SubGraph")
+            {
+                objectType = typeof(SubGraph),
+                value = Target.SubGraph
+            };
+            subGraphField.RegisterValueChangedCallback((prop) =>
+            {
+                Target.SetPrivateFieldValue(SubGraphNode.SubGraphField, prop.newValue as SubGraph);
+                Target.UpdateAllPortsLocal();
+                Target.RepaintTitle();
 
-            EditorWindow.GetWindow<SubGraphWindow>().InitializeGraph(SubGraph);
+                if (prop.newValue == null)
+                {
+                    subGraphGUIContainer.Hide();
+                    subGraphGUIContainer.Clear();
+                }
+                else
+                {
+                    subGraphGUIContainer.Add(DrawSubGraphGUI());
+                    subGraphGUIContainer.Show();
+                }
+            });
+            return subGraphField;
         }
     }
 }

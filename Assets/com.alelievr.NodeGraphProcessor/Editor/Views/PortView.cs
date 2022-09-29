@@ -104,7 +104,7 @@ namespace GraphProcessor
 
             // Correct port type if port accept multiple values (and so is a container)
             if (direction == Direction.Input && portData.acceptMultipleEdges && portType == fieldType) // If the user haven't set a custom field type
-            {//
+            {
                 if (fieldType.GetGenericArguments().Length > 0)
                     portType = fieldType.GetGenericArguments()[0];
             }
@@ -166,11 +166,16 @@ namespace GraphProcessor
                 {
                     portLabel.style.display = DisplayStyle.None;
                     this.AddToClassList(VerticalClass);
+
+                    // Allows the port to pick up mouse events
+                    this.Q("connector").pickingMode = PickingMode.Position;
                 }
                 else
                 {
                     portLabel.style.display = DisplayStyle.Flex;
-                    this.RemoveFromClassList(VerticalClass);//
+                    this.RemoveFromClassList(VerticalClass);
+
+                    this.Q("connector").pickingMode = PickingMode.Ignore;
                 }
             }
 

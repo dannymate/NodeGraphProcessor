@@ -7,7 +7,7 @@ namespace GraphProcessor.View
     [NodeCustomEditor(typeof(MacroNode))]
     public class MacroNodeView : BaseNodeView
     {
-        SubGraphNode Target => nodeTarget as SubGraphNode;
+        MacroNode Target => nodeTarget as MacroNode;
         SubGraph SubGraph => Target.SubGraph;
 
         SubGraphSerializerUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;

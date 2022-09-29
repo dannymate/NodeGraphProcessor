@@ -24,6 +24,7 @@ public class SubGraphNode : BaseNode
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
     public override string name => SubGraph?.name ?? "SubGraphNode";
+    public override Color color => Color.magenta;
 
     public SubGraph SubGraph => subGraph;
 

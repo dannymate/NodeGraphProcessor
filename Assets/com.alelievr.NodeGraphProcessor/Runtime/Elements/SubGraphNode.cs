@@ -75,6 +75,7 @@ public class SubGraphNode : BaseNode
 
         PortData portData = EgressPortData.Find(x => x.Equals(connectedEdges[0].outputPort.portData));
         Dictionary<PortData, object> returnedData = SubGraph.EgressNode.PushEgress();
+
         foreach (var edge in connectedEdges)
         {
             if (returnedData.ContainsKey(portData))

@@ -16,11 +16,14 @@ namespace GraphProcessor
             return passThroughBufferByPort;
         }
 
+        protected override void PreProcess()
+        {
+            passThroughBufferByPort.Clear();
+        }
+
         [CustomPortInput(nameof(_egress), typeof(object))]
         protected void PullEgressPorts(List<SerializableEdge> connectedEdges)
         {
-            passThroughBufferByPort.Clear();
-
             if (connectedEdges.Count == 0) return;
 
             passThroughBufferByPort.Add(connectedEdges[0].inputPort.portData, connectedEdges[0].passThroughBuffer);

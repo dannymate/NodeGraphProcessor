@@ -20,6 +20,11 @@ namespace GraphProcessor
             passThroughBufferByPort = ingress;
         }
 
+        protected override void PostProcess()
+        {
+            passThroughBufferByPort.Clear();
+        }
+
         [CustomPortOutput(nameof(_ingress), typeof(object))]
         protected void PushIngress(List<SerializableEdge> connectedEdges)
         {

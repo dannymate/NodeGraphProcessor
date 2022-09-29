@@ -51,34 +51,8 @@ MonoBehaviour:
   scale: {x: 1.3225, y: 1.3225, z: 1}
   isMacro: 1
   menuLocation: Macro/FloatToString
-  ingressPortData:
-  - identifier: input
-    displayName: input
-    displayType:
-      GuidAssignmentFailed: 0
-      GUID: 
-      _typeNameAndAssembly: System.String, mscorlib
-      _suppressLogs: 0
-    showAsDrawer: 0
-    acceptMultipleEdges: 0
-    proxiedFieldPath: 
-    sizeInPixel: 0
-    tooltip: 
-    vertical: 0
-  egressPortData:
-  - identifier: out
-    displayName: out
-    displayType:
-      GuidAssignmentFailed: 0
-      GUID: 
-      _typeNameAndAssembly: System.String, mscorlib
-      _suppressLogs: 0
-    showAsDrawer: 0
-    acceptMultipleEdges: 0
-    proxiedFieldPath: 
-    sizeInPixel: 0
-    tooltip: 
-    vertical: 1
+  ingressPortData: []
+  egressPortData: []
   schema: {fileID: 11400000, guid: 8af34e3b8c41eb42d9bfab8fe2fbfc89, type: 2}
   references:
     version: 2

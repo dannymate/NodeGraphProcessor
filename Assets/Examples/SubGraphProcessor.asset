@@ -29,7 +29,20 @@ MonoBehaviour:
   isMacro: 0
   menuLocation: 
   ingressPortData: []
-  egressPortData: []
+  egressPortData:
+  - identifier: 
+    displayName: test
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: 
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0
   schema: {fileID: 0}
   references:
     version: 2

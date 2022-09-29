@@ -1136,6 +1136,18 @@ namespace GraphProcessor
             nodeTarget.nodeLock ^= true;
         }
 
+        public override void OnSelected()
+        {
+            base.OnSelected();
+            SetOpacity(1);
+        }
+
+        public override void OnUnselected()
+        {
+            base.OnUnselected();
+            SetOpacity(HasPorts ? 1 : NoPortOpacity);
+        }
+
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             BuildAlignMenu(evt);

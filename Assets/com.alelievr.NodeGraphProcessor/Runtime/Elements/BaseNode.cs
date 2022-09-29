@@ -601,6 +601,8 @@ namespace GraphProcessor
 
         public void OnProcess()
         {
+            ExceptionToLog.Call(() => PreProcess());
+
             inputPorts.PullDatas();
 
             ExceptionToLog.Call(() => Process());
@@ -608,6 +610,8 @@ namespace GraphProcessor
             InvokeOnProcessed();
 
             outputPorts.PushDatas();
+
+            ExceptionToLog.Call(() => PostProcess());
         }
 
         public void InvokeOnProcessed() => onProcessed?.Invoke();
@@ -626,9 +630,19 @@ namespace GraphProcessor
         protected virtual void Destroy() { }
 
         /// <summary>
+        /// Prepare node before inputs are pulled
+        /// </summary>
+        protected virtual void PreProcess() { }
+
+        /// <summary>
         /// Override this method to implement custom processing
         /// </summary>
         protected virtual void Process() { }
+
+        /// <summary>
+        /// Called after outputs are pushed
+        /// </summary>
+        protected virtual void PostProcess() { }
 
         #endregion
 

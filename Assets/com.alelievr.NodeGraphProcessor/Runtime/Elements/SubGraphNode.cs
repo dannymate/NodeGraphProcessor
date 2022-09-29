@@ -23,6 +23,7 @@ public class SubGraphNode : BaseNode
 
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
+    public override string name => SubGraph?.name ?? "SubGraphNode";
 
     public SubGraph SubGraph => subGraph;
 
@@ -97,5 +98,9 @@ public class SubGraphNode : BaseNode
         }
     }
 
-    private void OnPortsListUpdated() => UpdateAllPortsLocal();
+    private void OnPortsListUpdated()
+    {
+        UpdateAllPortsLocal();
+        RepaintTitle();
+    }
 }

@@ -842,6 +842,11 @@ namespace GraphProcessor
         public void SetCustomName(string customName)
         {
             nodeCustomName = customName;
+            RepaintTitle();
+        }
+
+        public void RepaintTitle()
+        {
             View?.UpdateTitle();
         }
 

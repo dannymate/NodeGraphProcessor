@@ -341,4 +341,21 @@ namespace GraphProcessor
             this.args = args;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class NodeOpacityIfNoPorts : Attribute
+    {
+        private readonly float _opacity;
+
+        /// <summary>
+        /// What opacity to set this Node when there are no ports set.
+        /// </summary>
+        /// <param name="opacity">Min:0 Max:1 Opacity to set the Node to</param>
+        public NodeOpacityIfNoPorts(float opacity)
+        {
+            this._opacity = opacity;
+        }
+
+        public float Opacity => _opacity;
+    }
 }

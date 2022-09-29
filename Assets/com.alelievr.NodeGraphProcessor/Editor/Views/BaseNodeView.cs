@@ -67,6 +67,20 @@ namespace GraphProcessor
         private float selectedNodesAvgHorizontal;
         private float selectedNodesAvgVertical;
 
+        private float _noPortOpacity = -1;
+        protected virtual float NoPortOpacity =>
+            PropertyUtils.LazyLoad(ref _noPortOpacity, () =>
+            {
+                Type nodeType = nodeTarget.GetType();
+                if (nodeType.HasCustomAttribute<NodeOpacityIfNoPorts>())
+                    return nodeType.GetCustomAttribute<NodeOpacityIfNoPorts>().Opacity;
+
+                return 1;
+            },
+            (value) => value == -1);
+
+        protected bool HasPorts => inputPortViews.Count + outputPortViews.Count > 0;
+
         #region  Initialization
 
         public void Initialize(BaseGraphView owner, BaseNode node)
@@ -105,6 +119,7 @@ namespace GraphProcessor
             RefreshExpandedState();
 
             this.RefreshPorts();
+            SetOpacity(HasPorts ? 1 : NoPortOpacity);
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<DetachFromPanelEvent>(e => ExceptionToLog.Call(Disable));
@@ -1285,6 +1300,8 @@ namespace GraphProcessor
             RefreshPorts();
 
             RedrawControlDrawers();
+
+            SetOpacity(HasPorts ? 1 : NoPortOpacity);
         }
 
         void UpdatePortsForField(string fieldName)
@@ -1292,6 +1309,17 @@ namespace GraphProcessor
             // TODO: actual code
             RefreshPorts();
             RedrawControlDrawers();
+            SetOpacity(HasPorts ? 1 : NoPortOpacity);
+        }
+
+        protected void SetNoPortOpacity(float opacity)
+        {
+            this._noPortOpacity = opacity;
+        }
+
+        protected void SetOpacity(float opacity)
+        {
+            this.style.opacity = opacity;
         }
 
         protected virtual VisualElement CreateSettingsView() => new Label("Settings") { name = "header" };

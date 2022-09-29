@@ -13,5 +13,13 @@ namespace GraphProcessor
 
             return backingField;
         }
+
+        public static T LazyLoad<T>(ref T backingField, Func<T> getter, Predicate<T> getterPredicate)
+        {
+            if (getterPredicate.Invoke(backingField))
+                backingField = getter();
+
+            return backingField;
+        }
     }
 }

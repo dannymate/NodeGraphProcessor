@@ -123,6 +123,11 @@ namespace GraphProcessor
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<DetachFromPanelEvent>(e => ExceptionToLog.Call(Disable));
+            RegisterCallback<PointerDownEvent>((p) =>
+            {
+                if (p.clickCount == 2)
+                    OnDoubleClicked();
+            });
             OnGeometryChanged(null);
 
             InitializeNodeToViewInterface();
@@ -1135,6 +1140,8 @@ namespace GraphProcessor
         {
             nodeTarget.nodeLock ^= true;
         }
+
+        public virtual void OnDoubleClicked() { }
 
         public override void OnSelected()
         {

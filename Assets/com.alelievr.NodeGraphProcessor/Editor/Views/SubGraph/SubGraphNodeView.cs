@@ -1,6 +1,6 @@
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using UnityEngine;
+using UnityEditor;
 
 namespace GraphProcessor.View
 {
@@ -41,6 +41,13 @@ namespace GraphProcessor.View
             schemaControls.Add(SubGraphSerializer.SchemaSerializer?.DrawFullSchemaGUI());
 
             return schemaControls;
+        }
+
+        public override void OnDoubleClicked()
+        {
+            if (SubGraph == null) return;
+
+            EditorWindow.GetWindow<SubGraphWindow>().InitializeGraph(SubGraph);
         }
     }
 }

@@ -449,9 +449,49 @@ namespace GraphProcessor
             }
         }
 
+        public static IEnumerable<PortDescription> GetMacroPortDescriptions()
+        {
+            foreach (var macro in GetMacros())
+            {
+                foreach (var ingressPort in macro.IngressPortData)
+                {
+                    yield return new PortDescription
+                    {
+                        nodeType = typeof(MacroNode),
+                        portType = ingressPort.DisplayType,
+                        isInput = true,
+                        portFieldName = MacroNode.IngressPortsField,
+                        portDisplayName = ingressPort.displayName,
+                        portIdentifier = ingressPort.identifier,
+                    };
+                }
+
+                foreach (var egressPort in macro.EgressPortData)
+                {
+                    yield return new PortDescription
+                    {
+                        nodeType = typeof(MacroNode),
+                        portType = egressPort.DisplayType,
+                        isInput = false,
+                        portFieldName = MacroNode.EgressPortsField,
+                        portDisplayName = egressPort.displayName,
+                        portIdentifier = egressPort.identifier,
+                    };
+                }
+            }
+        }
+
         public static IEnumerable<PortDescription> GetEdgeCreationNodeMenuEntry(PortView portView, BaseGraph graph = null)
         {
             foreach (var description in genericNodes.nodeCreatePortDescription)
+            {
+                if (!IsPortCompatible(description))
+                    continue;
+
+                yield return description;
+            }
+
+            foreach (var description in GetMacroPortDescriptions())
             {
                 if (!IsPortCompatible(description))
                     continue;

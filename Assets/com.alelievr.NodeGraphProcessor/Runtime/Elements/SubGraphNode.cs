@@ -7,6 +7,8 @@ using System;
 [System.Serializable, NodeMenuItem("Subgraph")]
 public class SubGraphNode : BaseNode
 {
+    public const string IngressPortsField = nameof(_ingress);
+    public const string EgressPortsField = nameof(_egress);
 
     [SerializeField]
     protected SubGraph subGraph;

@@ -152,7 +152,7 @@ namespace GraphProcessor
                     if (String.IsNullOrEmpty(nodePath))
                         continue;
 
-                    // Ignore the node if it has filters and it doesn't meet the requirements, contains doesn't work so we compare paths instead.
+                    // Ignore the node if it has filters and it doesn't meet the requirements.
                     if (customMenuEntries.Contains(node) && !filteredCustomNodePaths.Contains(node))
                         continue;
 

@@ -259,10 +259,13 @@ namespace GraphProcessor
             renameIcon.RegisterCallback<MouseDownEvent>(ImageMouseDownCallback);
             this.Add(renameIcon);
 
+            if (RenameOption == NodeRenameOptions.DISABLED || RenameOption == NodeRenameOptions.DOUBLE_CLICK)
+                renameIcon.Hide();
+
 
             titleLabel.RegisterCallback<MouseDownEvent>(e =>
             {
-                if (RenameOption != NodeRenameOptions.DOUBLE_CLICK) return;
+                if (RenameOption != NodeRenameOptions.DOUBLE_CLICK && RenameOption != NodeRenameOptions.BOTH) return;
 
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                     OpenTitleEditor();
@@ -327,6 +330,11 @@ namespace GraphProcessor
         void UpdateTitle()
         {
             title = nodeTarget.GetCustomName() ?? nodeTarget.GetType().Name;
+
+            if (RenameOption == NodeRenameOptions.BOTH || RenameOption == NodeRenameOptions.ICON)
+                renameIcon?.Show();
+            else
+                renameIcon?.Hide();
         }
 
         void InitializeSettings()

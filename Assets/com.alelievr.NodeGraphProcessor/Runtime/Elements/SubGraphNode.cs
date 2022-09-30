@@ -22,7 +22,7 @@ public class SubGraphNode : BaseNode
 
     protected Dictionary<PortData, object> _passThroughBufferByPort = new();
 
-    public override NodeRenameOptions RenameOption => NodeRenameOptions.DOUBLE_CLICK;
+    protected override NodeRenameOptions DefaultRenameOption => SubGraph?.Options.RenameOptions ?? NodeRenameOptions.DISABLED;
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
     public override string name
@@ -78,7 +78,7 @@ public class SubGraphNode : BaseNode
 
         foreach (var input in IngressPortData)
         {
-            if (String.IsNullOrEmpty(input.identifier))
+            if (string.IsNullOrEmpty(input.identifier))
                 input.identifier = input.displayName;
 
             yield return input;

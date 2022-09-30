@@ -12,7 +12,7 @@ namespace GraphProcessor
         SerializedObject _subGraphSerialized;
         SerializedProperty _options;
         SerializedProperty _displayName;
-        SerializedProperty _isRenamable;
+        SerializedProperty _renameOption;
 
         public SubGraphOptionsGUIUtility(SubGraph subGraph)
         {
@@ -39,10 +39,10 @@ namespace GraphProcessor
                 () => Options.FindPropertyRelative(SubGraphOptions.DisplayNameFieldName)
             );
 
-        public SerializedProperty IsRenamable =>
+        public SerializedProperty RenameOption =>
             PropertyUtils.LazyLoad(
-                ref _isRenamable,
-                () => Options.FindPropertyRelative(SubGraphOptions.IsRenamableFieldName)
+                ref _renameOption,
+                () => Options.FindPropertyRelative(SubGraphOptions.RenameOptionsFieldName)
             );
 
         public Foldout DrawGUI()
@@ -54,16 +54,24 @@ namespace GraphProcessor
 
             PropertyField displayNameField = DrawDisplayNameField(bind: false);
             displayNameField.RegisterCallback<ChangeEvent<string>>((prop) =>
-                {
-                    if (string.Equals(prop.previousValue, prop.newValue))
-                        return;
+            {
+                if (string.Equals(prop.previousValue, prop.newValue))
+                    return;
 
-                    SubGraph.NotifyOptionsChanged();
-                }
-            );
+                SubGraph.NotifyOptionsChanged();
+            });
+
+            PropertyField renameOptionField = DrawRenameOptionsField(bind: false);
+            renameOptionField.RegisterCallback<ChangeEvent<string>>((e) =>
+            {
+                if (e.previousValue == e.newValue)
+                    return;
+
+                SubGraph.NotifyOptionsChanged();
+            });
 
             optionsFoldout.Add(displayNameField);
-            optionsFoldout.Add(DrawIsRenamableField(bind: false));
+            optionsFoldout.Add(renameOptionField);
 
             optionsFoldout.Bind(SubGraphObject);
 
@@ -79,13 +87,13 @@ namespace GraphProcessor
             return displayNameField;
         }
 
-        public PropertyField DrawIsRenamableField(bool bind = true)
+        public PropertyField DrawRenameOptionsField(bool bind = true)
         {
-            PropertyField isRenamableField = new(IsRenamable);
+            PropertyField renameOptionsField = new(RenameOption);
 
-            if (bind) isRenamableField.Bind(SubGraphObject);
+            if (bind) renameOptionsField.Bind(SubGraphObject);
 
-            return isRenamableField;
+            return renameOptionsField;
         }
     }
 }

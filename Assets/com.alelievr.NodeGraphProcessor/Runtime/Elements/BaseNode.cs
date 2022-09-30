@@ -129,7 +129,9 @@ namespace GraphProcessor
         /// <summary>
         /// Can the node be renamed in the UI. By default a node can be renamed by double clicking it's name.
         /// </summary>
-        public virtual NodeRenameOptions RenameOption => NodeRenameOptions.DISABLED;
+        private NodeRenameOptions? _renameOption = null;
+        protected virtual NodeRenameOptions DefaultRenameOption => NodeRenameOptions.DISABLED;
+        public NodeRenameOptions RenameOption => _renameOption ?? DefaultRenameOption;
 
         /// <summary>
         /// Is the node created from a duplicate operation (either ctrl-D or copy/paste).
@@ -848,6 +850,12 @@ namespace GraphProcessor
         public void RepaintTitle()
         {
             View?.UpdateTitle();
+        }
+
+        public void SetRenameMethod(NodeRenameOptions renameMethod)
+        {
+            _renameOption = renameMethod;
+            RepaintTitle();
         }
 
         /// <summary>

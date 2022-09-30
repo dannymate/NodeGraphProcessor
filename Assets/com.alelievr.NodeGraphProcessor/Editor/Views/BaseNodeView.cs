@@ -96,7 +96,7 @@ namespace GraphProcessor
                 capabilities &= ~Capabilities.Deletable;
             // Note that the Renamable capability is useless right now as it isn't implemented in GraphView.
             // We implement our own in SetupRenamableTitle
-            if (!RenamePolicy.IsDisabled())
+            if (!RenamePolicy.Is(NodeRenamePolicy.DISABLED))
                 capabilities |= Capabilities.Renamable;
 
             owner.computeOrderUpdated += ComputeOrderUpdatedCallback;
@@ -132,7 +132,7 @@ namespace GraphProcessor
             {
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                 {
-                    if (RenamePolicy.IsDisabled()) return;
+                    if (RenamePolicy.Is(NodeRenamePolicy.DISABLED)) return;
                     if (RenamePolicy.IsAny(NodeRenamePolicy.DOUBLE_CLICK, NodeRenamePolicy.BOTH))
                     {
                         if (titleContainer.ContainsPoint(e.localPosition))

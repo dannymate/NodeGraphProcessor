@@ -17,9 +17,9 @@ namespace GraphProcessor
             return options.Contains(value);
         }
 
-        public static bool IsDisabled(this NodeRenamePolicy value)
+        public static bool Is<T>(this T value, T option) where T : Enum
         {
-            return value == NodeRenamePolicy.DISABLED;
+            return value.Equals(option);
         }
     }
 }

@@ -83,7 +83,7 @@ namespace GraphProcessor
 
         protected bool HasPorts => inputPortViews.Count + outputPortViews.Count > 0;
 
-        protected NodeRenameOptions RenameOption => nodeTarget.RenameOption;
+        protected NodeRenamePolicy RenamePolicy => nodeTarget.RenamePolicy;
 
         #region  Initialization
 
@@ -96,7 +96,7 @@ namespace GraphProcessor
                 capabilities &= ~Capabilities.Deletable;
             // Note that the Renamable capability is useless right now as it isn't implemented in GraphView.
             // We implement our own in SetupRenamableTitle
-            if (RenameOption != NodeRenameOptions.DISABLED)
+            if (RenamePolicy != NodeRenamePolicy.DISABLED)
                 capabilities |= Capabilities.Renamable;
 
             owner.computeOrderUpdated += ComputeOrderUpdatedCallback;
@@ -132,13 +132,13 @@ namespace GraphProcessor
             {
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                 {
-                    if (RenameOption == NodeRenameOptions.DISABLED) return;
-                    if (RenameOption == NodeRenameOptions.DOUBLE_CLICK || RenameOption == NodeRenameOptions.BOTH)
+                    if (RenamePolicy == NodeRenamePolicy.DISABLED) return;
+                    if (RenamePolicy == NodeRenamePolicy.DOUBLE_CLICK || RenamePolicy == NodeRenamePolicy.BOTH)
                     {
                         if (titleContainer.ContainsPoint(e.localPosition))
                             return;
                     }
-                    if (RenameOption == NodeRenameOptions.ICON || RenameOption == NodeRenameOptions.BOTH)
+                    if (RenamePolicy == NodeRenamePolicy.ICON || RenamePolicy == NodeRenamePolicy.BOTH)
                     {
                         if (renameIcon.ContainsPoint(e.localPosition))
                             return;
@@ -259,13 +259,13 @@ namespace GraphProcessor
             renameIcon.RegisterCallback<MouseDownEvent>(ImageMouseDownCallback);
             this.Add(renameIcon);
 
-            if (RenameOption == NodeRenameOptions.DISABLED || RenameOption == NodeRenameOptions.DOUBLE_CLICK)
+            if (RenamePolicy == NodeRenamePolicy.DISABLED || RenamePolicy == NodeRenamePolicy.DOUBLE_CLICK)
                 renameIcon.Hide();
 
 
             titleLabel.RegisterCallback<MouseDownEvent>(e =>
             {
-                if (RenameOption != NodeRenameOptions.DOUBLE_CLICK && RenameOption != NodeRenameOptions.BOTH) return;
+                if (RenamePolicy != NodeRenamePolicy.DOUBLE_CLICK && RenamePolicy != NodeRenamePolicy.BOTH) return;
 
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                     OpenTitleEditor();
@@ -331,7 +331,7 @@ namespace GraphProcessor
         {
             title = nodeTarget.GetCustomName() ?? nodeTarget.GetType().Name;
 
-            if (RenameOption == NodeRenameOptions.BOTH || RenameOption == NodeRenameOptions.ICON)
+            if (RenamePolicy == NodeRenamePolicy.BOTH || RenamePolicy == NodeRenamePolicy.ICON)
                 renameIcon?.Show();
             else
                 renameIcon?.Hide();

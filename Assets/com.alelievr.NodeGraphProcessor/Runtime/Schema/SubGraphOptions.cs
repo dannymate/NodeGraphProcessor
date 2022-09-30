@@ -6,15 +6,15 @@ namespace GraphProcessor
     public struct SubGraphOptions
     {
         public const string DisplayNameFieldName = nameof(displayName);
-        public const string RenameOptionsFieldName = nameof(renameOptions);
+        public const string RenamePolicyFieldName = nameof(renamePolicy);
 
         [SerializeField]
         private string displayName;
 
         [SerializeField]
-        private NodeRenameOptions renameOptions;
+        private NodeRenamePolicy renamePolicy;
 
         public string DisplayName => displayName;
-        public NodeRenameOptions RenameOptions => renameOptions;
+        public NodeRenamePolicy RenamePolicy => renamePolicy;
     }
 }

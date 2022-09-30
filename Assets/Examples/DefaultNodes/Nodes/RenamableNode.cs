@@ -12,7 +12,7 @@ public class RenamableNode : BaseNode
 
     public override string name => "Renamable";
 
-    protected override NodeRenameOptions DefaultRenameOption => NodeRenameOptions.BOTH;
+    protected override NodeRenamePolicy DefaultRenamePolicy => NodeRenamePolicy.BOTH;
 
     protected override void Process() => output = input;
 }

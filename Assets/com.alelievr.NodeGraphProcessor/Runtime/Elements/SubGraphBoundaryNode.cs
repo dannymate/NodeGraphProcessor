@@ -9,7 +9,7 @@ namespace GraphProcessor
     {
         protected Dictionary<PortData, object> passThroughBufferByPort = new();
 
-        protected override NodeRenameOptions DefaultRenameOption => NodeRenameOptions.DISABLED;
+        protected override NodeRenamePolicy DefaultRenamePolicy => NodeRenamePolicy.DISABLED;
         public override bool deletable => false;
         public override bool needsInspector => true;
         public override bool HideNodeInspectorBlock => true;

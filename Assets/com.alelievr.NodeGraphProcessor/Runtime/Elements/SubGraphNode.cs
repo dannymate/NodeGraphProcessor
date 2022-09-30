@@ -22,7 +22,7 @@ public class SubGraphNode : BaseNode
 
     protected Dictionary<PortData, object> _passThroughBufferByPort = new();
 
-    protected override NodeRenameOptions DefaultRenameOption => SubGraph?.Options.RenameOptions ?? NodeRenameOptions.DISABLED;
+    protected override NodeRenamePolicy DefaultRenamePolicy => SubGraph?.Options.RenamePolicy ?? NodeRenamePolicy.DISABLED;
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
     public override string name

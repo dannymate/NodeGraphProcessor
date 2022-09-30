@@ -12,7 +12,7 @@ namespace GraphProcessor
         SerializedObject _subGraphSerialized;
         SerializedProperty _options;
         SerializedProperty _displayName;
-        SerializedProperty _renameOption;
+        SerializedProperty _renamePolicy;
 
         public SubGraphOptionsGUIUtility(SubGraph subGraph)
         {
@@ -39,10 +39,10 @@ namespace GraphProcessor
                 () => Options.FindPropertyRelative(SubGraphOptions.DisplayNameFieldName)
             );
 
-        public SerializedProperty RenameOption =>
+        public SerializedProperty RenamePolicy =>
             PropertyUtils.LazyLoad(
-                ref _renameOption,
-                () => Options.FindPropertyRelative(SubGraphOptions.RenameOptionsFieldName)
+                ref _renamePolicy,
+                () => Options.FindPropertyRelative(SubGraphOptions.RenamePolicyFieldName)
             );
 
         public Foldout DrawGUI()
@@ -61,8 +61,8 @@ namespace GraphProcessor
                 SubGraph.NotifyOptionsChanged();
             });
 
-            PropertyField renameOptionField = DrawRenameOptionsField(bind: false);
-            renameOptionField.RegisterCallback<ChangeEvent<string>>((e) =>
+            PropertyField renamePolicyField = DrawRenamePolicyField(bind: false);
+            renamePolicyField.RegisterCallback<ChangeEvent<string>>((e) =>
             {
                 if (e.previousValue == e.newValue)
                     return;
@@ -71,7 +71,7 @@ namespace GraphProcessor
             });
 
             optionsFoldout.Add(displayNameField);
-            optionsFoldout.Add(renameOptionField);
+            optionsFoldout.Add(renamePolicyField);
 
             optionsFoldout.Bind(SubGraphObject);
 
@@ -87,13 +87,13 @@ namespace GraphProcessor
             return displayNameField;
         }
 
-        public PropertyField DrawRenameOptionsField(bool bind = true)
+        public PropertyField DrawRenamePolicyField(bool bind = true)
         {
-            PropertyField renameOptionsField = new(RenameOption);
+            PropertyField renamePolicyField = new(RenamePolicy);
 
-            if (bind) renameOptionsField.Bind(SubGraphObject);
+            if (bind) renamePolicyField.Bind(SubGraphObject);
 
-            return renameOptionsField;
+            return renamePolicyField;
         }
     }
 }

@@ -123,10 +123,15 @@ namespace GraphProcessor
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<DetachFromPanelEvent>(e => ExceptionToLog.Call(Disable));
-            RegisterCallback<PointerDownEvent>((p) =>
+            RegisterCallback<PointerDownEvent>((e) =>
             {
-                if (p.clickCount == 2)
+                if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
+                {
+                    if (IsRenamable() && titleContainer.ContainsPoint(e.localPosition))
+                        return;
+
                     OnDoubleClicked();
+                }
             });
             OnGeometryChanged(null);
 

@@ -11,7 +11,7 @@ namespace GraphProcessor.View
         SubGraphNode Target => nodeTarget as SubGraphNode;
         SubGraph SubGraph => Target.SubGraph;
 
-        SubGraphSerializerUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
+        SubGraphGUIUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
 
         public override void OnDoubleClicked()
         {
@@ -54,12 +54,12 @@ namespace GraphProcessor.View
                 }
                 else if (!schemaControls.visible && SubGraph.Schema != null)
                 {
-                    schemaControls.Add(SubGraphSerializer.SchemaSerializer.DrawFullSchemaGUI());
+                    schemaControls.Add(SubGraphSerializer.SchemaGUIUtil.DrawFullSchemaGUI());
                     schemaControls.visible = true;
                 }
             }, visible: false);
             schemaControls.Add(schemaField);
-            schemaControls.Add(SubGraphSerializer.SchemaSerializer?.DrawFullSchemaGUI());
+            schemaControls.Add(SubGraphSerializer.SchemaGUIUtil?.DrawFullSchemaGUI());
 
             return schemaControls;
         }

@@ -358,7 +358,7 @@ namespace GraphProcessor
         {
             foreach (var macro in GetMacros())
             {
-                yield return new NodeMenuEntry(macro.MenuLocation, typeof(MacroNode), MacroNode.InstantiateMacro, new object[] { macro });
+                yield return new NodeMenuEntry(macro.MacroOptions.MenuLocation, typeof(MacroNode), MacroNode.InstantiateMacro, new object[] { macro });
             }
         }
 

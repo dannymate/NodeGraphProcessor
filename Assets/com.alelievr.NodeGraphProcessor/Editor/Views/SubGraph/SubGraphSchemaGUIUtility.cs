@@ -4,14 +4,14 @@ using UnityEngine.UIElements;
 
 namespace GraphProcessor
 {
-    public class SubGraphSchemaSerializer
+    public class SubGraphSchemaGUIUtility
     {
         readonly SubGraphPortSchema _schema;
         SerializedObject _subGraphSerialized;
         SerializedProperty _ingressPortDataSerialized;
         SerializedProperty _egressPortDataSerialized;
 
-        public SubGraphSchemaSerializer(SubGraphPortSchema schema)
+        public SubGraphSchemaGUIUtility(SubGraphPortSchema schema)
         {
             this._schema = schema;
         }

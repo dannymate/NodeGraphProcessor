@@ -8,7 +8,7 @@ namespace GraphProcessor.View
         MacroNode Target => nodeTarget as MacroNode;
         SubGraph SubGraph => Target.SubGraph;
 
-        SubGraphSerializerUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
+        SubGraphGUIUtility SubGraphSerializer => SubGraph ? new(SubGraph) : null;
 
         protected override void DrawDefaultInspector(bool fromInspector = false) { }
 

@@ -9,8 +9,8 @@ namespace GraphProcessor.View
         SubGraphIngressNode Target => this.nodeTarget as SubGraphIngressNode;
         SubGraph SubGraph => Target.SubGraph;
 
-        SubGraphSerializerUtility _subGraphSerializer;
-        SubGraphSerializerUtility SubGraphSerializer =>
+        SubGraphGUIUtility _subGraphSerializer;
+        SubGraphGUIUtility SubGraphSerializer =>
             PropertyUtils.LazyLoad(ref _subGraphSerializer, () => new(SubGraph));
 
         protected override void DrawDefaultInspector(bool fromInspector = false)
@@ -50,14 +50,14 @@ namespace GraphProcessor.View
                 }
                 else if (!schemaFoldout.visible && SubGraph.Schema != null)
                 {
-                    schemaControls.Add(SubGraphSerializer.SchemaSerializer.DrawIngressPortSelectorGUI());
-                    schemaControls.Add(SubGraphSerializer.SchemaSerializer.DrawSchemaUpdaterButtonGUI());
+                    schemaControls.Add(SubGraphSerializer.SchemaGUIUtil.DrawIngressPortSelectorGUI());
+                    schemaControls.Add(SubGraphSerializer.SchemaGUIUtil.DrawSchemaUpdaterButtonGUI());
                     schemaFoldout.visible = true;
                 }
             }, visible: false);
 
-            schemaControls.Add(SubGraphSerializer.SchemaSerializer?.DrawIngressPortSelectorGUI());
-            schemaControls.Add(SubGraphSerializer.SchemaSerializer?.DrawSchemaUpdaterButtonGUI());
+            schemaControls.Add(SubGraphSerializer.SchemaGUIUtil?.DrawIngressPortSelectorGUI());
+            schemaControls.Add(SubGraphSerializer.SchemaGUIUtil?.DrawSchemaUpdaterButtonGUI());
 
             schemaFoldout.Add(schemaField);
             schemaFoldout.Add(schemaControls);

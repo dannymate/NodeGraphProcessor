@@ -24,7 +24,19 @@ public class SubGraphNode : BaseNode
 
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
-    public override string name => SubGraph?.name ?? "SubGraphNode";
+    public override string name
+    {
+        get
+        {
+            if (!SubGraph)
+                return "SubGraphNode";
+
+            if (String.IsNullOrWhiteSpace(SubGraph.Options.DisplayName))
+                return SubGraph.name;
+
+            return SubGraph.Options.DisplayName;
+        }
+    }
     public override Color color => new Color(1, 0, 1, 0.5f);
 
     public SubGraph SubGraph => subGraph;
@@ -38,6 +50,7 @@ public class SubGraphNode : BaseNode
 
         _passThroughBufferByPort?.Clear();
         SubGraph?.AddUpdatePortsListener(OnPortsListUpdated);
+        SubGraph?.AddOptionsListener(OnSubGraphOptionsChanged);
     }
 
     protected override void Process()
@@ -103,6 +116,10 @@ public class SubGraphNode : BaseNode
     private void OnPortsListUpdated()
     {
         UpdateAllPortsLocal();
+    }
+
+    private void OnSubGraphOptionsChanged()
+    {
         RepaintTitle();
     }
 }

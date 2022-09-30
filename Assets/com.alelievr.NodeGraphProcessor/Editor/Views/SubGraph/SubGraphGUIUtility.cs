@@ -1,10 +1,11 @@
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using UnityEngine;
 
 namespace GraphProcessor
 {
-    public class SubGraphSerializerUtility
+    public class SubGraphGUIUtility
     {
         readonly SubGraph _subgraph;
         SerializedObject _subGraphSerialized;
@@ -12,15 +13,16 @@ namespace GraphProcessor
         SerializedProperty _egressPortDataSerialized;
         SerializedProperty _schemaSerialized;
         SerializedProperty _isMacro;
-        SerializedProperty _menuLocation;
+        SerializedProperty _macroOptions;
 
-        public SubGraphSerializerUtility(SubGraph subGraph)
+        public SubGraphGUIUtility(SubGraph subGraph)
         {
             this._subgraph = subGraph;
         }
 
         public SubGraph SubGraph => _subgraph;
-        public SubGraphSchemaSerializer SchemaSerializer => SubGraph.Schema ? new(SubGraph.Schema) : null;
+        public SubGraphOptionsGUIUtility OptionsGUIUtil => new(SubGraph);
+        public SubGraphSchemaGUIUtility SchemaGUIUtil => SubGraph.Schema ? new(SubGraph.Schema) : null;
 
         public SerializedObject SubGraphObject =>
             PropertyUtils.LazyLoad(
@@ -53,10 +55,10 @@ namespace GraphProcessor
                 () => SubGraphObject.FindProperty(SubGraph.IsMacroFieldName)
             );
 
-        public SerializedProperty MenuLocation =>
+        public SerializedProperty MacroOptions =>
             PropertyUtils.LazyLoad(
-                ref _menuLocation,
-                () => SubGraphObject.FindProperty(SubGraph.MenuLocationFieldName)
+                ref _macroOptions,
+                () => SubGraphObject.FindProperty(SubGraph.MacroOptionsFieldName)
             );
 
         public VisualElement DrawFullSubGraphGUI()
@@ -114,39 +116,43 @@ namespace GraphProcessor
             return updateSchemaButton;
         }
 
-        public Foldout DrawMacroGUI()
+        public VisualElement DrawOptionsGUI()
         {
-            var macroFoldout = new Foldout()
-            {
-                text = "Macro Options"
-            };
+            return OptionsGUIUtil.DrawGUI();
+        }
 
-            VisualElement macroOptions = new();
+        public VisualElement DrawMacroOptionsGUI()
+        {
+            VisualElement root = new();
+            VisualElement macroOptionsContainer = new();
 
             var isMacroField = new PropertyField(IsMacro);
             isMacroField.RegisterValueChangeCallback((prop) =>
             {
-                if (macroOptions.visible == true && !SubGraph.IsMacro)
+                if (macroOptionsContainer.visible == true && !SubGraph.IsMacro)
                 {
-                    macroOptions.visible = false;
+                    macroOptionsContainer.visible = false;
                 }
-                else if (macroOptions.visible == false && SubGraph.IsMacro)
+                else if (macroOptionsContainer.visible == false && SubGraph.IsMacro)
                 {
-                    macroOptions.visible = true;
+                    macroOptionsContainer.visible = true;
                 }
             });
 
-            var menuLocationField = new PropertyField(MenuLocation);
-
+            var macroOptionsField = new PropertyField(MacroOptions);
+            macroOptionsField.RegisterCallback<ChangeEvent<MacroOptions>>((prop) =>
+            {
+                Debug.Log("Changed");
+            });
             isMacroField.Bind(SubGraphObject);
-            menuLocationField.Bind(SubGraphObject);
+            macroOptionsField.Bind(SubGraphObject);
 
-            macroOptions.Add(menuLocationField);
+            macroOptionsContainer.Add(macroOptionsField);
 
-            macroFoldout.Add(isMacroField);
-            macroFoldout.Add(macroOptions);
+            root.Add(isMacroField);
+            root.Add(macroOptionsContainer);
 
-            return macroFoldout;
+            return root;
         }
     }
 }

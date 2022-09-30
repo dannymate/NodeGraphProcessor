@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 061c4e5078ffdfd1ab72813a0e014ce2, type: 3}
-  m_Name: SubGraphProcessor
+  m_Name: CHANGED
   m_EditorClassIdentifier: 
   serializedNodes: []
   nodes:
@@ -26,8 +26,11 @@ MonoBehaviour:
   nodeInspectorReference: {fileID: 0}
   position: {x: -482, y: -251, z: 0}
   scale: {x: 1.7490063, y: 1.7490063, z: 1}
+  options:
+    displayName: 
   isMacro: 0
-  menuLocation: 
+  macroOptions:
+    menuLocation: 
   ingressPortData: []
   egressPortData:
   - identifier: 

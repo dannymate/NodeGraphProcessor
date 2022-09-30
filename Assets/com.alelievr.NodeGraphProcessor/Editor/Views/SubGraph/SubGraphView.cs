@@ -10,8 +10,8 @@ namespace GraphProcessor
         protected SubGraph SubGraph => target as SubGraph;
         protected SubGraphPortSchema Schema => SubGraph.Schema;
 
-        SubGraphSerializerUtility _subGraphSerializer;
-        SubGraphSerializerUtility SubGraphSerializer =>
+        SubGraphGUIUtility _subGraphSerializer;
+        SubGraphGUIUtility SubGraphSerializer =>
             PropertyUtils.LazyLoad(ref _subGraphSerializer, () => new(SubGraph));
 
         protected override void CreateInspector()
@@ -20,7 +20,8 @@ namespace GraphProcessor
 
             root.Add(SubGraphSerializer.DrawFullSubGraphGUI());
             root.Add(DrawSchemaControlGUI());
-            root.Add(SubGraphSerializer.DrawMacroGUI());
+            root.Add(SubGraphSerializer.DrawOptionsGUI());
+            root.Add(SubGraphSerializer.DrawMacroOptionsGUI());
         }
 
         private VisualElement DrawSchemaControlGUI()
@@ -31,7 +32,7 @@ namespace GraphProcessor
             };
 
             VisualElement schemaControls = new();
-            schemaControls.Add(SubGraphSerializer.SchemaSerializer?.DrawFullSchemaGUI());
+            schemaControls.Add(SubGraphSerializer.SchemaGUIUtil?.DrawFullSchemaGUI());
 
             PropertyField schemaField = SubGraphSerializer.DrawSchemaFieldGUI();
             schemaField.RegisterValueChangeCallback((prop) =>
@@ -44,7 +45,7 @@ namespace GraphProcessor
                 }
                 else if (!schemaControls.visible && Schema != null)
                 {
-                    schemaControls.Add(SubGraphSerializer.SchemaSerializer.DrawFullSchemaGUI());
+                    schemaControls.Add(SubGraphSerializer.SchemaGUIUtil.DrawFullSchemaGUI());
                     schemaControls.visible = true;
                 }
             });

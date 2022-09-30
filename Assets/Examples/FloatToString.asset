@@ -49,8 +49,11 @@ MonoBehaviour:
   nodeInspectorReference: {fileID: 0}
   position: {x: 585, y: 416, z: 0}
   scale: {x: 0.8695652, y: 0.8695652, z: 1}
+  options:
+    displayName: 
   isMacro: 1
-  menuLocation: Macro/FloatToString
+  macroOptions:
+    menuLocation: 
   ingressPortData: []
   egressPortData: []
   schema: {fileID: 11400000, guid: 8af34e3b8c41eb42d9bfab8fe2fbfc89, type: 2}

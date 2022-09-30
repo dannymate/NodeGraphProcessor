@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using UnityEngine.UIElements;
-using UnityEditor;
-using UnityEditor.UIElements;
 
 namespace GraphProcessor
 {
@@ -13,16 +10,21 @@ namespace GraphProcessor
         public const string IngressPortDataFieldName = nameof(ingressPortData);
         public const string EgressPortDataFieldName = nameof(egressPortData);
         public const string SchemaFieldName = nameof(schema);
+        public const string OptionsFieldName = nameof(options);
         public const string IsMacroFieldName = nameof(isMacro);
-        public const string MenuLocationFieldName = nameof(menuLocation);
+        public const string MacroOptionsFieldName = nameof(macroOptions);
 
-        // Possibly create GUI methods for nodes to use like in FlowCanvas
         public event Notify OnPortsUpdated;
+        public event Notify OnOptionsUpdated;
+
+        [SerializeField]
+        private SubGraphOptions options;
 
         [SerializeField]
         private bool isMacro = false;
+
         [SerializeField]
-        private string menuLocation;
+        private MacroOptions macroOptions;
 
         [SerializeField]
         private List<PortData> ingressPortData = new();
@@ -35,7 +37,8 @@ namespace GraphProcessor
 
 
         public bool IsMacro => isMacro;
-        public string MenuLocation => menuLocation;
+        public SubGraphOptions Options => options;
+        public MacroOptions MacroOptions => macroOptions;
         public SubGraphPortSchema Schema => schema;
 
         public List<PortData> IngressPortData
@@ -121,9 +124,24 @@ namespace GraphProcessor
             this.OnPortsUpdated -= listener;
         }
 
+        public void AddOptionsListener(Notify listener)
+        {
+            this.OnOptionsUpdated += listener;
+        }
+
+        public void RemoveOptionsListener(Notify listener)
+        {
+            this.OnOptionsUpdated -= listener;
+        }
+
         public void NotifyPortsChanged()
         {
             OnPortsUpdated?.Invoke();
+        }
+
+        public void NotifyOptionsChanged()
+        {
+            OnOptionsUpdated?.Invoke();
         }
     }
 }

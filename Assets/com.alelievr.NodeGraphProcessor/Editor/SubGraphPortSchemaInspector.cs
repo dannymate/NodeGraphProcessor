@@ -9,8 +9,8 @@ namespace GraphProcessor
         SubGraphPortSchema Schema => target as SubGraphPortSchema;
 
 
-        SubGraphSchemaSerializer _schemaSerializer;
-        SubGraphSchemaSerializer SchemaSerializer =>
+        SubGraphSchemaGUIUtility _schemaSerializer;
+        SubGraphSchemaGUIUtility SchemaSerializer =>
             PropertyUtils.LazyLoad(ref _schemaSerializer, () => new(Schema));
 
 

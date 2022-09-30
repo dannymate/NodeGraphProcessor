@@ -65,34 +65,12 @@ MonoBehaviour:
     inputPortIdentifier: Float IN
     outputPortIdentifier: 
   - _guid:
-      Value: 04dfa0c4-de7c-4378-9b09-2b73ea82165d
-    owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 96eae2f5-0a07-4abe-a587-03b6f1730f27
-    outputNodeGUID:
-      Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
-    inputFieldName: _ingress
-    outputFieldName: output
-    inputPortIdentifier: Float IN
-    outputPortIdentifier: 
-  - _guid:
       Value: f60e9fd6-0d49-411c-9974-e6db11691046
     owner: {fileID: 11400000}
     inputNodeGUID:
       Value: 53a7bbb4-f3ed-421a-813c-8fd732f2c7f4
     outputNodeGUID:
       Value: 6dbd349d-958b-4c53-bbb2-1c09a458494f
-    inputFieldName: obj
-    outputFieldName: _egress
-    inputPortIdentifier: 
-    outputPortIdentifier: String OUT
-  - _guid:
-      Value: 5ea4547d-419c-4562-96cf-45a86056e123
-    owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: b233fdec-4d0e-48e2-a2d9-bb976eb6f6f3
-    outputNodeGUID:
-      Value: 96eae2f5-0a07-4abe-a587-03b6f1730f27
     inputFieldName: obj
     outputFieldName: _egress
     inputPortIdentifier: 
@@ -551,7 +529,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: b233fdec-4d0e-48e2-a2d9-bb976eb6f6f3
-        computeOrder: 11
+        computeOrder: 9
         position:
           serializedVersion: 2
           x: -130.00008
@@ -573,7 +551,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: f092acad-9de0-4ba2-a82c-20b797f73b1e
-        computeOrder: 12
+        computeOrder: 10
         position:
           serializedVersion: 2
           x: 501
@@ -597,7 +575,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 190136ef-7885-452f-8c2f-b3af931233d3
-        computeOrder: 13
+        computeOrder: 11
         position:
           serializedVersion: 2
           x: -124.79325
@@ -622,7 +600,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 1594ca0f-fab6-4bbe-b739-49a012294423
-        computeOrder: 14
+        computeOrder: 12
         position:
           serializedVersion: 2
           x: 88.17013
@@ -644,7 +622,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 8baad979-f03f-4695-9f7b-977f2833f7bc
-        computeOrder: 16
+        computeOrder: 14
         position:
           serializedVersion: 2
           x: 347.81113
@@ -668,7 +646,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: ecf6694d-e464-42b3-a65f-0b8242dddc2b
-        computeOrder: 17
+        computeOrder: 15
         position:
           serializedVersion: 2
           x: 605.984
@@ -691,7 +669,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: e758e713-6edc-4731-ba78-60d5d0023deb
-        computeOrder: 18
+        computeOrder: 16
         position:
           serializedVersion: 2
           x: 850.10004
@@ -713,7 +691,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: e275442c-ca67-4898-a3a5-ddbd1e2d27d9
-        computeOrder: 19
+        computeOrder: 17
         position:
           serializedVersion: 2
           x: 1248
@@ -736,7 +714,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 9785e124-5c11-4256-966f-ff31daf434d8
-        computeOrder: 20
+        computeOrder: 18
         position:
           serializedVersion: 2
           x: 1584
@@ -759,7 +737,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 353340ea-58ca-48dc-8463-0a3423eaf67c
-        computeOrder: 21
+        computeOrder: 19
         position:
           serializedVersion: 2
           x: 578
@@ -802,7 +780,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 55a1596b-7c86-4f53-85a7-74aef83dd122
-        computeOrder: 22
+        computeOrder: 20
         position:
           serializedVersion: 2
           x: 991.95654
@@ -828,7 +806,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 01e94ed6-7697-41dd-a76f-b38757528885
-        computeOrder: 23
+        computeOrder: 21
         position:
           serializedVersion: 2
           x: 922
@@ -871,7 +849,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: e35bde04-76f0-494e-9cd3-9e984c29d459
-        computeOrder: 15
+        computeOrder: 13
         position:
           serializedVersion: 2
           x: 106.00001
@@ -895,7 +873,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: d29cb965-003c-4cb0-a6b0-dbb1f69933ee
-        computeOrder: 24
+        computeOrder: 22
         position:
           serializedVersion: 2
           x: -405.48395
@@ -918,7 +896,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 74a8b801-a688-4b34-87dd-e0532944b92d
-        computeOrder: 25
+        computeOrder: 23
         position:
           serializedVersion: 2
           x: 77.5
@@ -972,7 +950,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 96eae2f5-0a07-4abe-a587-03b6f1730f27
-        computeOrder: 10
+        computeOrder: 28
         position:
           serializedVersion: 2
           x: -361
@@ -995,7 +973,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: d2be3e4d-f69f-42d6-a693-14f4aa3ded5c
-        computeOrder: 30
+        computeOrder: 29
         position:
           serializedVersion: 2
           x: -751
@@ -1020,7 +998,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
-        computeOrder: 9
+        computeOrder: 30
         position:
           serializedVersion: 2
           x: -512
@@ -1206,7 +1184,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 3ecc0329-d5cb-4c5e-aaee-981933481681
-        computeOrder: 26
+        computeOrder: 24
         position:
           serializedVersion: 2
           x: -516.50006
@@ -1257,7 +1235,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: e7f55b8a-e4dc-43bf-bd8d-63204d7e671f
-        computeOrder: 27
+        computeOrder: 25
         position:
           serializedVersion: 2
           x: -516.00006
@@ -1281,7 +1259,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: b0790ec9-3bef-482f-8395-a1a7b1a3efc1
-        computeOrder: 28
+        computeOrder: 26
         position:
           serializedVersion: 2
           x: -709
@@ -1305,7 +1283,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: c9b188d1-aaa1-43f9-aeef-85f3efaddfaf
-        computeOrder: 29
+        computeOrder: 27
         position:
           serializedVersion: 2
           x: -632.5

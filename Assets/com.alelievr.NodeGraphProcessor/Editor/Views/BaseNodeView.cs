@@ -132,8 +132,17 @@ namespace GraphProcessor
             {
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                 {
-                    if (IsRenamable() && titleContainer.ContainsPoint(e.localPosition))
-                        return;
+                    if (RenameOption == NodeRenameOptions.DISABLED) return;
+                    if (RenameOption == NodeRenameOptions.DOUBLE_CLICK || RenameOption == NodeRenameOptions.BOTH)
+                    {
+                        if (titleContainer.ContainsPoint(e.localPosition))
+                            return;
+                    }
+                    if (RenameOption == NodeRenameOptions.ICON || RenameOption == NodeRenameOptions.BOTH)
+                    {
+                        if (renameIcon.ContainsPoint(e.localPosition))
+                            return;
+                    }
 
                     OnDoubleClicked();
                 }

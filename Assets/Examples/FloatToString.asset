@@ -51,6 +51,7 @@ MonoBehaviour:
   scale: {x: 0.8695652, y: 0.8695652, z: 1}
   options:
     displayName: 
+    isRenamable: 0
   isMacro: 1
   macroOptions:
     menuLocation: 

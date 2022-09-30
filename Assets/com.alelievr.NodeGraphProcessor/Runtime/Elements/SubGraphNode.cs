@@ -22,6 +22,7 @@ public class SubGraphNode : BaseNode
 
     protected Dictionary<PortData, object> _passThroughBufferByPort = new();
 
+    public override NodeRenameOptions RenameOption => NodeRenameOptions.DOUBLE_CLICK;
     public override bool HideNodeInspectorBlock => true;
     public override bool needsInspector => true;
     public override string name
@@ -31,7 +32,7 @@ public class SubGraphNode : BaseNode
             if (!SubGraph)
                 return "SubGraphNode";
 
-            if (String.IsNullOrWhiteSpace(SubGraph.Options.DisplayName))
+            if (string.IsNullOrWhiteSpace(SubGraph.Options.DisplayName))
                 return SubGraph.name;
 
             return SubGraph.Options.DisplayName;

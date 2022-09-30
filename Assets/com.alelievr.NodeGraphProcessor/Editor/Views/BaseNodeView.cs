@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 
 using Status = UnityEngine.UIElements.DropdownMenuAction.Status;
 using NodeView = UnityEditor.Experimental.GraphView.Node;
+using GraphProcessor.Utils;
 
 namespace GraphProcessor
 {
@@ -38,6 +39,7 @@ namespace GraphProcessor
         NodeSettingsView settingsContainer;
         Button settingButton;
         TextField titleTextField;
+        Image renameIcon;
 
         Label computeOrderLabel = new Label();
 
@@ -81,6 +83,8 @@ namespace GraphProcessor
 
         protected bool HasPorts => inputPortViews.Count + outputPortViews.Count > 0;
 
+        protected NodeRenameOptions RenameOption => nodeTarget.RenameOption;
+
         #region  Initialization
 
         public void Initialize(BaseGraphView owner, BaseNode node)
@@ -90,8 +94,9 @@ namespace GraphProcessor
 
             if (!node.deletable)
                 capabilities &= ~Capabilities.Deletable;
-            // Note that the Renamable capability is useless right now as it haven't been implemented in Graphview
-            if (node.isRenamable)
+            // Note that the Renamable capability is useless right now as it isn't implemented in GraphView.
+            // We implement our own in SetupRenamableTitle
+            if (RenameOption != NodeRenameOptions.DISABLED)
                 capabilities |= Capabilities.Renamable;
 
             owner.computeOrderUpdated += ComputeOrderUpdatedCallback;
@@ -212,9 +217,9 @@ namespace GraphProcessor
 
             AddInputContainer();
 
-            // Add renaming capability
-            if ((capabilities & Capabilities.Renamable) != 0)
-                SetupRenamableTitle();
+            // // Add renaming capability
+            // if ((capabilities & Capabilities.Renamable) != 0)
+            SetupRenamableTitle();
         }
 
         void SetupRenamableTitle()
@@ -222,11 +227,34 @@ namespace GraphProcessor
             var titleLabel = this.Q("title-label") as Label;
 
             titleTextField = new TextField { isDelayed = true };
-            titleTextField.style.display = DisplayStyle.None;
+            titleTextField.Hide();
             titleLabel.parent.Insert(0, titleTextField);
+
+            renameIcon = new() { image = EditorGUIUtility.IconContent("d_InputField Icon").image };
+            renameIcon.style.position = Position.Absolute;
+            renameIcon.SetOpacity(0.4f);
+            renameIcon.SetSize(16, 16);
+            renameIcon.SetPosition(10, 0, -9, 0);
+
+            bool isPointerOverImage = false;
+            renameIcon.RegisterCallback<PointerOverEvent>((e) =>
+            {
+                renameIcon.SetOpacity(1);
+                isPointerOverImage = true;
+            });
+            renameIcon.RegisterCallback<PointerOutEvent>((e) =>
+            {
+                renameIcon.SetOpacity(0.4f);
+                isPointerOverImage = false;
+            });
+            renameIcon.RegisterCallback<MouseDownEvent>(ImageMouseDownCallback);
+            this.Add(renameIcon);
+
 
             titleLabel.RegisterCallback<MouseDownEvent>(e =>
             {
+                if (RenameOption != NodeRenameOptions.DOUBLE_CLICK) return;
+
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                     OpenTitleEditor();
             });
@@ -239,14 +267,33 @@ namespace GraphProcessor
                     CloseAndSaveTitleEditor(titleTextField.value);
             });
 
-            titleTextField.RegisterCallback<FocusOutEvent>(e => CloseAndSaveTitleEditor(titleTextField.value));
+            void ImageMouseDownCallback(MouseDownEvent e)
+            {
+                if (!titleTextField.IsShowing())
+                    OpenTitleEditor();
+                else
+                    CloseAndSaveTitleEditor(titleTextField.value);
+
+                e.StopPropagation();
+            }
+
+            void TitleTextFieldFocusOut(FocusOutEvent e)
+            {
+                if (isPointerOverImage && Event.current?.button == 0) return;
+
+                CloseAndSaveTitleEditor(titleTextField.value);
+            }
+
+            titleTextField.RegisterCallback<FocusOutEvent>(TitleTextFieldFocusOut, TrickleDown.TrickleDown);
+
 
             void OpenTitleEditor()
             {
                 // show title textbox
-                titleTextField.style.display = DisplayStyle.Flex;
-                titleLabel.style.display = DisplayStyle.None;
+                titleTextField.Show();
+                titleLabel.Hide();
                 titleTextField.focusable = true;
+                // titleTextField.RegisterCallback<FocusOutEvent>(TitleTextFieldFocusOut);
 
                 titleTextField.SetValueWithoutNotify(title);
                 titleTextField.Focus();
@@ -259,9 +306,10 @@ namespace GraphProcessor
                 nodeTarget.SetCustomName(newTitle);
 
                 // hide title TextBox
-                titleTextField.style.display = DisplayStyle.None;
-                titleLabel.style.display = DisplayStyle.Flex;
+                titleTextField.Hide();
+                titleLabel.Show();
                 titleTextField.focusable = false;
+                // titleTextField.UnregisterCallback<FocusOutEvent>(TitleTextFieldFocusOut);
 
                 UpdateTitle();
             }
@@ -269,7 +317,7 @@ namespace GraphProcessor
 
         void UpdateTitle()
         {
-            title = (nodeTarget.GetCustomName() == null) ? nodeTarget.GetType().Name : nodeTarget.GetCustomName();
+            title = nodeTarget.GetCustomName() ?? nodeTarget.GetType().Name;
         }
 
         void InitializeSettings()

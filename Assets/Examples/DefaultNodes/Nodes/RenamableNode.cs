@@ -5,14 +5,14 @@ using GraphProcessor;
 public class RenamableNode : BaseNode
 {
     [Output("Out")]
-	public float		output;
-	
+    public float output;
+
     [Input("In")]
-	public float		input;
+    public float input;
 
-	public override string name => "Renamable";
+    public override string name => "Renamable";
 
-    public override bool isRenamable => true;
+    public override NodeRenameOptions RenameOption => NodeRenameOptions.BOTH;
 
-	protected override void Process() => output = input;
+    protected override void Process() => output = input;
 }

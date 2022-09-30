@@ -96,7 +96,7 @@ namespace GraphProcessor
                 capabilities &= ~Capabilities.Deletable;
             // Note that the Renamable capability is useless right now as it isn't implemented in GraphView.
             // We implement our own in SetupRenamableTitle
-            if (RenamePolicy != NodeRenamePolicy.DISABLED)
+            if (!RenamePolicy.IsDisabled())
                 capabilities |= Capabilities.Renamable;
 
             owner.computeOrderUpdated += ComputeOrderUpdatedCallback;
@@ -132,13 +132,13 @@ namespace GraphProcessor
             {
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                 {
-                    if (RenamePolicy == NodeRenamePolicy.DISABLED) return;
-                    if (RenamePolicy == NodeRenamePolicy.DOUBLE_CLICK || RenamePolicy == NodeRenamePolicy.BOTH)
+                    if (RenamePolicy.IsDisabled()) return;
+                    if (RenamePolicy.IsAny(NodeRenamePolicy.DOUBLE_CLICK, NodeRenamePolicy.BOTH))
                     {
                         if (titleContainer.ContainsPoint(e.localPosition))
                             return;
                     }
-                    if (RenamePolicy == NodeRenamePolicy.ICON || RenamePolicy == NodeRenamePolicy.BOTH)
+                    if (RenamePolicy.IsAny(NodeRenamePolicy.ICON, NodeRenamePolicy.BOTH))
                     {
                         if (renameIcon.ContainsPoint(e.localPosition))
                             return;
@@ -259,13 +259,12 @@ namespace GraphProcessor
             renameIcon.RegisterCallback<MouseDownEvent>(ImageMouseDownCallback);
             this.Add(renameIcon);
 
-            if (RenamePolicy == NodeRenamePolicy.DISABLED || RenamePolicy == NodeRenamePolicy.DOUBLE_CLICK)
+            if (!RenamePolicy.IsAny(NodeRenamePolicy.ICON, NodeRenamePolicy.BOTH))
                 renameIcon.Hide();
-
 
             titleLabel.RegisterCallback<MouseDownEvent>(e =>
             {
-                if (RenamePolicy != NodeRenamePolicy.DOUBLE_CLICK && RenamePolicy != NodeRenamePolicy.BOTH) return;
+                if (!RenamePolicy.IsAny(NodeRenamePolicy.DOUBLE_CLICK, NodeRenamePolicy.BOTH)) return;
 
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                     OpenTitleEditor();
@@ -331,7 +330,7 @@ namespace GraphProcessor
         {
             title = nodeTarget.GetCustomName() ?? nodeTarget.GetType().Name;
 
-            if (RenamePolicy == NodeRenamePolicy.BOTH || RenamePolicy == NodeRenamePolicy.ICON)
+            if (RenamePolicy.IsAny(NodeRenamePolicy.ICON, NodeRenamePolicy.BOTH))
                 renameIcon?.Show();
             else
                 renameIcon?.Hide();

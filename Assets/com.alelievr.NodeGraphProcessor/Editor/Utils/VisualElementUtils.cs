@@ -27,7 +27,7 @@ namespace GraphProcessor.Utils
             return ve.style.display == DisplayStyle.Flex;
         }
 
-        public static VisualElement SetPosition(this VisualElement ve, float top, float bottom, float left, float right)
+        public static VisualElement SetOffset(this VisualElement ve, float top, float bottom, float left, float right)
         {
             ve.style.top = top;
             ve.style.bottom = bottom;

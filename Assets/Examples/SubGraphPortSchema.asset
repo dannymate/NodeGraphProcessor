@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ingressPortData:
   - identifier: Float IN
+    identifierObject: {fileID: 0}
+    useIdentifierObject: 0
     displayName: Float IN
     displayType:
       GuidAssignmentFailed: 0
@@ -28,6 +30,8 @@ MonoBehaviour:
     vertical: 0
   egressPortData:
   - identifier: String OUT
+    identifierObject: {fileID: 0}
+    useIdentifierObject: 0
     displayName: String OUT
     displayType:
       GuidAssignmentFailed: 0

@@ -38,30 +38,27 @@ namespace GraphProcessor
 
         public VisualElement DrawFullSchemaGUI()
         {
-            var portSelectionFoldout = new Foldout()
-            {
-                text = "Schema Port Selection"
-            };
+            var schemaControlsContainer = new VisualElement();
 
-            portSelectionFoldout.Add(DrawIngressPortSelectorGUI(bind: false));
-            portSelectionFoldout.Add(DrawEgressPortSelectorGUI(bind: false));
-            portSelectionFoldout.Add(DrawSchemaUpdaterButtonGUI());
+            schemaControlsContainer.Add(DrawIngressPortSelectorGUI(bind: false));
+            schemaControlsContainer.Add(DrawEgressPortSelectorGUI(bind: false));
+            schemaControlsContainer.Add(DrawSchemaUpdaterButtonGUI());
 
-            portSelectionFoldout.Bind(SchemaObject);
+            schemaControlsContainer.Bind(SchemaObject);
 
-            return portSelectionFoldout;
+            return schemaControlsContainer;
         }
 
         public PropertyField DrawIngressPortSelectorGUI(bool bind = true)
         {
-            var ingressDataField = new PropertyField(IngressPortData);
+            var ingressDataField = new PropertyField(IngressPortData) { label = "Ingress Port Data - Schema" };
             if (bind) ingressDataField.Bind(SchemaObject);
             return ingressDataField;
         }
 
         public PropertyField DrawEgressPortSelectorGUI(bool bind = true)
         {
-            var egressDataField = new PropertyField(EgressPortData);
+            var egressDataField = new PropertyField(EgressPortData) { label = "Egress Port Data - Schema" };
             if (bind) egressDataField.Bind(SchemaObject);
             return egressDataField;
         }

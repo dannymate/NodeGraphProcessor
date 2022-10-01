@@ -1,29 +1,31 @@
+using System.Linq;
 using GraphProcessor.Utils;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using UnityEngine;
 
 namespace GraphProcessor
 {
     [CustomPropertyDrawer(typeof(PortData))]
     public class PortDataDrawer : PropertyDrawer
     {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        private StyleBackground IdentifierTextBackground => (StyleBackground)EditorGUIUtility.IconContent("d_Text Icon").image;
+        private StyleBackground IdentifierSOBackground => (StyleBackground)EditorGUIUtility.IconContent("d_ScriptableObject Icon").image;
+
+        public override VisualElement CreatePropertyGUI(SerializedProperty portDataProperty)
         {
-            SerializedProperty identifierProperty = property.FindPropertyRelative(PortData.IdentifierFieldName);
-            SerializedProperty identifierObjectProperty = property.FindPropertyRelative(PortData.IdentifierObjectFieldName);
-            SerializedProperty useIdentifierObjectProperty = property.FindPropertyRelative(PortData.UseIdentifierObjectFieldName);
-            SerializedProperty displayNameProperty = property.FindPropertyRelative(PortData.DisplayNameFieldName);
-            SerializedProperty displayTypeProperty = property.FindPropertyRelative(PortData.DisplayTypeFieldName);
-            SerializedProperty showAsDrawerProperty = property.FindPropertyRelative(PortData.ShowAsDrawerFieldName);
-            SerializedProperty acceptMultipleEdgesProperty = property.FindPropertyRelative(PortData.AcceptMultipleEdgesFieldName);
-            SerializedProperty tooltipProperty = property.FindPropertyRelative(PortData.TooltipFieldName);
-            SerializedProperty verticalProperty = property.FindPropertyRelative(PortData.VerticalFieldName);
+            SerializedProperty displayNameProperty = portDataProperty.FindPropertyRelative(PortData.DisplayNameFieldName);
+            SerializedProperty displayTypeProperty = portDataProperty.FindPropertyRelative(PortData.DisplayTypeFieldName);
+            SerializedProperty showAsDrawerProperty = portDataProperty.FindPropertyRelative(PortData.ShowAsDrawerFieldName);
+            SerializedProperty acceptMultipleEdgesProperty = portDataProperty.FindPropertyRelative(PortData.AcceptMultipleEdgesFieldName);
+            SerializedProperty tooltipProperty = portDataProperty.FindPropertyRelative(PortData.TooltipFieldName);
+            SerializedProperty verticalProperty = portDataProperty.FindPropertyRelative(PortData.VerticalFieldName);
+
+            Foldout container = new() { text = displayNameProperty.stringValue };
 
             // Create property fields.
-            var identifierField = new PropertyField(identifierProperty);
-            var identifierObjectField = new PropertyField(identifierObjectProperty);
-            var useIdentifierObjectField = new PropertyField(useIdentifierObjectProperty);
+            var identifierContainer = DrawIdentifierGUI(portDataProperty);
             var displayNameField = new PropertyField(displayNameProperty);
             var displayTypeField = new PropertyField(displayTypeProperty);
             var showAsDrawerField = new PropertyField(showAsDrawerProperty);
@@ -31,28 +33,9 @@ namespace GraphProcessor
             var tooltipField = new PropertyField(tooltipProperty);
             var verticalField = new PropertyField(verticalProperty);
 
-            SetIdentifierStyle(useIdentifierObjectProperty.boolValue);
+            displayNameField.RegisterCallback<ChangeEvent<string>>((e) => container.text = e.newValue);
 
-            Foldout container = new()
-            {
-                text = displayNameProperty.stringValue,
-            };
-
-            displayNameField.RegisterCallback<ChangeEvent<string>>((e) =>
-            {
-                container.text = e.newValue;
-            });
-
-            useIdentifierObjectField.RegisterCallback<ChangeEvent<bool>>((e) =>
-            {
-                if (e.previousValue == e.newValue) return;
-
-                SetIdentifierStyle(useIdentifierObject: e.newValue);
-            });
-
-            container.Add(identifierField);
-            container.Add(identifierObjectField);
-            container.Add(useIdentifierObjectField);
+            container.Add(identifierContainer);
             container.Add(displayNameField);
             container.Add(displayTypeField);
             container.Add(showAsDrawerField);
@@ -61,6 +44,55 @@ namespace GraphProcessor
             container.Add(verticalField);
 
             return container;
+        }
+
+        private VisualElement DrawIdentifierGUI(SerializedProperty portDataProperty)
+        {
+            SerializedProperty identifierProperty = portDataProperty.FindPropertyRelative(PortData.IdentifierFieldName);
+            SerializedProperty identifierObjectProperty = portDataProperty.FindPropertyRelative(PortData.IdentifierObjectFieldName);
+            SerializedProperty useIdentifierObjectProperty = portDataProperty.FindPropertyRelative(PortData.UseIdentifierObjectFieldName);
+
+            VisualElement identifierContainer = new();
+            identifierContainer.style.flexDirection = FlexDirection.Row;
+
+            var identifierField = new PropertyField(identifierProperty);
+            identifierField.style.flexGrow = 1;
+            identifierField.RegisterCallback<GeometryChangedEvent>((e) =>
+            {
+                // We do this because the indentation is wrong otherwise
+                Label label = identifierField.Q<Label>();
+                label.style.marginRight = -27;
+                label.style.paddingRight = 30;
+            });
+
+            var identifierObjectField = new PropertyField(identifierObjectProperty);
+            identifierObjectField.style.flexGrow = 1;
+            identifierField.RegisterCallback<GeometryChangedEvent>((e) =>
+            {
+                // We do this because the indentation is wrong otherwise
+                Label label = identifierObjectField.Q<Label>();
+                label.style.marginRight = -27;
+                label.style.paddingRight = 30;
+            });
+
+            var useIdentifierObjectButton = new Button().SetSize(14, 14).SetMargin(0, 0, 8, 2);
+            useIdentifierObjectButton.clicked += () =>
+            {
+                bool useIdentifierObject = !useIdentifierObjectProperty.boolValue;
+
+                useIdentifierObjectProperty.boolValue = useIdentifierObject;
+                useIdentifierObjectProperty.serializedObject.ApplyModifiedProperties();
+
+                SetIdentifierStyle(useIdentifierObject);
+            };
+
+            SetIdentifierStyle(useIdentifierObjectProperty.boolValue);
+
+            identifierContainer.Add(identifierField);
+            identifierContainer.Add(identifierObjectField);
+            identifierContainer.Add(useIdentifierObjectButton);
+
+            return identifierContainer;
 
             void SetIdentifierStyle(bool useIdentifierObject)
             {
@@ -68,12 +100,15 @@ namespace GraphProcessor
                 {
                     identifierField.Show();
                     identifierObjectField.Hide();
+                    useIdentifierObjectButton.style.backgroundImage = IdentifierSOBackground;
                 }
                 else
                 {
                     identifierField.Hide();
                     identifierObjectField.Show();
+                    useIdentifierObjectButton.style.backgroundImage = IdentifierTextBackground;
                 }
+
             }
         }
     }

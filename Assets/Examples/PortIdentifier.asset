@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f18fdc722da3c66a89c9fc4080668cb9, type: 3}
   m_Name: PortIdentifier
   m_EditorClassIdentifier: 
-  identifier: 
+  identifier: MyID

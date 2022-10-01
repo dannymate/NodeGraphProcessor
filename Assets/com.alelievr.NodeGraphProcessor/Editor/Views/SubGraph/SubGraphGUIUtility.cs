@@ -98,14 +98,14 @@ namespace GraphProcessor
 
         public PropertyField DrawIngressPortSelectorGUI(bool bind = true)
         {
-            var ingressDataField = new PropertyField(IngressPortData);
+            var ingressDataField = new PropertyField(IngressPortData) { label = "Ingress Port Data - SubGraph" };
             if (bind) ingressDataField.Bind(SubGraphObject);
             return ingressDataField;
         }
 
         public PropertyField DrawEgressPortSelectorGUI(bool bind = true)
         {
-            var egressDataField = new PropertyField(EgressPortData);
+            var egressDataField = new PropertyField(EgressPortData) { label = "Egress Port Data - SubGraph" };
             if (bind) egressDataField.Bind(SubGraphObject);
             return egressDataField;
         }

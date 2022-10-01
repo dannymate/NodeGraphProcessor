@@ -1,3 +1,4 @@
+using GraphProcessor.Utils;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -19,12 +20,6 @@ namespace GraphProcessor
             SerializedProperty tooltipProperty = property.FindPropertyRelative(PortData.TooltipFieldName);
             SerializedProperty verticalProperty = property.FindPropertyRelative(PortData.VerticalFieldName);
 
-
-            Foldout container = new()
-            {
-                text = displayNameProperty.stringValue,
-            };
-
             // Create property fields.
             var identifierField = new PropertyField(identifierProperty);
             var identifierObjectField = new PropertyField(identifierObjectProperty);
@@ -36,9 +31,23 @@ namespace GraphProcessor
             var tooltipField = new PropertyField(tooltipProperty);
             var verticalField = new PropertyField(verticalProperty);
 
-            displayNameField.RegisterValueChangeCallback((e) =>
+            SetIdentifierStyle(useIdentifierObjectProperty.boolValue);
+
+            Foldout container = new()
             {
-                container.text = displayNameProperty.stringValue;
+                text = displayNameProperty.stringValue,
+            };
+
+            displayNameField.RegisterCallback<ChangeEvent<string>>((e) =>
+            {
+                container.text = e.newValue;
+            });
+
+            useIdentifierObjectField.RegisterCallback<ChangeEvent<bool>>((e) =>
+            {
+                if (e.previousValue == e.newValue) return;
+
+                SetIdentifierStyle(useIdentifierObject: e.newValue);
             });
 
             container.Add(identifierField);
@@ -52,6 +61,20 @@ namespace GraphProcessor
             container.Add(verticalField);
 
             return container;
+
+            void SetIdentifierStyle(bool useIdentifierObject)
+            {
+                if (!useIdentifierObject)
+                {
+                    identifierField.Show();
+                    identifierObjectField.Hide();
+                }
+                else
+                {
+                    identifierField.Hide();
+                    identifierObjectField.Show();
+                }
+            }
         }
     }
 }

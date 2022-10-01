@@ -452,7 +452,7 @@ namespace GraphProcessor
         {
             return GetPortViewsFromFieldName(fieldName)?.FirstOrDefault(pv =>
             {
-                return (pv.portData.identifier == identifier) || (String.IsNullOrEmpty(pv.portData.identifier) && String.IsNullOrEmpty(identifier));
+                return (pv.portData.Identifier == identifier) || (String.IsNullOrEmpty(pv.portData.Identifier) && String.IsNullOrEmpty(identifier));
             });
         }
 
@@ -1282,7 +1282,7 @@ namespace GraphProcessor
             {
                 // If the port have disappeared from the node data, we remove the view:
                 // We can use the identifier here because this function will only be called when there is a custom port behavior
-                if (!ports.Any(p => p.portData.identifier == pv.portData.identifier))
+                if (!ports.Any(p => p.portData.Identifier == pv.portData.Identifier))
                 {
                     RemovePort(pv);
                     portViewList.Remove(pv);
@@ -1292,7 +1292,7 @@ namespace GraphProcessor
             foreach (var p in ports)
             {
                 // Add missing port views
-                if (!portViews.Any(pv => p.portData.identifier == pv.portData.identifier))
+                if (!portViews.Any(pv => p.portData.Identifier == pv.portData.Identifier))
                 {
                     Direction portDirection = nodeTarget.IsFieldInput(p.fieldName) ? Direction.Input : Direction.Output;
                     var pv = AddPort(p.fieldInfo, portDirection, listener, p.portData);
@@ -1311,9 +1311,9 @@ namespace GraphProcessor
             // Re-order the port views to match the ports order in case a custom behavior re-ordered the ports
             for (int i = 0; i < portsList.Count; i++)
             {
-                var id = portsList[i].portData.identifier;
+                var id = portsList[i].portData.Identifier;
 
-                var pv = portViewList.FirstOrDefault(p => p.portData.identifier == id);
+                var pv = portViewList.FirstOrDefault(p => p.portData.Identifier == id);
                 if (pv != null)
                     InsertPort(pv, i);
             }

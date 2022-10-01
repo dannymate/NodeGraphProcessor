@@ -78,7 +78,7 @@ public class SubGraphNode : BaseNode
 
         foreach (var input in IngressPortData)
         {
-            if (string.IsNullOrEmpty(input.identifier))
+            if (string.IsNullOrEmpty(input.Identifier))
                 input.identifier = input.displayName;
 
             yield return input;
@@ -107,7 +107,7 @@ public class SubGraphNode : BaseNode
 
         foreach (var output in EgressPortData)
         {
-            if (String.IsNullOrEmpty(output.identifier))
+            if (String.IsNullOrEmpty(output.Identifier))
                 output.identifier = output.displayName;
 
             yield return output;

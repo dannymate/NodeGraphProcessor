@@ -69,7 +69,7 @@ public class RelayNode : BaseNode
 
         var inputPortEdges = inputPorts[0].GetEdges();
 
-        if (outputPort.portData.identifier != packIdentifier && outputIndex >= 0 && (unpackOutput || inputPortEdges.Count == 1))
+        if (outputPort.portData.Identifier != packIdentifier && outputIndex >= 0 && (unpackOutput || inputPortEdges.Count == 1))
         {
             if (output.values == null)
                 return;

@@ -63,8 +63,8 @@ namespace GraphProcessor
             edge.outputFieldName = outputPort.fieldName;
             edge.inputPort = inputPort;
             edge.outputPort = outputPort;
-            edge.inputPortIdentifier = inputPort.portData.identifier;
-            edge.outputPortIdentifier = outputPort.portData.identifier;
+            edge.inputPortIdentifier = inputPort.portData.Identifier;
+            edge.outputPortIdentifier = outputPort.portData.Identifier;
 
             return edge;
         }

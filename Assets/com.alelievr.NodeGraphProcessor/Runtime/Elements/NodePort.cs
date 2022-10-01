@@ -16,6 +16,8 @@ namespace GraphProcessor
     public class PortData : IEquatable<PortData>, ICloneable
     {
         public const string IdentifierFieldName = nameof(identifier);
+        public const string IdentifierObjectFieldName = nameof(identifierObject);
+        public const string UseIdentifierObjectFieldName = nameof(useIdentifierObject);
         public const string DisplayNameFieldName = nameof(displayName);
         public const string DisplayTypeFieldName = nameof(displayType);
         public const string ShowAsDrawerFieldName = nameof(showAsDrawer);
@@ -28,6 +30,15 @@ namespace GraphProcessor
         /// </summary>
         [SerializeField]
         public string identifier;
+
+        [SerializeField]
+        private PortIdentifier identifierObject;
+
+        [SerializeField]
+        public bool useIdentifierObject = false;
+
+        public string Identifier => !useIdentifierObject ? identifier : identifierObject;
+
         /// <summary>
         /// Display name on the node
         /// </summary>
@@ -88,7 +99,7 @@ namespace GraphProcessor
         public bool Equals(PortData other)
         {
             return other != null
-                && identifier == other.identifier
+                && Identifier == other.Identifier
                 && displayName == other.displayName
                 && DisplayType == other.DisplayType
                 && showAsDrawer == other.showAsDrawer
@@ -109,12 +120,12 @@ namespace GraphProcessor
 
         public override int GetHashCode()
         {
-            return identifier?.GetHashCode() ?? 0;
+            return Identifier?.GetHashCode() ?? 0;
         }
 
         public void CopyFrom(PortData other)
         {
-            identifier = other.identifier;
+            identifier = other.Identifier;
             displayName = other.displayName;
             displayType = other.displayType;
             showAsDrawer = other.showAsDrawer;
@@ -448,7 +459,7 @@ namespace GraphProcessor
 
             var port = this.FirstOrDefault(p =>
             {
-                return p.fieldName == portFieldName && p.portData.identifier == portIdentifier;
+                return p.fieldName == portFieldName && p.portData.Identifier == portIdentifier;
             });
 
             if (port == null)

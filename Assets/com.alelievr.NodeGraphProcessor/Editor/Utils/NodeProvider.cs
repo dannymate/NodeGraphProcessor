@@ -206,7 +206,7 @@ namespace GraphProcessor
                     isInput = input,
                     portFieldName = p.fieldName,
                     portDisplayName = p.portData.displayName ?? p.fieldName,
-                    portIdentifier = p.portData.identifier,
+                    portIdentifier = p.portData.Identifier,
                 });
             }
         }
@@ -462,7 +462,7 @@ namespace GraphProcessor
                         isInput = true,
                         portFieldName = MacroNode.IngressPortsField,
                         portDisplayName = ingressPort.displayName,
-                        portIdentifier = ingressPort.identifier,
+                        portIdentifier = ingressPort.Identifier,
                     };
                 }
 
@@ -475,7 +475,7 @@ namespace GraphProcessor
                         isInput = false,
                         portFieldName = MacroNode.EgressPortsField,
                         portDisplayName = egressPort.displayName,
-                        portIdentifier = egressPort.identifier,
+                        portIdentifier = egressPort.Identifier,
                     };
                 }
             }

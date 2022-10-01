@@ -350,7 +350,7 @@ namespace GraphProcessor
 
             void AddPortData(PortData portData)
             {
-                var port = nodePorts.FirstOrDefault(n => n.portData.identifier == portData.identifier);
+                var port = nodePorts.FirstOrDefault(n => n.portData.Identifier == portData.Identifier);
                 // Guard using the port identifier so we don't duplicate identifiers
                 if (port == null)
                 {
@@ -374,7 +374,7 @@ namespace GraphProcessor
                     }
                 }
 
-                finalPorts.Add(portData.identifier);
+                finalPorts.Add(portData.Identifier);
             }
 
             // TODO
@@ -385,7 +385,7 @@ namespace GraphProcessor
                 foreach (var currentPort in currentPortsCopy)
                 {
                     // If the current port does not appear in the list of final ports, we remove it
-                    if (!finalPorts.Any(id => id == currentPort.portData.identifier))
+                    if (!finalPorts.Any(id => id == currentPort.portData.Identifier))
                     {
                         RemovePort(fieldInfo.input, currentPort);
                         changed = true;
@@ -396,8 +396,8 @@ namespace GraphProcessor
             // Make sure the port order is correct:
             portCollection.Sort((p1, p2) =>
             {
-                int p1Index = finalPorts.FindIndex(id => p1.portData.identifier == id);
-                int p2Index = finalPorts.FindIndex(id => p2.portData.identifier == id);
+                int p1Index = finalPorts.FindIndex(id => p1.portData.Identifier == id);
+                int p2Index = finalPorts.FindIndex(id => p2.portData.Identifier == id);
 
                 if (p1Index == -1 || p2Index == -1)
                     return 0;
@@ -756,8 +756,8 @@ namespace GraphProcessor
         {
             return inputPorts.Concat(outputPorts).FirstOrDefault(p =>
             {
-                var bothNull = String.IsNullOrEmpty(identifier) && String.IsNullOrEmpty(p.portData.identifier);
-                return p.fieldName == fieldName && (bothNull || identifier == p.portData.identifier);
+                var bothNull = String.IsNullOrEmpty(identifier) && String.IsNullOrEmpty(p.portData.Identifier);
+                return p.fieldName == fieldName && (bothNull || identifier == p.portData.Identifier);
             });
         }
 

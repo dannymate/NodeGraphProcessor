@@ -1180,9 +1180,9 @@ namespace GraphProcessor
             // If the input port have been removed by the custom port behavior
             // we try to find if it's still here
             if (e.input == null)
-                e.input = inputNodeView.GetPortViewFromFieldName(inputPortView.fieldName, inputPortView.portData.identifier);
+                e.input = inputNodeView.GetPortViewFromFieldName(inputPortView.fieldName, inputPortView.portData.Identifier);
             if (e.output == null)
-                e.output = inputNodeView.GetPortViewFromFieldName(outputPortView.fieldName, outputPortView.portData.identifier);
+                e.output = inputNodeView.GetPortViewFromFieldName(outputPortView.fieldName, outputPortView.portData.Identifier);
 
             edgeViews.Add(e);
 
@@ -1202,8 +1202,8 @@ namespace GraphProcessor
 
         public bool Connect(PortView inputPortView, PortView outputPortView, bool autoDisconnectInputs = true)
         {
-            var inputPort = inputPortView.owner.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.identifier);
-            var outputPort = outputPortView.owner.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.identifier);
+            var inputPort = inputPortView.owner.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.Identifier);
+            var outputPort = outputPortView.owner.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.Identifier);
 
             // Checks that the node we are connecting still exists
             if (inputPortView.owner.parent == null || outputPortView.owner.parent == null)
@@ -1241,8 +1241,8 @@ namespace GraphProcessor
             var outputPortView = e.output as PortView;
             var inputNodeView = inputPortView.node as BaseNodeView;
             var outputNodeView = outputPortView.node as BaseNodeView;
-            var inputPort = inputNodeView.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.identifier);
-            var outputPort = outputNodeView.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.identifier);
+            var inputPort = inputNodeView.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.Identifier);
+            var outputPort = outputNodeView.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.Identifier);
 
             Type conversionNodeType = ConversionNodeAdapter.GetConversionNode(outputPort.portData.DisplayType, inputPort.portData.DisplayType);
             if (conversionNodeType != null)
@@ -1282,8 +1282,8 @@ namespace GraphProcessor
             var outputPortView = e.output as PortView;
             var inputNodeView = inputPortView.node as BaseNodeView;
             var outputNodeView = outputPortView.node as BaseNodeView;
-            var inputPort = inputNodeView.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.identifier);
-            var outputPort = outputNodeView.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.identifier);
+            var inputPort = inputNodeView.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.Identifier);
+            var outputPort = outputNodeView.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.Identifier);
 
             e.userData = graph.Connect(inputPort, outputPort, autoDisconnectInputs);
 

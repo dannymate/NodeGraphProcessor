@@ -15,6 +15,14 @@ namespace GraphProcessor
     [Serializable]
     public class PortData : IEquatable<PortData>, ICloneable
     {
+        public const string IdentifierFieldName = nameof(identifier);
+        public const string DisplayNameFieldName = nameof(displayName);
+        public const string DisplayTypeFieldName = nameof(displayType);
+        public const string ShowAsDrawerFieldName = nameof(showAsDrawer);
+        public const string AcceptMultipleEdgesFieldName = nameof(acceptMultipleEdges);
+        public const string TooltipFieldName = nameof(tooltip);
+        public const string VerticalFieldName = nameof(vertical);
+
         /// <summary>
         /// Unique identifier for the port
         /// </summary>

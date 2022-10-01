@@ -46,7 +46,7 @@ namespace GraphProcessor.View
             VisualElement schemaControls = new();
             PropertyField schemaField = SubGraphSerializer.DrawSchemaFieldWithCallback((prop) =>
             {
-                // We sanity check visibility due to this callback being called twice
+                // We check visibility due to this callback being called twice
                 if (schemaControls.visible && SubGraph.Schema == null)
                 {
                     schemaControls.visible = false;

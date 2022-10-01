@@ -239,9 +239,8 @@ namespace GraphProcessor
             titleTextField.Hide();
             titleLabel.parent.Insert(0, titleTextField);
 
-            renameIcon = new() { image = EditorGUIUtility.IconContent("d_InputField Icon").image };
-            renameIcon.style.position = Position.Absolute;
-            renameIcon.SetSize(16, 16).SetOffset(10, 0, -9, 0).SetOpacity(0.4f);
+            renameIcon = new Image() { image = EditorGUIUtility.IconContent("d_InputField Icon").image };
+            renameIcon.SetPosition(Position.Absolute).SetSize(16, 16).SetOffset(10, 0, -9, 0).SetOpacity(0.4f);
 
             bool isPointerOverImage = false;
             renameIcon.RegisterCallback<PointerOverEvent>((e) =>

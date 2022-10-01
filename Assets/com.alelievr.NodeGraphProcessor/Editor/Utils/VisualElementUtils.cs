@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.UIElements;
 
 namespace GraphProcessor.Utils
@@ -7,7 +8,7 @@ namespace GraphProcessor.Utils
         /// <summary>
         /// Make visible and affects layout.
         /// </summary>
-        public static VisualElement Show(this VisualElement ve)
+        public static T Show<T>(this T ve) where T : VisualElement
         {
             ve.style.display = DisplayStyle.Flex;
             return ve;
@@ -16,7 +17,7 @@ namespace GraphProcessor.Utils
         /// <summary>
         /// Make invisible and absent from layout.
         /// </summary>
-        public static VisualElement Hide(this VisualElement ve)
+        public static T Hide<T>(this T ve) where T : VisualElement
         {
             ve.style.display = DisplayStyle.None;
             return ve;
@@ -27,7 +28,7 @@ namespace GraphProcessor.Utils
             return ve.style.display == DisplayStyle.Flex;
         }
 
-        public static VisualElement SetOffset(this VisualElement ve, float top, float bottom, float left, float right)
+        public static T SetOffset<T>(this T ve, float top, float bottom, float left, float right) where T : VisualElement
         {
             ve.style.top = top;
             ve.style.bottom = bottom;
@@ -36,20 +37,20 @@ namespace GraphProcessor.Utils
             return ve;
         }
 
-        public static VisualElement SetSize(this VisualElement ve, float width, float height)
+        public static T SetSize<T>(this T ve, float width, float height) where T : VisualElement
         {
             ve.style.width = width;
             ve.style.height = height;
             return ve;
         }
 
-        public static VisualElement SetOpacity(this VisualElement ve, float opacity)
+        public static T SetOpacity<T>(this T ve, float opacity) where T : VisualElement
         {
             ve.style.opacity = opacity;
             return ve;
         }
 
-        public static VisualElement SetMargin(this VisualElement ve, float top, float bottom, float left, float right)
+        public static T SetMargin<T>(this T ve, float top, float bottom, float left, float right) where T : VisualElement
         {
             ve.style.marginTop = top;
             ve.style.marginBottom = bottom;
@@ -58,9 +59,15 @@ namespace GraphProcessor.Utils
             return ve;
         }
 
-        public static VisualElement SetAlignment(this VisualElement ve, Align alignment)
+        public static T SetAlignment<T>(this T ve, Align alignment) where T : VisualElement
         {
             ve.style.alignSelf = alignment;
+            return ve;
+        }
+
+        public static T SetPosition<T>(this T ve, Position position) where T : VisualElement
+        {
+            ve.style.position = position;
             return ve;
         }
     }

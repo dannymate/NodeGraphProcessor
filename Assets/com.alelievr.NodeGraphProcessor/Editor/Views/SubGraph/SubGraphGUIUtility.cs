@@ -61,11 +61,11 @@ namespace GraphProcessor
                 () => SubGraphObject.FindProperty(SubGraph.MacroOptionsFieldName)
             );
 
-        public VisualElement DrawFullSubGraphGUI()
+        public VisualElement DrawSubGraphPortControlGUI()
         {
             var portSelectionFoldout = new Foldout()
             {
-                text = "SubGraph Port Selection"
+                text = "SubGraph Port Control"
             };
 
             portSelectionFoldout.Add(DrawIngressPortSelectorGUI(bind: false));

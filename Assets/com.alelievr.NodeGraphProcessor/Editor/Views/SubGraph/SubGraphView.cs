@@ -18,10 +18,11 @@ namespace GraphProcessor
         {
             base.CreateInspector();
 
-            root.Add(SubGraphSerializer.DrawFullSubGraphGUI());
+            var optionsGUI = SubGraphSerializer.DrawOptionsGUI();
+            optionsGUI.Add(SubGraphSerializer.DrawMacroOptionsGUI());
+            root.Add(optionsGUI);
+            root.Add(SubGraphSerializer.DrawSubGraphPortControlGUI());
             root.Add(DrawSchemaControlGUI());
-            root.Add(SubGraphSerializer.DrawOptionsGUI());
-            root.Add(SubGraphSerializer.DrawMacroOptionsGUI());
         }
 
         private VisualElement DrawSchemaControlGUI()

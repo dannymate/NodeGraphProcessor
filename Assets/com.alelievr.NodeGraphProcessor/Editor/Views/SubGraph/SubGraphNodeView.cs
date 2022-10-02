@@ -35,7 +35,7 @@ namespace GraphProcessor.View
         {
             VisualElement subGraphGUIContainer = new();
 
-            subGraphGUIContainer.Add(SubGraphSerializer?.DrawFullSubGraphGUI());
+            subGraphGUIContainer.Add(SubGraphSerializer?.DrawSubGraphPortControlGUI());
             subGraphGUIContainer.Add(DrawSchemaControls());
 
             return subGraphGUIContainer;

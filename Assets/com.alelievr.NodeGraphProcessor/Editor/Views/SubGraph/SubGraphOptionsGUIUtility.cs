@@ -49,7 +49,7 @@ namespace GraphProcessor
         {
             var optionsFoldout = new Foldout()
             {
-                text = "Options"
+                text = "SubGraph Configuration"
             };
 
             PropertyField displayNameField = DrawDisplayNameField(bind: false);

@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -40,13 +41,23 @@ namespace GraphProcessor
         {
             var schemaControlsContainer = new VisualElement();
 
-            schemaControlsContainer.Add(DrawIngressPortSelectorGUI(bind: false));
-            schemaControlsContainer.Add(DrawEgressPortSelectorGUI(bind: false));
+            schemaControlsContainer.Add(DrawSchemaPortControlGUI(bind: false));
             schemaControlsContainer.Add(DrawSchemaUpdaterButtonGUI());
 
             schemaControlsContainer.Bind(SchemaObject);
 
             return schemaControlsContainer;
+        }
+
+        public VisualElement DrawSchemaPortControlGUI(bool bind = true)
+        {
+            VisualElement schemaPortControlContainer = new();
+
+            schemaPortControlContainer.Add(DrawIngressPortSelectorGUI(bind));
+            schemaPortControlContainer.Add(DrawEgressPortSelectorGUI(bind));
+
+            return schemaPortControlContainer;
+
         }
 
         public PropertyField DrawIngressPortSelectorGUI(bool bind = true)
@@ -63,9 +74,16 @@ namespace GraphProcessor
             return egressDataField;
         }
 
+        public Action SchemaUpdateButtonAction => () => Schema.NotifyPortsChanged();
         public Button DrawSchemaUpdaterButtonGUI()
         {
-            var updatePortsButton = new Button(() => Schema.NotifyPortsChanged()) { text = "UPDATE SCHEMA" };
+            var updatePortsButton = new Button(SchemaUpdateButtonAction) { text = "UPDATE SCHEMA" };
+            return updatePortsButton;
+        }
+
+        public static Button DrawSchemaUpdaterButtonGUI(Action action)
+        {
+            var updatePortsButton = new Button(action) { text = "UPDATE SCHEMA" };
             return updatePortsButton;
         }
     }

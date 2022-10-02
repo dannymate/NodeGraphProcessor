@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ingressPortData:
   - identifier: Float IN
-    identifierObject: {fileID: 0}
+    identifierObject: {fileID: 11400000, guid: 8c83bbc8f51fd35d0a23d1b2854c82e8, type: 2}
     useIdentifierObject: 0
     displayName: Float IN
     displayType:

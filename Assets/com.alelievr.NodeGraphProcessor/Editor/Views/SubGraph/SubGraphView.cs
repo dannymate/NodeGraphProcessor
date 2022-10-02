@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GraphProcessor
@@ -33,26 +34,35 @@ namespace GraphProcessor
             };
 
             VisualElement schemaControls = new();
-            schemaControls.Add(SubGraphSerializer.SchemaGUIUtil?.DrawFullSchemaGUI());
+            schemaControls.Add(SubGraphSerializer.SchemaGUIUtil?.DrawSchemaPortControlGUI());
 
             PropertyField schemaField = SubGraphSerializer.DrawSchemaFieldGUI();
-            schemaField.RegisterValueChangeCallback((prop) =>
+            schemaField.RegisterCallback<ChangeEvent<Object>>((e) =>
             {
-                // We sanity check visibility due to this callback being called twice
+                SubGraphPortSchema prevSchemaValue = e.previousValue as SubGraphPortSchema;
+                // We check visibility due to this callback sometimes being called twice.
                 if (schemaControls.visible && Schema == null)
                 {
+                    if (prevSchemaValue != null)
+                        prevSchemaValue.OnPortsUpdated -= SubGraph.NotifyPortsChanged;
                     schemaControls.visible = false;
                     schemaControls.Clear();
                 }
                 else if (!schemaControls.visible && Schema != null)
                 {
-                    schemaControls.Add(SubGraphSerializer.SchemaGUIUtil.DrawFullSchemaGUI());
+                    Schema.OnPortsUpdated += SubGraph.NotifyPortsChanged;
+                    schemaControls.Add(SubGraphSerializer.SchemaGUIUtil.DrawSchemaPortControlGUI());
                     schemaControls.visible = true;
                 }
             });
 
             schemaControlsFoldout.Add(schemaField);
             schemaControlsFoldout.Add(schemaControls);
+            schemaControlsFoldout.Add(SubGraphSchemaGUIUtility.DrawSchemaUpdaterButtonGUI(() =>
+            {
+                if (SubGraph.Schema == null) SubGraph.NotifyPortsChanged();
+                else SubGraphSerializer.SchemaGUIUtil.SchemaUpdateButtonAction();
+            }));
 
             return schemaControlsFoldout;
         }

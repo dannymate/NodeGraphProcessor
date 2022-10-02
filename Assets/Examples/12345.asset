@@ -28,12 +28,15 @@ MonoBehaviour:
   scale: {x: 1.7490063, y: 1.7490063, z: 1}
   options:
     displayName: 
+    renamePolicy: 0
   isMacro: 0
   macroOptions:
     menuLocation: 
   ingressPortData: []
   egressPortData:
   - identifier: 
+    identifierObject: {fileID: 0}
+    useIdentifierObject: 0
     displayName: test
     displayType:
       GuidAssignmentFailed: 0

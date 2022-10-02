@@ -43,25 +43,25 @@ namespace GraphProcessor.View
 
         protected VisualElement DrawSchemaControls()
         {
-            VisualElement schemaControls = new();
+            Foldout schemaControlFoldout = new() { text = "Schema Port Control" };
             PropertyField schemaField = SubGraphSerializer.DrawSchemaFieldWithCallback((prop) =>
             {
                 // We check visibility due to this callback being called twice
-                if (schemaControls.visible && SubGraph.Schema == null)
+                if (schemaControlFoldout.visible && SubGraph.Schema == null)
                 {
-                    schemaControls.visible = false;
-                    schemaControls.Clear();
+                    schemaControlFoldout.visible = false;
+                    schemaControlFoldout.Clear();
                 }
-                else if (!schemaControls.visible && SubGraph.Schema != null)
+                else if (!schemaControlFoldout.visible && SubGraph.Schema != null)
                 {
-                    schemaControls.Add(SubGraphSerializer.SchemaGUIUtil.DrawFullSchemaGUI());
-                    schemaControls.visible = true;
+                    schemaControlFoldout.Add(SubGraphSerializer.SchemaGUIUtil.DrawFullSchemaGUI());
+                    schemaControlFoldout.visible = true;
                 }
             }, visible: false);
-            schemaControls.Add(schemaField);
-            schemaControls.Add(SubGraphSerializer.SchemaGUIUtil?.DrawFullSchemaGUI());
+            schemaControlFoldout.Add(schemaField);
+            schemaControlFoldout.Add(SubGraphSerializer.SchemaGUIUtil?.DrawFullSchemaGUI());
 
-            return schemaControls;
+            return schemaControlFoldout;
         }
 
         protected VisualElement DrawSubGraphField(VisualElement subGraphGUIContainer)

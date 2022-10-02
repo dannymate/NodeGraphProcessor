@@ -39,7 +39,7 @@ MonoBehaviour:
       _typeNameAndAssembly: System.String, mscorlib
       _suppressLogs: 0
     showAsDrawer: 0
-    acceptMultipleEdges: 0
+    acceptMultipleEdges: 1
     proxiedFieldPath: 
     sizeInPixel: 0
     tooltip: 

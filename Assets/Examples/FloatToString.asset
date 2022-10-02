@@ -94,7 +94,7 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        input: 0
+        input: 100
         decimalPlaces: 2
         output: 100.00
     - rid: 702614953389457875

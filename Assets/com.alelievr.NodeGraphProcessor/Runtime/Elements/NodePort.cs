@@ -138,7 +138,9 @@ namespace GraphProcessor
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            PortData portData = this.MemberwiseClone() as PortData;
+            portData.displayType = new TypeReference(displayType);
+            return portData;
         }
 
         public static bool operator ==(PortData lhs, PortData rhs)

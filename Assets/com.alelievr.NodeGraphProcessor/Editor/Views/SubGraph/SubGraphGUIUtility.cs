@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using UnityEngine;
+using GraphProcessor.Utils;
 
 namespace GraphProcessor
 {
@@ -129,13 +130,13 @@ namespace GraphProcessor
             var isMacroField = new PropertyField(IsMacro);
             isMacroField.RegisterValueChangeCallback((prop) =>
             {
-                if (macroOptionsContainer.visible == true && !SubGraph.IsMacro)
+                if (macroOptionsContainer.IsShowing() && !SubGraph.IsMacro)
                 {
-                    macroOptionsContainer.visible = false;
+                    macroOptionsContainer.Hide();
                 }
-                else if (macroOptionsContainer.visible == false && SubGraph.IsMacro)
+                else if (!macroOptionsContainer.IsShowing() && SubGraph.IsMacro)
                 {
-                    macroOptionsContainer.visible = true;
+                    macroOptionsContainer.Show();
                 }
             });
 

@@ -17,7 +17,40 @@ MonoBehaviour:
   - rid: 702614929662542285
   - rid: 702614953389457875
   - rid: 702614953389457900
-  edges: []
+  edges:
+  - _guid:
+      Value: a9119567-6f7c-4913-9ba5-e474cd988280
+    owner: {fileID: 11400000}
+    inputNodeGUID:
+      Value: 2219c2b0-d129-4cdf-8811-83a98c0a76d8
+    outputNodeGUID:
+      Value: 7248bc3b-e4b0-4feb-841d-e1050938a375
+    inputFieldName: _egress
+    outputFieldName: output
+    inputPortIdentifier: String OUT
+    outputPortIdentifier: 
+  - _guid:
+      Value: 103fa12d-4a3d-46b5-bff3-3e97a4d3324b
+    owner: {fileID: 11400000}
+    inputNodeGUID:
+      Value: 7248bc3b-e4b0-4feb-841d-e1050938a375
+    outputNodeGUID:
+      Value: cffba5ed-acdb-41a5-bfa8-bd4ad2de1136
+    inputFieldName: input
+    outputFieldName: _ingress
+    inputPortIdentifier: 
+    outputPortIdentifier: Float IN
+  - _guid:
+      Value: 03ef26cf-494e-47fc-8e68-9c69dff16fd1
+    owner: {fileID: 11400000}
+    inputNodeGUID:
+      Value: 2219c2b0-d129-4cdf-8811-83a98c0a76d8
+    outputNodeGUID:
+      Value: 7248bc3b-e4b0-4feb-841d-e1050938a375
+    inputFieldName: _egress
+    outputFieldName: output
+    inputPortIdentifier: String OUT
+    outputPortIdentifier: 
   groups: []
   stackNodes: []
   pinnedElements: []
@@ -34,22 +67,7 @@ MonoBehaviour:
   macroOptions:
     menuLocation: 
   ingressPortData: []
-  egressPortData:
-  - identifier: Float OUT
-    identifierObject: {fileID: 11400000, guid: 8c83bbc8f51fd35d0a23d1b2854c82e8, type: 2}
-    useIdentifierObject: 1
-    displayName: Float OUT
-    displayType:
-      GuidAssignmentFailed: 0
-      GUID: 
-      _typeNameAndAssembly: System.Single, mscorlib
-      _suppressLogs: 0
-    showAsDrawer: 0
-    acceptMultipleEdges: 0
-    proxiedFieldPath: 
-    sizeInPixel: 0
-    tooltip: 
-    vertical: 0
+  egressPortData: []
   schema: {fileID: 11400000, guid: 8af34e3b8c41eb42d9bfab8fe2fbfc89, type: 2}
   references:
     version: 2
@@ -60,7 +78,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 7248bc3b-e4b0-4feb-841d-e1050938a375
-        computeOrder: 0
+        computeOrder: 1
         position:
           serializedVersion: 2
           x: 34.536858
@@ -76,7 +94,7 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        input: 100
+        input: 0
         decimalPlaces: 2
         output: 100.00
     - rid: 702614953389457875
@@ -85,7 +103,7 @@ MonoBehaviour:
         nodeCustomName: 
         _guid:
           Value: 2219c2b0-d129-4cdf-8811-83a98c0a76d8
-        computeOrder: 1
+        computeOrder: 2
         position:
           serializedVersion: 2
           x: 290.55768
@@ -107,7 +125,7 @@ MonoBehaviour:
         nodeCustomName: Ingress
         _guid:
           Value: cffba5ed-acdb-41a5-bfa8-bd4ad2de1136
-        computeOrder: 2
+        computeOrder: 0
         position:
           serializedVersion: 2
           x: -119.48582

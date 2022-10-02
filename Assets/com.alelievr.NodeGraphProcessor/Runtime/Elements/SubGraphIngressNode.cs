@@ -24,9 +24,10 @@ namespace GraphProcessor
         [CustomPortOutput(nameof(_ingress), typeof(object))]
         protected void PushIngress(List<SerializableEdge> connectedEdges)
         {
-            if (connectedEdges.Count == 0 || passThroughBufferByPort.Count == 0) return;
+            if (connectedEdges.Count == 0) return;
 
-            var value = passThroughBufferByPort[connectedEdges[0].outputPort.portData];
+            bool keyExists = passThroughBufferByPort.ContainsKey(connectedEdges[0].outputPort.portData);
+            var value = keyExists ? passThroughBufferByPort[connectedEdges[0].outputPort.portData] : default;
             foreach (var edge in connectedEdges)
             {
                 edge.passThroughBuffer = value;

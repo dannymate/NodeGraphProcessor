@@ -1,3 +1,5 @@
+#if UNITY_2022_1_OR_NEWER
+#else
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -28,3 +30,4 @@ public class DefaultEditor : Editor
         return container;
     }
 }
+#endif

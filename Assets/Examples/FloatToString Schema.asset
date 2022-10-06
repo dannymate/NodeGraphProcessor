@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19c80a5ff257fe3de96984fb18d3ebb8, type: 3}
-  m_Name: SubGraphPortSchema
+  m_Name: FloatToString Schema
   m_EditorClassIdentifier: 
   ingressPortData:
   - identifier: Float IN
-    identifierObject: {fileID: 11400000, guid: 8c83bbc8f51fd35d0a23d1b2854c82e8, type: 2}
+    identifierObject: {fileID: 0}
     useIdentifierObject: 0
     displayName: Float IN
     displayType:

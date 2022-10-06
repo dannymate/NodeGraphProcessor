@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 061c4e5078ffdfd1ab72813a0e014ce2, type: 3}
-  m_Name: FloatToString
+  m_Name: FloatToString Decimal
   m_EditorClassIdentifier: 
   serializedNodes: []
   nodes:
@@ -19,7 +19,18 @@ MonoBehaviour:
   - rid: 4827994175793266725
   edges:
   - _guid:
-      Value: 9b4d0bb9-965b-43a5-9a7b-9cd00344d029
+      Value: 5bd500b9-06f3-42b4-b8cd-8cb20b88d758
+    owner: {fileID: 11400000}
+    inputNodeGUID:
+      Value: ea9dd183-58e9-46d0-b544-e999ef6808ab
+    outputNodeGUID:
+      Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
+    inputFieldName: _egress
+    outputFieldName: output
+    inputPortIdentifier: String OUT
+    outputPortIdentifier: 
+  - _guid:
+      Value: 6d781f5e-c949-4d06-9a7d-6335a4ba2645
     owner: {fileID: 11400000}
     inputNodeGUID:
       Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
@@ -30,16 +41,16 @@ MonoBehaviour:
     inputPortIdentifier: 
     outputPortIdentifier: Float IN
   - _guid:
-      Value: 0245cd7d-8811-4048-9d6a-fa26bc67cde6
+      Value: 9015bc02-1bed-4b66-b818-ff6e5cb376de
     owner: {fileID: 11400000}
     inputNodeGUID:
-      Value: ea9dd183-58e9-46d0-b544-e999ef6808ab
-    outputNodeGUID:
       Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
-    inputFieldName: _egress
-    outputFieldName: output
-    inputPortIdentifier: String OUT
-    outputPortIdentifier: 
+    outputNodeGUID:
+      Value: 258cd69a-880c-4cfe-b47c-9ca6089c9fcc
+    inputFieldName: decimalPlaces
+    outputFieldName: _ingress
+    inputPortIdentifier: 
+    outputPortIdentifier: Decimal Places
   groups: []
   stackNodes: []
   pinnedElements: []
@@ -47,15 +58,30 @@ MonoBehaviour:
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: -575, y: -421, z: 0}
+  position: {x: -604, y: -344, z: 0}
   scale: {x: 1.7490063, y: 1.7490063, z: 1}
   options:
-    displayName: Float To String
+    displayName: Float To String Decimal
     renamePolicy: 2
   isMacro: 0
   macroOptions:
     menuLocation: 
-  ingressPortData: []
+  ingressPortData:
+  - identifier: Decimal Places
+    identifierObject: {fileID: 0}
+    useIdentifierObject: 0
+    displayName: Decimal Places
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: System.Int32, mscorlib
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0
   egressPortData: []
   schema: {fileID: 11400000, guid: a48263565eeb001d49c2846c7cb39567, type: 2}
   references:
@@ -92,8 +118,8 @@ MonoBehaviour:
         computeOrder: 2
         position:
           serializedVersion: 2
-          x: 1030.4501
-          y: 488.00006
+          x: 1030
+          y: 487.42834
           width: 98
           height: 75
         initialPosition:
@@ -128,5 +154,5 @@ MonoBehaviour:
         debug: 0
         nodeLock: 0
         input: 150
-        decimalPlaces: 2
-        output: 150.00
+        decimalPlaces: 1
+        output: 150.0

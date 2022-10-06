@@ -73,14 +73,16 @@ namespace GraphProcessor.View
             };
             subGraphField.RegisterValueChangedCallback((prop) =>
             {
+                if (prop.previousValue == prop.newValue) return;
+
                 Target.SetPrivateFieldValue(SubGraphNode.SubGraphField, prop.newValue as SubGraph);
                 Target.UpdateAllPortsLocal();
                 Target.RepaintTitle();
 
+                subGraphGUIContainer.Clear();
                 if (prop.newValue == null)
                 {
                     subGraphGUIContainer.Hide();
-                    subGraphGUIContainer.Clear();
                 }
                 else
                 {

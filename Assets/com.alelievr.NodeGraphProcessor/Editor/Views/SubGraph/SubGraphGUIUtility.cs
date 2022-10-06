@@ -23,7 +23,13 @@ namespace GraphProcessor
 
         public SubGraph SubGraph => _subgraph;
         public SubGraphOptionsGUIUtility OptionsGUIUtil => new(SubGraph);
-        public SubGraphSchemaGUIUtility SchemaGUIUtil => SubGraph.Schema ? new(SubGraph.Schema) : null;
+        private SubGraphSchemaGUIUtility _schemaGUIUtil;
+        public SubGraphSchemaGUIUtility SchemaGUIUtil =>
+            PropertyUtils.LazyLoad(
+                ref _schemaGUIUtil,
+                () => SubGraph.Schema ? new(SubGraph.Schema) : null,
+                (x) => x == null || SubGraph.Schema != x.Schema
+            );
 
         public SerializedObject SubGraphObject =>
             PropertyUtils.LazyLoad(

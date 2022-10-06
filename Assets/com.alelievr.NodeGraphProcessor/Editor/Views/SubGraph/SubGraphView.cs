@@ -1,3 +1,4 @@
+using GraphProcessor.Utils;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UIElements;
 namespace GraphProcessor
 {
     [CustomEditor(typeof(SubGraph), true)]
-    public partial class SubGraphView : GraphInspector
+    public class SubGraphView : GraphInspector
     {
         protected SubGraph SubGraph => target as SubGraph;
         protected SubGraphPortSchema Schema => SubGraph.Schema;
@@ -40,19 +41,22 @@ namespace GraphProcessor
             schemaField.RegisterCallback<ChangeEvent<Object>>((e) =>
             {
                 SubGraphPortSchema prevSchemaValue = e.previousValue as SubGraphPortSchema;
-                // We check visibility due to this callback sometimes being called twice.
-                if (schemaControls.visible && Schema == null)
+                SubGraphPortSchema newSchemaValue = e.newValue as SubGraphPortSchema;
+
+                if (prevSchemaValue == newSchemaValue) return;
+                if (prevSchemaValue) prevSchemaValue.OnPortsUpdated -= SubGraph.NotifyPortsChanged;
+
+                schemaControls.Clear();
+
+                if (!newSchemaValue)
                 {
-                    if (prevSchemaValue != null)
-                        prevSchemaValue.OnPortsUpdated -= SubGraph.NotifyPortsChanged;
-                    schemaControls.visible = false;
-                    schemaControls.Clear();
+                    schemaControls.Hide();
                 }
-                else if (!schemaControls.visible && Schema != null)
+                else
                 {
-                    Schema.OnPortsUpdated += SubGraph.NotifyPortsChanged;
+                    newSchemaValue.OnPortsUpdated += SubGraph.NotifyPortsChanged;
                     schemaControls.Add(SubGraphSerializer.SchemaGUIUtil.DrawSchemaPortControlGUI());
-                    schemaControls.visible = true;
+                    schemaControls.Show();
                 }
             });
 

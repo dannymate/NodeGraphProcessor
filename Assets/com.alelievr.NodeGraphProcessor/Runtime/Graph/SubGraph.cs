@@ -137,6 +137,7 @@ namespace GraphProcessor
         public void NotifyPortsChanged()
         {
             OnPortsUpdated?.Invoke();
+            DestroyBrokenGraphElements();
         }
 
         public void NotifyOptionsChanged()

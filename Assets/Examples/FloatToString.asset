@@ -19,7 +19,7 @@ MonoBehaviour:
   - rid: 4827994175793266725
   edges:
   - _guid:
-      Value: 9b4d0bb9-965b-43a5-9a7b-9cd00344d029
+      Value: 6c633c2e-ccc0-4b60-b504-734e85a9054b
     owner: {fileID: 11400000}
     inputNodeGUID:
       Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
@@ -30,7 +30,7 @@ MonoBehaviour:
     inputPortIdentifier: 
     outputPortIdentifier: Float IN
   - _guid:
-      Value: 0245cd7d-8811-4048-9d6a-fa26bc67cde6
+      Value: 6b771e34-f0f7-4080-92ce-4101464e233c
     owner: {fileID: 11400000}
     inputNodeGUID:
       Value: ea9dd183-58e9-46d0-b544-e999ef6808ab
@@ -51,7 +51,7 @@ MonoBehaviour:
   scale: {x: 1.7490063, y: 1.7490063, z: 1}
   options:
     displayName: Float To String
-    renamePolicy: 2
+    renamePolicy: 1
   isMacro: 0
   macroOptions:
     menuLocation: 
@@ -70,8 +70,8 @@ MonoBehaviour:
         computeOrder: 0
         position:
           serializedVersion: 2
-          x: 535.4502
-          y: 464.75006
+          x: 605.6925
+          y: 441.00006
           width: 84
           height: 75
         initialPosition:
@@ -92,8 +92,8 @@ MonoBehaviour:
         computeOrder: 2
         position:
           serializedVersion: 2
-          x: 1030.4501
-          y: 488.00006
+          x: 957.1414
+          y: 441.0001
           width: 98
           height: 75
         initialPosition:

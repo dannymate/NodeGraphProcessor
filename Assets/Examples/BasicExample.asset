@@ -65,29 +65,7 @@ MonoBehaviour:
     inputPortIdentifier: 
     outputPortIdentifier: 
   - _guid:
-      Value: 4134c8f0-3dd1-4b20-836e-afb4762a92c8
-    owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 05c6ea81-f327-4692-9e0f-792c109f3184
-    outputNodeGUID:
-      Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
-    inputFieldName: _ingress
-    outputFieldName: output
-    inputPortIdentifier: Float IN
-    outputPortIdentifier: 
-  - _guid:
-      Value: 604145ea-745c-4b4b-9ccc-c089dc173c95
-    owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: b233fdec-4d0e-48e2-a2d9-bb976eb6f6f3
-    outputNodeGUID:
-      Value: 05c6ea81-f327-4692-9e0f-792c109f3184
-    inputFieldName: obj
-    outputFieldName: _egress
-    inputPortIdentifier: 
-    outputPortIdentifier: String OUT
-  - _guid:
-      Value: 326496ae-9ef5-44e4-a475-b9e602f1f695
+      Value: abe45722-8a31-4cc1-be33-d3b8a90b5c1a
     owner: {fileID: 11400000}
     inputNodeGUID:
       Value: 034f0a6d-ea56-4e83-8190-5459f04085bf
@@ -98,7 +76,7 @@ MonoBehaviour:
     inputPortIdentifier: Float IN
     outputPortIdentifier: 
   - _guid:
-      Value: 91ea98d1-763d-4b47-8d7d-8dbe42d915f9
+      Value: 0e58fe31-0e18-47ec-9e66-772ca7d7a543
     owner: {fileID: 11400000}
     inputNodeGUID:
       Value: f1bbd92e-6021-4bfb-9420-a3cc973fbb0d
@@ -109,7 +87,7 @@ MonoBehaviour:
     inputPortIdentifier: 
     outputPortIdentifier: String OUT
   - _guid:
-      Value: e8dcd9f4-b743-4eda-a990-a09c466e00fa
+      Value: eec4286d-0123-4afd-b207-f7b8294a4a02
     owner: {fileID: 11400000}
     inputNodeGUID:
       Value: 034f0a6d-ea56-4e83-8190-5459f04085bf
@@ -119,6 +97,39 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: Decimal Places
     outputPortIdentifier: output
+  - _guid:
+      Value: c8cb5412-1b74-4cea-8c0a-a03b10f7dcaa
+    owner: {fileID: 11400000}
+    inputNodeGUID:
+      Value: 034f0a6d-ea56-4e83-8190-5459f04085bf
+    outputNodeGUID:
+      Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
+    inputFieldName: _ingress
+    outputFieldName: output
+    inputPortIdentifier: Float IN
+    outputPortIdentifier: 
+  - _guid:
+      Value: 3245c8d4-ed87-4397-a4fa-f623440c641a
+    owner: {fileID: 11400000}
+    inputNodeGUID:
+      Value: 05c6ea81-f327-4692-9e0f-792c109f3184
+    outputNodeGUID:
+      Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
+    inputFieldName: _ingress
+    outputFieldName: output
+    inputPortIdentifier: Float IN
+    outputPortIdentifier: 
+  - _guid:
+      Value: 9d4de727-b267-4c5b-b92a-ea85f72633bf
+    owner: {fileID: 11400000}
+    inputNodeGUID:
+      Value: b233fdec-4d0e-48e2-a2d9-bb976eb6f6f3
+    outputNodeGUID:
+      Value: 05c6ea81-f327-4692-9e0f-792c109f3184
+    inputFieldName: obj
+    outputFieldName: _egress
+    inputPortIdentifier: 
+    outputPortIdentifier: String OUT
   groups:
   - title: New Comment Block
     color: {r: 0, g: 0, b: 0, a: 0}
@@ -1248,7 +1259,7 @@ MonoBehaviour:
     - rid: 4827994175793266935
       type: {class: SubGraphNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
-        nodeCustomName: 
+        nodeCustomName: Float To String
         _guid:
           Value: 05c6ea81-f327-4692-9e0f-792c109f3184
         computeOrder: 10
@@ -1300,7 +1311,7 @@ MonoBehaviour:
         computeOrder: 31
         position:
           serializedVersion: 2
-          x: -535.0001
+          x: -535
           y: 1031.5
           width: 125
           height: 37

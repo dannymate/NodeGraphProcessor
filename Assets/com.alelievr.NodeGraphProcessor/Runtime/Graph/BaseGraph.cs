@@ -178,7 +178,7 @@ namespace GraphProcessor
 
         public virtual void Initialize() { }
 
-        void InitializeGraphElements()
+        private void InitializeGraphElements()
         {
             // Sanitize the element lists (it's possible that nodes are null if their full class name have changed)
             // If you rename / change the assembly of a node or parameter, please use the MovedFrom() attribute to avoid breaking the graph.
@@ -815,14 +815,21 @@ namespace GraphProcessor
             }
         }
 
-        void DestroyBrokenGraphElements()
+        protected void DestroyBrokenGraphElements()
         {
-            edges.RemoveAll(e => e.inputNode == null
+            var brokenEdges = edges.FindAll(e => e.inputNode == null
                 || e.outputNode == null
+                || !e.inputNode.GetAllEdges().Contains(e)
+                || !e.outputNode.GetAllEdges().Contains(e)
                 || string.IsNullOrEmpty(e.outputFieldName)
-                || string.IsNullOrEmpty(e.inputFieldName)
-            );
+                || string.IsNullOrEmpty(e.inputFieldName));
+
+            brokenEdges.ForEach(e => Disconnect(e.GUID));
+            edges.RemoveAll(e => brokenEdges.Contains(e));
+
             nodes.RemoveAll(n => n == null);
+
+            UpdateComputeOrder();
         }
 
         /// <summary>

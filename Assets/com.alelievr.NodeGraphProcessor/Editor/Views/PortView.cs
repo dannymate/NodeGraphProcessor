@@ -194,9 +194,6 @@ namespace GraphProcessor
             UpdatePortSize();
         }
 
-        public List<EdgeView> GetEdges()
-        {
-            return edges;
-        }
+        public List<EdgeView> GetEdges() => edges;
     }
 }

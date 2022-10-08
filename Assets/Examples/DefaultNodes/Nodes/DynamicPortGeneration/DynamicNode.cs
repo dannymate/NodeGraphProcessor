@@ -101,7 +101,7 @@ public abstract class DynamicNode<T> : BaseNode
             yield return new PortData
             {
                 displayName = field.inputAttribute.name,
-                displayType = displayType,
+                DisplayType = displayType,
                 identifier = field.fieldInfo.Name,
                 showAsDrawer = field.inputAttribute.showAsDrawer,
                 vertical = false,

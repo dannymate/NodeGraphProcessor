@@ -65,6 +65,7 @@ namespace GraphProcessor
             // Sort menu by alphabetical order and submenus
             var nodeEntries = graphView.FilterCreateNodeMenuEntries()
                 .Concat(graphView.FilterCreateCustomNodeMenuEntries())
+                .Concat(graphView.FilterMacroMenuEntries())
                 .OrderBy(k => k.Path);
 
             var titlePaths = new HashSet<string>();
@@ -115,8 +116,9 @@ namespace GraphProcessor
 
             var titlePaths = new HashSet<string>();
 
+            var macroMenuEntries = NodeProvider.GetMacroNodeMenuEntries();
             var customMenuEntries = NodeProvider.GetCustomNodeMenuEntries(graphView.graph, cachedCustomMenuItemMethods);
-            var menuEntries = NodeProvider.GetNodeMenuEntries(graphView.graph).Concat(customMenuEntries);
+            var menuEntries = NodeProvider.GetNodeMenuEntries(graphView.graph).Concat(customMenuEntries).Concat(macroMenuEntries);
 
             tree.Add(new SearchTreeEntry(new GUIContent($"Relay", icon))
             {
@@ -150,7 +152,7 @@ namespace GraphProcessor
                     if (String.IsNullOrEmpty(nodePath))
                         continue;
 
-                    // Ignore the node if it has filters and it doesn't meet the requirements, contains doesn't work so we compare paths instead.
+                    // Ignore the node if it has filters and it doesn't meet the requirements.
                     if (customMenuEntries.Contains(node) && !filteredCustomNodePaths.Contains(node))
                         continue;
 

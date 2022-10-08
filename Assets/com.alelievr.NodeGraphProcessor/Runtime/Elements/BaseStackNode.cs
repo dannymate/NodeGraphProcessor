@@ -11,7 +11,7 @@ namespace GraphProcessor
     {
         public Vector2 position;
         public string title = "New Stack";
-        
+
         /// <summary>
         /// Is the stack accept drag and dropped nodes
         /// </summary>
@@ -27,7 +27,7 @@ namespace GraphProcessor
         /// </summary>
         /// <typeparam name="string"></typeparam>
         /// <returns></returns>
-        public List< string >   nodeGUIDs = new List< string >();
+        public List<SerializableGuid> nodeGUIDs = new();
 
         public BaseStackNode(Vector2 position, string title = "Stack", bool acceptDrop = true, bool acceptNewNode = true)
         {

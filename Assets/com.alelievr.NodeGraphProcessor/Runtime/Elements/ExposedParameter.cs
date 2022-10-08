@@ -193,7 +193,7 @@ namespace GraphProcessor
 
         [SerializeField] float val;
 
-        public override object value { get => val; set => val = (float)value; }
+        public override object value { get => val; set => val = value != null ? (float)value : 0; }
         protected override Settings CreateSettings() => new FloatSettings();
     }
 

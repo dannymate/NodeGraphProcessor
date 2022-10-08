@@ -9,6 +9,7 @@ public class FloatToStringsNode : BaseNode, IConversionNode
     [Input("In")]
     public float input;
 
+    [Input("Decimal Places"), ShowAsDrawer]
     public int decimalPlaces = 2;
 
     [Output("Out")]

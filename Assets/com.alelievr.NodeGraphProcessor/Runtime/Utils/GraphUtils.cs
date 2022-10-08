@@ -18,7 +18,7 @@ namespace GraphProcessor
             public BaseNode node;
             public List<TarversalNode> inputs = new List<TarversalNode>();
             public List<TarversalNode> outputs = new List<TarversalNode>();
-            public State    state = State.White;
+            public State state = State.White;
 
             public TarversalNode(BaseNode node) { this.node = node; }
         }
@@ -66,12 +66,12 @@ namespace GraphProcessor
             {
                 if (n.state == State.Black)
                     return;
-                
+
                 n.state = State.Grey;
 
                 if (n.node is ParameterNode parameterNode && parameterNode.accessor == ParameterAccessor.Get)
                 {
-                    foreach (var setter in graph.nodes.Where(x=> 
+                    foreach (var setter in graph.nodes.Where(x =>
                         x.node is ParameterNode p &&
                         p.parameterGUID == parameterNode.parameterGUID &&
                         p.accessor == ParameterAccessor.Set))
@@ -110,7 +110,7 @@ namespace GraphProcessor
             {
                 if (n.state == State.Black)
                     return;
-                
+
                 n.state = State.Grey;
 
                 foreach (var input in n.inputs)
@@ -124,6 +124,11 @@ namespace GraphProcessor
             }
 
             cyclicNodes.ForEach((tn) => cyclicNode?.Invoke(tn.node));
+        }
+
+        public static T FindNodeInGraphOfType<T>(BaseGraph graph) where T : BaseNode
+        {
+            return graph.nodes.Find(x => x is T) as T;
         }
     }
 }

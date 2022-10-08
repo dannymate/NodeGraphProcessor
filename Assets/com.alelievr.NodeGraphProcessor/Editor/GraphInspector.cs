@@ -10,10 +10,10 @@ namespace GraphProcessor
     public class GraphInspector : Editor
     {
         protected VisualElement root;
-        protected BaseGraph     graph;
+        protected BaseGraph graph;
         protected ExposedParameterFieldFactory exposedParameterFactory;
 
-        VisualElement           parameterContainer;
+        VisualElement parameterContainer;
 
         protected virtual void OnEnable()
         {
@@ -35,13 +35,15 @@ namespace GraphProcessor
         public sealed override VisualElement CreateInspectorGUI()
         {
             root = new VisualElement();
+            graph.CreateInspectorGUI(root);
             CreateInspector();
             return root;
         }
 
         protected virtual void CreateInspector()
         {
-            parameterContainer = new VisualElement{
+            parameterContainer = new VisualElement
+            {
                 name = "ExposedParameters"
             };
             FillExposedParameters(parameterContainer);
@@ -59,7 +61,8 @@ namespace GraphProcessor
                 if (param.settings.isHidden)
                     continue;
 
-                var field = exposedParameterFactory.GetParameterValueField(param, (newValue) => {
+                var field = exposedParameterFactory.GetParameterValueField(param, (newValue) =>
+                {
                     param.value = newValue;
                     serializedObject.ApplyModifiedProperties();
                     graph.NotifyExposedParameterValueChanged(param);
@@ -77,7 +80,7 @@ namespace GraphProcessor
         }
 
         // Don't use ImGUI
-        public sealed override void OnInspectorGUI() {}
+        public sealed override void OnInspectorGUI() { }
 
     }
 }

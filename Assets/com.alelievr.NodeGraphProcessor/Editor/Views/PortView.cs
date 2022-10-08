@@ -10,6 +10,8 @@ namespace GraphProcessor
 {
     public class PortView : Port
     {
+        public const string VerticalClass = "Vertical";
+
         public string fieldName => fieldInfo.Name;
         public Type fieldType => fieldInfo.GetUnderlyingType();
         public new Type portType;
@@ -31,11 +33,11 @@ namespace GraphProcessor
         readonly string portStyle = "GraphProcessorStyles/PortView";
 
         protected PortView(Direction direction, MemberInfo fieldInfo, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
-            : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.displayType ?? fieldInfo.GetUnderlyingType())
+            : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.DisplayType ?? fieldInfo.GetUnderlyingType())
         {
             this.fieldInfo = fieldInfo;
             this.listener = edgeConnectorListener;
-            this.portType = portData.displayType ?? fieldInfo.GetUnderlyingType();
+            this.portType = portData.DisplayType ?? fieldInfo.GetUnderlyingType();
             this.portData = portData;
             this.portName = fieldName;
 
@@ -48,7 +50,7 @@ namespace GraphProcessor
                 styleSheets.Add(userPortStyle);
 
             if (portData.vertical)
-                AddToClassList("Vertical");
+                AddToClassList(VerticalClass);
 
             this.tooltip = portData.tooltip;
         }
@@ -148,14 +150,34 @@ namespace GraphProcessor
 
         public void UpdatePortView(PortData data)
         {
-            if (data.displayType != null)
+            if (data.DisplayType != null)
             {
-                base.portType = data.displayType;
-                portType = data.displayType;
+                base.portType = data.DisplayType;
+                portType = data.DisplayType;
                 visualClass = "Port_" + portType.Name;
             }
             if (!String.IsNullOrEmpty(data.displayName))
                 base.portName = data.displayName;
+
+            var portLabel = this.Q("type");
+            if (portLabel != null)
+            {
+                if (data.vertical)
+                {
+                    portLabel.style.display = DisplayStyle.None;
+                    this.AddToClassList(VerticalClass);
+
+                    // Allows the port to pick up mouse events
+                    this.Q("connector").pickingMode = PickingMode.Position;
+                }
+                else
+                {
+                    portLabel.style.display = DisplayStyle.Flex;
+                    this.RemoveFromClassList(VerticalClass);
+
+                    this.Q("connector").pickingMode = PickingMode.Ignore;
+                }
+            }
 
             portData = data;
 
@@ -172,9 +194,6 @@ namespace GraphProcessor
             UpdatePortSize();
         }
 
-        public List<EdgeView> GetEdges()
-        {
-            return edges;
-        }
+        public List<EdgeView> GetEdges() => edges;
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using UnityEditor.Experimental.GraphView;
 using static GraphProcessor.NodeUtils;
+using GraphProcessor.Utils;
 
 namespace GraphProcessor
 {
@@ -201,11 +202,11 @@ namespace GraphProcessor
                 targetDescription.nodeCreatePortDescription.Add(new PortDescription
                 {
                     nodeType = nodeType,
-                    portType = p.portData.displayType ?? p.fieldInfo.GetUnderlyingType(),
+                    portType = p.portData.DisplayType ?? p.fieldInfo.GetUnderlyingType(),
                     isInput = input,
                     portFieldName = p.fieldName,
                     portDisplayName = p.portData.displayName ?? p.fieldName,
-                    portIdentifier = p.portData.identifier,
+                    portIdentifier = p.portData.Identifier,
                 });
             }
         }
@@ -345,6 +346,22 @@ namespace GraphProcessor
             }
         }
 
+        public static IEnumerable<SubGraph> GetMacros()
+        {
+            foreach (var subGraph in ScriptableObjectUtils.GetAllInstances<SubGraph>())
+            {
+                if (subGraph.IsMacro) yield return subGraph;
+            }
+        }
+
+        public static IEnumerable<NodeMenuEntry> GetMacroNodeMenuEntries()
+        {
+            foreach (var macro in GetMacros())
+            {
+                yield return new NodeMenuEntry(macro.MacroOptions.MenuLocation, typeof(MacroNode), MacroNode.InstantiateMacro, new object[] { macro });
+            }
+        }
+
         public static IEnumerable<NodeMenuEntry> GetFilteredCustomNodeMenuEntries(
             Type checkForType,
             PortDescription port,
@@ -432,9 +449,49 @@ namespace GraphProcessor
             }
         }
 
+        public static IEnumerable<PortDescription> GetMacroPortDescriptions()
+        {
+            foreach (var macro in GetMacros())
+            {
+                foreach (var ingressPort in macro.IngressPortData)
+                {
+                    yield return new PortDescription
+                    {
+                        nodeType = typeof(MacroNode),
+                        portType = ingressPort.DisplayType,
+                        isInput = true,
+                        portFieldName = MacroNode.IngressPortsField,
+                        portDisplayName = ingressPort.displayName,
+                        portIdentifier = ingressPort.Identifier,
+                    };
+                }
+
+                foreach (var egressPort in macro.EgressPortData)
+                {
+                    yield return new PortDescription
+                    {
+                        nodeType = typeof(MacroNode),
+                        portType = egressPort.DisplayType,
+                        isInput = false,
+                        portFieldName = MacroNode.EgressPortsField,
+                        portDisplayName = egressPort.displayName,
+                        portIdentifier = egressPort.Identifier,
+                    };
+                }
+            }
+        }
+
         public static IEnumerable<PortDescription> GetEdgeCreationNodeMenuEntry(PortView portView, BaseGraph graph = null)
         {
             foreach (var description in genericNodes.nodeCreatePortDescription)
+            {
+                if (!IsPortCompatible(description))
+                    continue;
+
+                yield return description;
+            }
+
+            foreach (var description in GetMacroPortDescriptions())
             {
                 if (!IsPortCompatible(description))
                     continue;

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c80a5ff257fe3de96984fb18d3ebb8, type: 3}
+  m_Name: SubGraphPortSchema
+  m_EditorClassIdentifier: 
+  ingressPortData:
+  - identifier: Float IN
+    identifierObject: {fileID: 11400000, guid: 8c83bbc8f51fd35d0a23d1b2854c82e8, type: 2}
+    useIdentifierObject: 0
+    displayName: Float IN
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: System.Single, mscorlib
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0
+  egressPortData:
+  - identifier: String OUT
+    identifierObject: {fileID: 0}
+    useIdentifierObject: 0
+    displayName: String OUT
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: System.String, mscorlib
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0

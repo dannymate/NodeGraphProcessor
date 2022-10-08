@@ -57,7 +57,7 @@ public class RelayNode : BaseNode
         {
             input.values = edges.Select(e => e.passThroughBuffer).ToList();
             input.names = edges.Select(e => e.outputPort.portData.displayName).ToList();
-            input.types = edges.Select(e => e.outputPort.portData.displayType ?? e.outputPort.fieldInfo.GetUnderlyingType()).ToList();
+            input.types = edges.Select(e => e.outputPort.portData.DisplayType ?? e.outputPort.fieldInfo.GetUnderlyingType()).ToList();
         }
     }
 
@@ -69,7 +69,7 @@ public class RelayNode : BaseNode
 
         var inputPortEdges = inputPorts[0].GetEdges();
 
-        if (outputPort.portData.identifier != packIdentifier && outputIndex >= 0 && (unpackOutput || inputPortEdges.Count == 1))
+        if (outputPort.portData.Identifier != packIdentifier && outputIndex >= 0 && (unpackOutput || inputPortEdges.Count == 1))
         {
             if (output.values == null)
                 return;
@@ -105,14 +105,14 @@ public class RelayNode : BaseNode
         }
 
         if (edges.Count == 1 && !packInput)
-            inputType.type = edges[0].outputPort.portData.displayType;
+            inputType.type = edges[0].outputPort.portData.DisplayType;
         else
             inputType.type = typeof(object);
 
         yield return new PortData
         {
             displayName = "",
-            displayType = inputType.type,
+            DisplayType = inputType.type,
             identifier = "0",
             acceptMultipleEdges = true,
             sizeInPixel = Mathf.Min(k_MaxPortSize, sizeInPixel + 8),
@@ -128,7 +128,7 @@ public class RelayNode : BaseNode
             yield return new PortData
             {
                 displayName = "",
-                displayType = typeof(object),
+                DisplayType = typeof(object),
                 identifier = "0",
                 acceptMultipleEdges = true,
             };
@@ -143,7 +143,7 @@ public class RelayNode : BaseNode
             {
                 displayName = "Pack",
                 identifier = packIdentifier,
-                displayType = inputType.type,
+                DisplayType = inputType.type,
                 acceptMultipleEdges = true,
                 sizeInPixel = Mathf.Min(k_MaxPortSize, Mathf.Max(underlyingPortData.Count, 1) + 7), // TODO: function
             };
@@ -154,7 +154,7 @@ public class RelayNode : BaseNode
                 yield return new PortData
                 {
                     displayName = underlyingPortData?[i].name ?? "",
-                    displayType = underlyingPortData?[i].type ?? typeof(object),
+                    DisplayType = underlyingPortData?[i].type ?? typeof(object),
                     identifier = i.ToString(),
                     acceptMultipleEdges = true,
                     sizeInPixel = 0,
@@ -166,7 +166,7 @@ public class RelayNode : BaseNode
             yield return new PortData
             {
                 displayName = "",
-                displayType = inputType.type,
+                DisplayType = inputType.type,
                 identifier = "0",
                 acceptMultipleEdges = true,
                 sizeInPixel = Mathf.Min(k_MaxPortSize, Mathf.Max(underlyingPortData.Count, 1) + 7),
@@ -184,7 +184,7 @@ public class RelayNode : BaseNode
         var inputEdges = GetNonRelayEdges();
 
         if (inputEdges != null)
-            return inputEdges.Select(e => (e.outputPort.portData.displayType ?? e.outputPort.fieldInfo.GetUnderlyingType(), e.outputPort.portData.displayName)).ToList();
+            return inputEdges.Select(e => (e.outputPort.portData.DisplayType ?? e.outputPort.fieldInfo.GetUnderlyingType(), e.outputPort.portData.displayName)).ToList();
 
         return s_empty;
     }

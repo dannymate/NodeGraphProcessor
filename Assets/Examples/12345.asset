@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 061c4e5078ffdfd1ab72813a0e014ce2, type: 3}
+  m_Name: 12345
+  m_EditorClassIdentifier: 
+  serializedNodes: []
+  nodes:
+  - rid: 702614988847841435
+  - rid: 702614988847841436
+  edges: []
+  groups: []
+  stackNodes: []
+  pinnedElements: []
+  exposedParameters: []
+  serializedParameterList: []
+  stickyNotes: []
+  nodeInspectorReference: {fileID: 0}
+  position: {x: -482, y: -251, z: 0}
+  scale: {x: 1.7490063, y: 1.7490063, z: 1}
+  options:
+    displayName: 
+    renamePolicy: 0
+  isMacro: 0
+  macroOptions:
+    menuLocation: 
+  ingressPortData: []
+  egressPortData:
+  - identifier: 
+    identifierObject: {fileID: 0}
+    useIdentifierObject: 0
+    displayName: test
+    displayType:
+      GuidAssignmentFailed: 0
+      GUID: 
+      _typeNameAndAssembly: 
+      _suppressLogs: 0
+    showAsDrawer: 0
+    acceptMultipleEdges: 0
+    proxiedFieldPath: 
+    sizeInPixel: 0
+    tooltip: 
+    vertical: 0
+  schema: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: 702614988847841435
+      type: {class: SubGraphIngressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid:
+          Value: cf545a48-50c8-431e-a553-cc844dc81f42
+        computeOrder: 0
+        position:
+          serializedVersion: 2
+          x: 473.455
+          y: 326
+          width: 84
+          height: 42
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 100
+          height: 100
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+    - rid: 702614988847841436
+      type: {class: SubGraphEgressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid:
+          Value: f8939290-9a63-42ab-83ed-ac5096e3277b
+        computeOrder: 1
+        position:
+          serializedVersion: 2
+          x: 661.89056
+          y: 325.86337
+          width: 81
+          height: 42
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 100
+          height: 100
+        expanded: 0
+        debug: 0
+        nodeLock: 0

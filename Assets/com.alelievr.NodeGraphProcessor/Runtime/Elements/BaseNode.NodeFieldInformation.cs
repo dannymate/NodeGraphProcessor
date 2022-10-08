@@ -1,4 +1,5 @@
 using System.Reflection;
+using static GraphProcessor.NodeDelegates;
 
 namespace GraphProcessor
 {
@@ -13,10 +14,10 @@ namespace GraphProcessor
             public bool isMultiple;
             public string tooltip;
             public bool showAsDrawer;
-            public CustomPortBehaviorDelegate behavior;
+            public CustomPortBehaviorDelegateInfo behavior;
             public bool vertical;
 
-            public NodeFieldInformation(MemberInfo info, string name, bool input, bool isMultiple, string tooltip, bool showAsDrawer, bool vertical, CustomPortBehaviorDelegate behavior)
+            public NodeFieldInformation(MemberInfo info, string name, bool input, bool isMultiple, string tooltip, bool showAsDrawer, bool vertical, CustomPortBehaviorDelegateInfo behavior)
             {
                 this.input = input;
                 this.isMultiple = isMultiple;

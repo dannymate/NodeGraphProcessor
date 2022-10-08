@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 
 using Status = UnityEngine.UIElements.DropdownMenuAction.Status;
 using NodeView = UnityEditor.Experimental.GraphView.Node;
+using GraphProcessor.Utils;
 
 namespace GraphProcessor
 {
@@ -38,6 +39,7 @@ namespace GraphProcessor
         NodeSettingsView settingsContainer;
         Button settingButton;
         TextField titleTextField;
+        Image renameIcon;
 
         Label computeOrderLabel = new Label();
 
@@ -67,6 +69,22 @@ namespace GraphProcessor
         private float selectedNodesAvgHorizontal;
         private float selectedNodesAvgVertical;
 
+        private float _noPortOpacity = -1;
+        protected virtual float NoPortOpacity =>
+            PropertyUtils.LazyLoad(ref _noPortOpacity, () =>
+            {
+                Type nodeType = nodeTarget.GetType();
+                if (nodeType.HasCustomAttribute<NodeOpacityIfNoPorts>())
+                    return nodeType.GetCustomAttribute<NodeOpacityIfNoPorts>().Opacity;
+
+                return 1;
+            },
+            (value) => value == -1);
+
+        protected bool HasPorts => inputPortViews.Count + outputPortViews.Count > 0;
+
+        protected NodeRenamePolicy RenamePolicy => nodeTarget.RenamePolicy;
+
         #region  Initialization
 
         public void Initialize(BaseGraphView owner, BaseNode node)
@@ -76,8 +94,9 @@ namespace GraphProcessor
 
             if (!node.deletable)
                 capabilities &= ~Capabilities.Deletable;
-            // Note that the Renamable capability is useless right now as it haven't been implemented in Graphview
-            if (node.isRenamable)
+            // Note that the Renamable capability is useless right now as it isn't implemented in GraphView.
+            // We implement our own in SetupRenamableTitle
+            if (!RenamePolicy.Is(NodeRenamePolicy.DISABLED))
                 capabilities |= Capabilities.Renamable;
 
             owner.computeOrderUpdated += ComputeOrderUpdatedCallback;
@@ -105,9 +124,29 @@ namespace GraphProcessor
             RefreshExpandedState();
 
             this.RefreshPorts();
+            SetOpacity(HasPorts ? 1 : NoPortOpacity);
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<DetachFromPanelEvent>(e => ExceptionToLog.Call(Disable));
+            RegisterCallback<PointerDownEvent>((e) =>
+            {
+                if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
+                {
+                    if (RenamePolicy.Is(NodeRenamePolicy.DISABLED)) return;
+                    if (RenamePolicy.IsAny(NodeRenamePolicy.DOUBLE_CLICK, NodeRenamePolicy.BOTH))
+                    {
+                        if (titleContainer.ContainsPoint(e.localPosition))
+                            return;
+                    }
+                    if (RenamePolicy.IsAny(NodeRenamePolicy.ICON, NodeRenamePolicy.BOTH))
+                    {
+                        if (renameIcon.ContainsPoint(e.localPosition))
+                            return;
+                    }
+
+                    OnDoubleClicked();
+                }
+            });
             OnGeometryChanged(null);
 
             InitializeNodeToViewInterface();
@@ -137,7 +176,8 @@ namespace GraphProcessor
         {
             controlsContainer = new VisualElement { name = "controls" };
             controlsContainer.AddToClassList("NodeControls");
-            mainContainer.Add(controlsContainer);
+            if (!nodeTarget.HideNodeInspectorBlock)
+                mainContainer.Add(controlsContainer);
 
             rightTitleContainer = new VisualElement { name = "RightTitleContainer" };
             titleContainer.Add(rightTitleContainer);
@@ -186,9 +226,9 @@ namespace GraphProcessor
 
             AddInputContainer();
 
-            // Add renaming capability
-            if ((capabilities & Capabilities.Renamable) != 0)
-                SetupRenamableTitle();
+            // // Add renaming capability
+            // if ((capabilities & Capabilities.Renamable) != 0)
+            SetupRenamableTitle();
         }
 
         void SetupRenamableTitle()
@@ -196,11 +236,33 @@ namespace GraphProcessor
             var titleLabel = this.Q("title-label") as Label;
 
             titleTextField = new TextField { isDelayed = true };
-            titleTextField.style.display = DisplayStyle.None;
+            titleTextField.Hide();
             titleLabel.parent.Insert(0, titleTextField);
+
+            renameIcon = new Image() { image = EditorGUIUtility.IconContent("d_InputField Icon").image };
+            renameIcon.SetPosition(Position.Absolute).SetSize(16, 16).SetOffset(10, 0, -9, 0).SetOpacity(0.4f);
+
+            bool isPointerOverImage = false;
+            renameIcon.RegisterCallback<PointerOverEvent>((e) =>
+            {
+                renameIcon.SetOpacity(1);
+                isPointerOverImage = true;
+            });
+            renameIcon.RegisterCallback<PointerOutEvent>((e) =>
+            {
+                renameIcon.SetOpacity(0.4f);
+                isPointerOverImage = false;
+            });
+            renameIcon.RegisterCallback<MouseDownEvent>(ImageMouseDownCallback);
+            this.Add(renameIcon);
+
+            if (!RenamePolicy.IsAny(NodeRenamePolicy.ICON, NodeRenamePolicy.BOTH))
+                renameIcon.Hide();
 
             titleLabel.RegisterCallback<MouseDownEvent>(e =>
             {
+                if (!RenamePolicy.IsAny(NodeRenamePolicy.DOUBLE_CLICK, NodeRenamePolicy.BOTH)) return;
+
                 if (e.clickCount == 2 && e.button == (int)MouseButton.LeftMouse)
                     OpenTitleEditor();
             });
@@ -213,14 +275,33 @@ namespace GraphProcessor
                     CloseAndSaveTitleEditor(titleTextField.value);
             });
 
-            titleTextField.RegisterCallback<FocusOutEvent>(e => CloseAndSaveTitleEditor(titleTextField.value));
+            void ImageMouseDownCallback(MouseDownEvent e)
+            {
+                if (!titleTextField.IsShowing())
+                    OpenTitleEditor();
+                else
+                    CloseAndSaveTitleEditor(titleTextField.value);
+
+                e.StopPropagation();
+            }
+
+            void TitleTextFieldFocusOut(FocusOutEvent e)
+            {
+                if (isPointerOverImage && Event.current?.button == 0) return;
+
+                CloseAndSaveTitleEditor(titleTextField.value);
+            }
+
+            titleTextField.RegisterCallback<FocusOutEvent>(TitleTextFieldFocusOut, TrickleDown.TrickleDown);
+
 
             void OpenTitleEditor()
             {
                 // show title textbox
-                titleTextField.style.display = DisplayStyle.Flex;
-                titleLabel.style.display = DisplayStyle.None;
+                titleTextField.Show();
+                titleLabel.Hide();
                 titleTextField.focusable = true;
+                // titleTextField.RegisterCallback<FocusOutEvent>(TitleTextFieldFocusOut);
 
                 titleTextField.SetValueWithoutNotify(title);
                 titleTextField.Focus();
@@ -233,9 +314,10 @@ namespace GraphProcessor
                 nodeTarget.SetCustomName(newTitle);
 
                 // hide title TextBox
-                titleTextField.style.display = DisplayStyle.None;
-                titleLabel.style.display = DisplayStyle.Flex;
+                titleTextField.Hide();
+                titleLabel.Show();
                 titleTextField.focusable = false;
+                // titleTextField.UnregisterCallback<FocusOutEvent>(TitleTextFieldFocusOut);
 
                 UpdateTitle();
             }
@@ -243,7 +325,12 @@ namespace GraphProcessor
 
         void UpdateTitle()
         {
-            title = (nodeTarget.GetCustomName() == null) ? nodeTarget.GetType().Name : nodeTarget.GetCustomName();
+            title = nodeTarget.GetCustomName() ?? nodeTarget.GetType().Name;
+
+            if (RenamePolicy.IsAny(NodeRenamePolicy.ICON, NodeRenamePolicy.BOTH))
+                renameIcon?.Show();
+            else
+                renameIcon?.Hide();
         }
 
         void InitializeSettings()
@@ -362,7 +449,7 @@ namespace GraphProcessor
         {
             return GetPortViewsFromFieldName(fieldName)?.FirstOrDefault(pv =>
             {
-                return (pv.portData.identifier == identifier) || (String.IsNullOrEmpty(pv.portData.identifier) && String.IsNullOrEmpty(identifier));
+                return (pv.portData.Identifier == identifier) || (String.IsNullOrEmpty(pv.portData.Identifier) && String.IsNullOrEmpty(identifier));
             });
         }
 
@@ -412,16 +499,28 @@ namespace GraphProcessor
             if (portView.direction == Direction.Input)
             {
                 if (portView.portData.vertical)
-                    topPortContainer.Insert(index, portView);
+                {
+                    int position = topPortContainer.childCount < index ? topPortContainer.childCount : index;
+                    topPortContainer.Insert(position, portView);
+                }
                 else
-                    inputContainer.Insert(index, portView);
+                {
+                    int position = inputContainer.childCount < index ? inputContainer.childCount : index;
+                    inputContainer.Insert(position, portView);
+                }
             }
             else
             {
                 if (portView.portData.vertical)
-                    bottomPortContainer.Insert(index, portView);
+                {
+                    int position = bottomPortContainer.childCount < index ? bottomPortContainer.childCount : index;
+                    bottomPortContainer.Insert(position, portView);
+                }
                 else
-                    outputContainer.Insert(index, portView);
+                {
+                    int position = outputContainer.childCount < index ? outputContainer.childCount : index;
+                    outputContainer.Insert(position, portView);
+                }
             }
         }
 
@@ -683,6 +782,10 @@ namespace GraphProcessor
 
         protected virtual void DrawDefaultInspector(bool fromInspector = false)
         {
+            if (!fromInspector) { inputContainerElement.Clear(); controlsContainer.Clear(); }
+
+            nodeTarget.DrawControlsContainer(controlsContainer);
+
             var fields = nodeTarget.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Cast<MemberInfo>()
                 .Concat(nodeTarget.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
@@ -697,8 +800,6 @@ namespace GraphProcessor
 
         protected virtual void DrawFields(List<MemberInfo> fields, bool fromInspector = false)
         {
-            if (!fromInspector) { inputContainerElement.Clear(); controlsContainer.Clear(); }
-
             for (int i = 0; i < fields.Count; i++)
             {
                 MemberInfo field = fields[i];
@@ -753,7 +854,7 @@ namespace GraphProcessor
             bool hasInputAttribute = inputAttribute != null;
             bool isInput = (!hasPortView && hasInputAttribute) || (hasPortView && portView.direction == Direction.Input);
             bool showAsDrawer = !fromInspector && isInput && (inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>());
-            showAsDrawer |= !fromInspector && isInput && portData.showAsDrawer;
+            showAsDrawer |= !fromInspector && isInput && hasPortView && portData.showAsDrawer;
             if (((!serializeField && !serializeReference) || isProxied) && (hasPortView || hasInputAttribute) && !showAsDrawer)
             {
                 AddEmptyField(field, fromInspector);
@@ -763,7 +864,7 @@ namespace GraphProcessor
             //skip if marked with NonSerialized or HideInInspector
             if (field.HasCustomAttribute<NonSerializedAttribute>() || field.HasCustomAttribute<HideInInspector>())
             {
-                Debug.Log("3 " + fieldPath);
+                // Debug.Log("3 " + fieldPath);
                 AddEmptyField(field, fromInspector);
                 return;
             }
@@ -772,7 +873,7 @@ namespace GraphProcessor
             var showInInspector = field.GetCustomAttribute<ShowInInspector>();
             if (!serializeField && !serializeReference && showInInspector != null && !showInInspector.showInNode && !fromInspector)
             {
-                Debug.Log("4 " + fieldPath);
+                // Debug.Log("4 " + fieldPath);
                 AddEmptyField(field, fromInspector);
                 return;
             }
@@ -1106,6 +1207,20 @@ namespace GraphProcessor
             nodeTarget.nodeLock ^= true;
         }
 
+        public virtual void OnDoubleClicked() { }
+
+        public override void OnSelected()
+        {
+            base.OnSelected();
+            SetOpacity(1);
+        }
+
+        public override void OnUnselected()
+        {
+            base.OnUnselected();
+            SetOpacity(HasPorts ? 1 : NoPortOpacity);
+        }
+
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             BuildAlignMenu(evt);
@@ -1164,7 +1279,7 @@ namespace GraphProcessor
             {
                 // If the port have disappeared from the node data, we remove the view:
                 // We can use the identifier here because this function will only be called when there is a custom port behavior
-                if (!ports.Any(p => p.portData.identifier == pv.portData.identifier))
+                if (!ports.Any(p => p.portData.Identifier == pv.portData.Identifier))
                 {
                     RemovePort(pv);
                     portViewList.Remove(pv);
@@ -1174,7 +1289,7 @@ namespace GraphProcessor
             foreach (var p in ports)
             {
                 // Add missing port views
-                if (!portViews.Any(pv => p.portData.identifier == pv.portData.identifier))
+                if (!portViews.Any(pv => p.portData.Identifier == pv.portData.Identifier))
                 {
                     Direction portDirection = nodeTarget.IsFieldInput(p.fieldName) ? Direction.Input : Direction.Output;
                     var pv = AddPort(p.fieldInfo, portDirection, listener, p.portData);
@@ -1193,9 +1308,9 @@ namespace GraphProcessor
             // Re-order the port views to match the ports order in case a custom behavior re-ordered the ports
             for (int i = 0; i < portsList.Count; i++)
             {
-                var id = portsList[i].portData.identifier;
+                var id = portsList[i].portData.Identifier;
 
-                var pv = portViewList.FirstOrDefault(p => p.portData.identifier == id);
+                var pv = portViewList.FirstOrDefault(p => p.portData.Identifier == id);
                 if (pv != null)
                     InsertPort(pv, i);
             }
@@ -1270,6 +1385,8 @@ namespace GraphProcessor
             RefreshPorts();
 
             RedrawControlDrawers();
+
+            SetOpacity(HasPorts ? 1 : NoPortOpacity);
         }
 
         void UpdatePortsForField(string fieldName)
@@ -1277,6 +1394,17 @@ namespace GraphProcessor
             // TODO: actual code
             RefreshPorts();
             RedrawControlDrawers();
+            SetOpacity(HasPorts ? 1 : NoPortOpacity);
+        }
+
+        protected void SetNoPortOpacity(float opacity)
+        {
+            this._noPortOpacity = opacity;
+        }
+
+        protected void SetOpacity(float opacity)
+        {
+            this.style.opacity = opacity;
         }
 
         protected virtual VisualElement CreateSettingsView() => new Label("Settings") { name = "header" };

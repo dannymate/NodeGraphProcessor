@@ -1051,7 +1051,27 @@ namespace GraphProcessor
 #endif
 
             if (typeof(IList).IsAssignableFrom(field.GetUnderlyingType()))
+            {
                 EnableSyncSelectionBorderHeight();
+
+                // Prevent node stealing focus from ListView 
+                void ListViewSelectionFixCallback(GeometryChangedEvent e)
+                {
+                    // Wait until propertyfield has generated its children
+                    if (element.childCount == 0) return;
+
+                    //#unity-content-container is the list view content
+                    element.Q("unity-content-container").RegisterCallback<MouseDownEvent>(_ =>
+                    {
+                        // avoid handing the event over to the SelectionDragger to prevent sorting issues
+                        _.StopImmediatePropagation();
+                    }, TrickleDown.TrickleDown);
+
+                    // Unregister this callback as we don't need it anymore
+                    element.UnregisterCallback<GeometryChangedEvent>(ListViewSelectionFixCallback);
+                }
+                element.RegisterCallback<GeometryChangedEvent>(ListViewSelectionFixCallback);
+            }
 
             element.RegisterValueChangeCallback(e =>
             {

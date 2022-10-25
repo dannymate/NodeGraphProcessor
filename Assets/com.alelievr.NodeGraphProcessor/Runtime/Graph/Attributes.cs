@@ -2,29 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static GraphProcessor.EdgeProcessing;
 
 namespace GraphProcessor
 {
     /// <summary>
-    /// Tell that this field is will generate an input port
+    /// Tell that this field is will generate an input port that accepts a single edge
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class InputAttribute : Attribute
     {
         public string name;
-        public bool allowMultiple = false;
+        public Type displayType = null;
         public bool showAsDrawer = false;
 
+        public bool AcceptsMultipleEdges => this is MultiEdgeInputAttribute;
+
         /// <summary>
-        /// Mark the field as an input port
+        /// Mark the field as a single input port
         /// </summary>
         /// <param name="name">display name</param>
-        /// <param name="allowMultiple">is connecting multiple edges allowed</param>
-        public InputAttribute(string name = null, bool allowMultiple = false, bool showAsDrawer = false)
+        /// <param name="showAsDrawer">if true shows a property drawer of displayType</param>
+        public InputAttribute(string name = null, Type displayType = null, bool showAsDrawer = false)
         {
             this.name = name;
-            this.allowMultiple = allowMultiple;
+            this.displayType = displayType;
             this.showAsDrawer = showAsDrawer;
+        }
+    }
+
+    /// <summary>
+    /// Tell that this field is will generate an input port that can accept multiple edges
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class MultiEdgeInputAttribute : InputAttribute
+    {
+        public readonly EdgeProcessOrder processOrder = EdgeProcessOrder.FIFO;
+
+        /// <summary>
+        /// Mark the field as a multi input port
+        /// </summary>
+        /// <param name="name">display name</param>
+        /// <param name="sortType">order in which to process connected edges</param>
+        /// <param name="displayType">changes the default port input type if set</param>
+        public MultiEdgeInputAttribute(string name = null, EdgeProcessOrder processOrder = EdgeProcessOrder.FIFO, Type displayType = null)
+        {
+            this.name = name;
+            this.processOrder = processOrder;
+            this.displayType = displayType;
         }
     }
 

@@ -233,6 +233,8 @@ namespace GraphProcessor
                         {
                             acceptMultipleEdges = nodeField.isMultiple,
                             displayName = nodeField.name,
+                            displayType = nodeField.displayType,
+                            edgeProcessOrder = nodeField.processOrder.GetValueOrDefault(),
                             tooltip = nodeField.tooltip,
                             vertical = nodeField.vertical,
                             showAsDrawer = nodeField.showAsDrawer
@@ -498,43 +500,18 @@ namespace GraphProcessor
         void InitializeInOutDatas()
         {
             var fields = GetNodeFields().Cast<MemberInfo>().Concat(GetNodeProperties()).ToArray();
-            var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                                   .Where(x => x.HasCustomAttribute<CustomPortBehaviorAttribute>());
 
             foreach (var field in fields)
             {
-                var inputAttribute = field.GetCustomAttribute<InputAttribute>();
-                var outputAttribute = field.GetCustomAttribute<OutputAttribute>();
-                var tooltipAttribute = field.GetCustomAttribute<TooltipAttribute>();
-                var showInInspector = field.GetCustomAttribute<ShowInInspector>();
-                var vertical = field.GetCustomAttribute<VerticalAttribute>();
-                bool isMultiple = false;
-                bool input = false;
-                string name = field.Name;
-                string tooltip = null;
-                bool showAsDrawer = false;
+                _needsInspector = field.HasCustomAttribute<ShowInInspector>();
 
-                if (showInInspector != null)
-                    _needsInspector = true;
-
-                if (inputAttribute == null && outputAttribute == null)
+                if (!field.HasCustomAttribute<InputAttribute>() && !field.HasCustomAttribute<OutputAttribute>())
                     continue;
 
-                //check if field is a collection type
-                isMultiple = (inputAttribute != null) ? inputAttribute.allowMultiple : (outputAttribute.allowMultiple);
-                input = inputAttribute != null;
-
-                if (input)
-                    showAsDrawer = inputAttribute.showAsDrawer;
-
-                tooltip = tooltipAttribute?.tooltip;
-
-                if (!String.IsNullOrEmpty(inputAttribute?.name))
-                    name = inputAttribute.name;
-                if (!String.IsNullOrEmpty(outputAttribute?.name))
-                    name = outputAttribute.name;
-
                 // By default we set the behavior to null, if the field have a custom behavior, it will be set in the loop just below
-                nodeFields[field.Name] = new NodeFieldInformation(field, name, input, isMultiple, tooltip, showAsDrawer, vertical != null, null);
+                nodeFields[field.Name] = new NodeFieldInformation(field);
             }
 
             foreach (var method in methods)
@@ -660,7 +637,15 @@ namespace GraphProcessor
         {
             // Fixup port data info if needed:
             if (portData.DisplayType == null)
-                portData.DisplayType = nodeFields[fieldName].info.GetUnderlyingType();
+            {
+                Type displayType = nodeFields[fieldName].info.GetUnderlyingType();
+                if (portData.acceptMultipleEdges)
+                {
+                    if (displayType.IsArray) displayType = displayType.GetElementType();
+                    else if (displayType.IsGenericType) displayType = displayType.GenericTypeArguments[0];
+                }
+                portData.DisplayType = displayType;
+            }
 
             if (input)
                 inputPorts.Add(new NodePort(this, fieldName, portData));

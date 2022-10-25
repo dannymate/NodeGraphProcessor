@@ -22,6 +22,7 @@ namespace GraphProcessor
         public const string DisplayTypeFieldName = nameof(displayType);
         public const string ShowAsDrawerFieldName = nameof(showAsDrawer);
         public const string AcceptMultipleEdgesFieldName = nameof(acceptMultipleEdges);
+        public const string EdgeProcessOrderFieldName = nameof(edgeProcessOrder);
         public const string TooltipFieldName = nameof(tooltip);
         public const string VerticalFieldName = nameof(vertical);
 
@@ -59,6 +60,11 @@ namespace GraphProcessor
         /// </summary>
         [SerializeField]
         public bool acceptMultipleEdges;
+        /// <summary>
+        /// Order to process connected edges
+        /// </summary>
+        [SerializeField]
+        public EdgeProcessing.EdgeProcessOrder edgeProcessOrder;
         /// <summary>
         /// The field the port is proxying if using custombehavior
         /// </summary>
@@ -104,6 +110,7 @@ namespace GraphProcessor
                 && DisplayType == other.DisplayType
                 && showAsDrawer == other.showAsDrawer
                 && acceptMultipleEdges == other.acceptMultipleEdges
+                && edgeProcessOrder == other.edgeProcessOrder
                 && sizeInPixel == other.sizeInPixel
                 && proxiedFieldPath == other.proxiedFieldPath
                 && tooltip == other.tooltip
@@ -130,6 +137,7 @@ namespace GraphProcessor
             displayType = other.displayType;
             showAsDrawer = other.showAsDrawer;
             acceptMultipleEdges = other.acceptMultipleEdges;
+            edgeProcessOrder = other.edgeProcessOrder;
             sizeInPixel = other.sizeInPixel;
             proxiedFieldPath = other.proxiedFieldPath;
             tooltip = other.tooltip;
@@ -181,6 +189,10 @@ namespace GraphProcessor
         List<SerializableEdge> edges = new List<SerializableEdge>();
         Dictionary<SerializableEdge, PushDataDelegate> pushDataDelegates = new Dictionary<SerializableEdge, PushDataDelegate>();
         List<SerializableEdge> edgeWithRemoteCustomIO = new List<SerializableEdge>();
+        List<SerializableEdge> edgeWithArrayInput = new();
+
+        public bool IsInput => owner.inputPorts.Contains(this);
+        public bool IsMultiEdgeInput => IsInput && portData.acceptMultipleEdges;
 
         /// <summary>
         /// Owner of the FieldInfo, to be used in case of Get/SetValue
@@ -251,6 +263,13 @@ namespace GraphProcessor
             //if we have a custom io implementation, we don't need to genereate the defaut one
             if (edge.inputPort.customPortIOMethod != null || edge.outputPort.customPortIOMethod != null)
                 return;
+
+            // We want to process all edges at once and provide a list
+            if (edge.inputPort.IsMultiEdgeInput)
+            {
+                edgeWithArrayInput.Add(edge);
+                return;
+            }
 
             PushDataDelegate edgeDelegate = CreatePushDataDelegateForEdge(edge);
 
@@ -329,6 +348,55 @@ namespace GraphProcessor
             }
         }
 
+        PushDataDelegate CreatePushDataDelegateForMultiEdgeInput(IList<SerializableEdge> edges)
+        {
+            try
+            {
+                // We know that this port is the input
+                MemberInfo inputField = fieldInfo;
+
+                Type inType = inputField.GetUnderlyingType();
+                Type elementType = typeof(object);
+                if (inType.IsArray) elementType = inType.GetElementType();
+                else if (inType.IsGenericType) elementType = inType.GenericTypeArguments[0];
+
+                var outputValues = Activator.CreateInstance(inType, new object[] { edges.Count });
+
+                if (inType.IsArray) Array.Copy(edges.Order(portData.edgeProcessOrder).Select(x => x.passThroughBuffer).ToArray(), outputValues as Array, edges.Count);
+                else if (outputValues is IList)
+                {
+                    foreach (var edge in edges.Order(portData.edgeProcessOrder))
+                        (outputValues as IList).Add(edge.passThroughBuffer);
+                }
+
+                Expression inputParamField = Expression.PropertyOrField(Expression.Constant(owner), inputField.Name);
+                Expression outputParamField = Expression.Constant(outputValues);
+
+                Type outType = outputValues.GetType();
+
+                // If there is a user defined conversion function, then we call it
+                if (TypeAdapter.AreAssignable(outType, inType))
+                {
+                    // We add a cast in case there we're calling the conversion method with a base class parameter (like object)
+                    var convertedParam = Expression.Convert(outputParamField, outType);
+                    outputParamField = Expression.Call(TypeAdapter.GetConversionMethod(outType, inType), convertedParam);
+                    // In case there is a custom port behavior in the output, then we need to re-cast to the base type because
+                    // the conversion method return type is not always assignable directly:
+                    outputParamField = Expression.Convert(outputParamField, inType);
+                }
+                else // otherwise we cast
+                    outputParamField = Expression.Convert(outputParamField, inType);
+
+                BinaryExpression assign = Expression.Assign(inputParamField, outputParamField);
+                return Expression.Lambda<PushDataDelegate>(assign).Compile();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Disconnect an Edge from this port
         /// </summary>
@@ -364,11 +432,15 @@ namespace GraphProcessor
             foreach (var pushDataDelegate in pushDataDelegates)
                 pushDataDelegate.Value();
 
+
+            object ourValue = fieldInfo.GetValue(fieldOwner);
+            foreach (var edge in edgeWithArrayInput)
+                edge.passThroughBuffer = ourValue;
+
             if (edgeWithRemoteCustomIO.Count == 0)
                 return;
 
             //if there are custom IO implementation on the other ports, they'll need our value in the passThrough buffer
-            object ourValue = fieldInfo.GetValue(fieldOwner);
             foreach (var edge in edgeWithRemoteCustomIO)
                 edge.passThroughBuffer = ourValue;
         }
@@ -406,12 +478,12 @@ namespace GraphProcessor
             }
 
             // check if this port have connection to ports that have custom output functions
-            if (edgeWithRemoteCustomIO.Count == 0)
+            if (!IsMultiEdgeInput && edgeWithRemoteCustomIO.Count == 0)
                 return;
 
             // Only one input connection is handled by this code, if you want to
             // take multiple inputs, you must create a custom input function see CustomPortsNode.cs
-            if (edges.Count > 0)
+            if (!IsMultiEdgeInput && edges.Count > 0)
             {
                 var passThroughObject = edges.First().passThroughBuffer;
 
@@ -421,6 +493,10 @@ namespace GraphProcessor
                         passThroughObject = TypeAdapter.Convert(passThroughObject, fieldInfo.GetUnderlyingType());
 
                 fieldInfo.SetValue(fieldOwner, passThroughObject);
+            }
+            else if (IsMultiEdgeInput)
+            {
+                CreatePushDataDelegateForMultiEdgeInput(edges)();
             }
         }
     }

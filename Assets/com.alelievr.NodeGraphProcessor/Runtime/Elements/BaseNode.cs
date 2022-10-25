@@ -639,7 +639,7 @@ namespace GraphProcessor
             if (portData.DisplayType == null)
             {
                 Type displayType = nodeFields[fieldName].info.GetUnderlyingType();
-                if (portData.acceptMultipleEdges)
+                if (input && portData.acceptMultipleEdges)
                 {
                     if (displayType.IsArray) displayType = displayType.GetElementType();
                     else if (displayType.IsGenericType) displayType = displayType.GenericTypeArguments[0];

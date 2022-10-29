@@ -23,8 +23,6 @@ namespace GraphProcessor.EdgeProcessing
 
             foreach (var methodInfo in TypeCache.GetMethodsWithAttribute<EdgeOrdererAttribute>())
             {
-                if (!methodInfo.HasCustomAttribute<EdgeOrdererAttribute>()) continue;
-
                 EdgeOrdererAttribute attribute = methodInfo.GetCustomAttribute<EdgeOrdererAttribute>();
 
                 if (edgeProcessOrderByName.ContainsKey(attribute.Key))

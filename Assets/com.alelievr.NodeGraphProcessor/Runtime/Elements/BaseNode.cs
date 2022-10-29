@@ -4,6 +4,7 @@ using System;
 using System.Reflection;
 using System.Linq;
 using static GraphProcessor.NodeDelegates;
+using GraphProcessor.EdgeProcessing;
 
 namespace GraphProcessor
 {
@@ -234,7 +235,7 @@ namespace GraphProcessor
                             acceptMultipleEdges = nodeField.isMultiple,
                             displayName = nodeField.name,
                             displayType = nodeField.displayType,
-                            edgeProcessOrder = nodeField.processOrder.GetValueOrDefault(),
+                            edgeProcessOrder = nodeField.processOrder ?? EdgeProcessOrder.FIFO,
                             tooltip = nodeField.tooltip,
                             vertical = nodeField.vertical,
                             showAsDrawer = nodeField.showAsDrawer

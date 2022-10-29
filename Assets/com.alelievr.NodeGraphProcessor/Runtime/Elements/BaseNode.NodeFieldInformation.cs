@@ -2,7 +2,7 @@ using System.Reflection;
 using static GraphProcessor.NodeDelegates;
 using System;
 using UnityEngine;
-using static GraphProcessor.EdgeProcessing;
+using GraphProcessor.EdgeProcessing;
 
 namespace GraphProcessor
 {
@@ -15,7 +15,7 @@ namespace GraphProcessor
             public MemberInfo info;
             public bool input;
             public bool isMultiple;
-            public EdgeProcessOrder? processOrder;
+            public EdgeProcessOrderKey processOrder;
             public Type displayType;
             public string tooltip;
             public bool showAsDrawer;
@@ -53,7 +53,7 @@ namespace GraphProcessor
                 this.name = name;
                 this.fieldName = info.Name;
                 this.displayType = (inputAttribute as MultiEdgeInputAttribute)?.displayType;
-                this.processOrder = (inputAttribute as MultiEdgeInputAttribute)?.processOrder;
+                this.processOrder = (inputAttribute as MultiEdgeInputAttribute)?.processOrder ?? EdgeProcessOrder.FIFO;
                 this.behavior = null; // Set after instantiation
                 this.tooltip = tooltip;
                 this.showAsDrawer = showAsDrawer;

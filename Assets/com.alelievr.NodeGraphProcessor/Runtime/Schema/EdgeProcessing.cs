@@ -1,25 +1,42 @@
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
 
-namespace GraphProcessor
+namespace GraphProcessor.EdgeProcessing
 {
     public static class EdgeProcessing
     {
+        private static Dictionary<EdgeProcessOrderKey, EdgeProcessOrderCallback> _edgeProcessOrderCallbackByKey;
 
-        public enum EdgeProcessOrder { FIFO, TOP_TO_BOTTOM }
+        public delegate IList<SerializableEdge> EdgeProcessOrderCallback(IList<SerializableEdge> edges);
 
-        public static IList<SerializableEdge> Order(this IList<SerializableEdge> edges, EdgeProcessOrder processOrder)
+        public static Dictionary<EdgeProcessOrderKey, EdgeProcessOrderCallback> EdgeProcessOrderCallbackByKey =>
+            PropertyUtils.LazyLoad(ref _edgeProcessOrderCallbackByKey, BuildEdgeProcessOrderBehaviorDict);
+
+        public static EdgeProcessOrderKey[] EdgeProcessOrderBehaviorKeys => EdgeProcessOrderCallbackByKey.Keys.ToArray();
+
+        private static Dictionary<EdgeProcessOrderKey, EdgeProcessOrderCallback> BuildEdgeProcessOrderBehaviorDict()
         {
-            switch (processOrder)
+            Dictionary<EdgeProcessOrderKey, EdgeProcessOrderCallback> edgeProcessOrderByName = new();
+
+            foreach (var methodInfo in TypeCache.GetMethodsWithAttribute<EdgeOrdererAttribute>())
             {
-                case EdgeProcessOrder.FIFO:
-                    break; // Default
-                case EdgeProcessOrder.TOP_TO_BOTTOM:
-                    edges = edges.OrderBy(x => x.outputNode.position.y).ToList();
-                    break;
+                if (!methodInfo.HasCustomAttribute<EdgeOrdererAttribute>()) continue;
+
+                EdgeOrdererAttribute attribute = methodInfo.GetCustomAttribute<EdgeOrdererAttribute>();
+
+                if (edgeProcessOrderByName.ContainsKey(attribute.Key))
+                {
+                    Debug.LogError("Edge Ordering Method with Key: " + attribute.Key + " already exists. SKIPPING!");
+                    continue;
+                }
+
+                edgeProcessOrderByName.Add(attribute.Key, methodInfo.CreateDelegate(typeof(EdgeProcessOrderCallback)) as EdgeProcessOrderCallback);
             }
-            return edges;
+
+            return edgeProcessOrderByName;
         }
     }
 }

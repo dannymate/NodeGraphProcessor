@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Linq.Expressions;
 using System;
 using TypeReferences;
+using GraphProcessor.EdgeProcessing;
+using static GraphProcessor.EdgeProcessing.EdgeProcessing;
 
 namespace GraphProcessor
 {
@@ -64,7 +66,7 @@ namespace GraphProcessor
         /// Order to process connected edges
         /// </summary>
         [SerializeField]
-        public EdgeProcessing.EdgeProcessOrder edgeProcessOrder;
+        public EdgeProcessOrderKey edgeProcessOrder = EdgeProcessOrder.FIFO;
         /// <summary>
         /// The field the port is proxying if using custombehavior
         /// </summary>
@@ -362,10 +364,12 @@ namespace GraphProcessor
 
                 var outputValues = Activator.CreateInstance(inType, new object[] { edges.Count });
 
-                if (inType.IsArray) Array.Copy(edges.Order(portData.edgeProcessOrder).Select(x => x.passThroughBuffer).ToArray(), outputValues as Array, edges.Count);
+                EdgeProcessOrderCallback edgeProcessOrderDelegate = EdgeProcessOrderCallbackByKey[portData.edgeProcessOrder];
+
+                if (inType.IsArray) Array.Copy(edgeProcessOrderDelegate(edges).Select(x => x.passThroughBuffer).ToArray(), outputValues as Array, edges.Count);
                 else if (outputValues is IList)
                 {
-                    foreach (var edge in edges.Order(portData.edgeProcessOrder))
+                    foreach (var edge in edgeProcessOrderDelegate(edges))
                         (outputValues as IList).Add(edge.passThroughBuffer);
                 }
 

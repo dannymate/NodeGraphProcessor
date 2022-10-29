@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using static GraphProcessor.EdgeProcessing;
+﻿using System;
+using GraphProcessor.EdgeProcessing;
 
 namespace GraphProcessor
 {
@@ -37,7 +34,7 @@ namespace GraphProcessor
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class MultiEdgeInputAttribute : InputAttribute
     {
-        public readonly EdgeProcessOrder processOrder = EdgeProcessOrder.FIFO;
+        public readonly EdgeProcessOrderKey processOrder = EdgeProcessOrder.FIFO;
 
         /// <summary>
         /// Mark the field as a multi input port
@@ -45,7 +42,7 @@ namespace GraphProcessor
         /// <param name="name">display name</param>
         /// <param name="sortType">order in which to process connected edges</param>
         /// <param name="displayType">changes the default port input type if set</param>
-        public MultiEdgeInputAttribute(string name = null, EdgeProcessOrder processOrder = EdgeProcessOrder.FIFO, Type displayType = null)
+        public MultiEdgeInputAttribute(string name = null, string processOrder = EdgeProcessOrder.FIFO, Type displayType = null)
         {
             this.name = name;
             this.processOrder = processOrder;
@@ -230,6 +227,21 @@ namespace GraphProcessor
         public CustomStackNodeView(Type stackNodeType)
         {
             this.stackNodeType = stackNodeType;
+        }
+    }
+
+    /// <summary>
+    /// Register a method with key as a way to sort edges
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public class EdgeOrdererAttribute : Attribute
+    {
+        private readonly EdgeProcessOrderKey _key;
+        public EdgeProcessOrderKey Key => _key;
+
+        public EdgeOrdererAttribute(string key)
+        {
+            this._key = key;
         }
     }
 

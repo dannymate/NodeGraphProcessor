@@ -16,6 +16,7 @@ namespace GraphProcessor.EdgeProcessing
             PropertyUtils.LazyLoad(ref _edgeProcessOrderCallbackByKey, BuildEdgeProcessOrderBehaviorDict);
 
         public static EdgeProcessOrderKey[] EdgeProcessOrderBehaviorKeys => EdgeProcessOrderCallbackByKey.Keys.ToArray();
+        public static IEnumerable<string> EdgeProcessOrderBehaviorKeyValues => EdgeProcessOrderBehaviorKeys.Select((e) => e.Value);
 
         private static Dictionary<EdgeProcessOrderKey, EdgeProcessOrderCallback> BuildEdgeProcessOrderBehaviorDict()
         {

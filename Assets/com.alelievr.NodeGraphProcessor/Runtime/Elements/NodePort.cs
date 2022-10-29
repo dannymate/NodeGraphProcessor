@@ -40,7 +40,7 @@ namespace GraphProcessor
         [SerializeField]
         public bool useIdentifierObject = false;
 
-        public string Identifier => !useIdentifierObject ? identifier : identifierObject;
+        public string Identifier => useIdentifierObject && identifierObject ? identifierObject : identifier;
 
         /// <summary>
         /// Display name on the node
@@ -66,7 +66,7 @@ namespace GraphProcessor
         /// Order to process connected edges
         /// </summary>
         [SerializeField]
-        public EdgeProcessOrderKey edgeProcessOrder = EdgeProcessOrder.FIFO;
+        public EdgeProcessOrderKey edgeProcessOrder = EdgeProcessOrder.DefaultEdgeProcessOrder;
         /// <summary>
         /// The field the port is proxying if using custombehavior
         /// </summary>

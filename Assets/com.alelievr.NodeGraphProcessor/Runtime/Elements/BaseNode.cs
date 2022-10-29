@@ -235,7 +235,7 @@ namespace GraphProcessor
                             acceptMultipleEdges = nodeField.isMultiple,
                             displayName = nodeField.name,
                             displayType = nodeField.displayType,
-                            edgeProcessOrder = nodeField.processOrder ?? EdgeProcessOrder.FIFO,
+                            edgeProcessOrder = nodeField.processOrder ?? EdgeProcessOrder.DefaultEdgeProcessOrder,
                             tooltip = nodeField.tooltip,
                             vertical = nodeField.vertical,
                             showAsDrawer = nodeField.showAsDrawer

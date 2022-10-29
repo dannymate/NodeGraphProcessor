@@ -1,10 +1,15 @@
 using System;
+using UnityEngine;
 
 namespace GraphProcessor.EdgeProcessing
 {
+    [Serializable]
     public class EdgeProcessOrderKey : IEquatable<string>, IEquatable<EdgeProcessOrderKey>
     {
-        private readonly string _value;
+        public const string ValueFieldName = nameof(_value);
+
+        [SerializeField, HideInInspector]
+        private string _value;
         public string Value => _value;
 
         public EdgeProcessOrderKey(string key)

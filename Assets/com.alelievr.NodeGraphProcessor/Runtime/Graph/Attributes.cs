@@ -34,7 +34,7 @@ namespace GraphProcessor
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class MultiEdgeInputAttribute : InputAttribute
     {
-        public readonly EdgeProcessOrderKey processOrder = EdgeProcessOrder.FIFO;
+        public readonly EdgeProcessOrderKey processOrder = EdgeProcessOrder.DefaultEdgeProcessOrder;
 
         /// <summary>
         /// Mark the field as a multi input port
@@ -42,7 +42,7 @@ namespace GraphProcessor
         /// <param name="name">display name</param>
         /// <param name="sortType">order in which to process connected edges</param>
         /// <param name="displayType">changes the default port input type if set</param>
-        public MultiEdgeInputAttribute(string name = null, string processOrder = EdgeProcessOrder.FIFO, Type displayType = null)
+        public MultiEdgeInputAttribute(string name = null, string processOrder = EdgeProcessOrder.DefaultEdgeProcessOrder, Type displayType = null)
         {
             this.name = name;
             this.processOrder = processOrder;

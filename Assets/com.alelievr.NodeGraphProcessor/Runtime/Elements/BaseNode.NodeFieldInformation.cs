@@ -53,7 +53,7 @@ namespace GraphProcessor
                 this.name = name;
                 this.fieldName = info.Name;
                 this.displayType = (inputAttribute as MultiEdgeInputAttribute)?.displayType;
-                this.processOrder = (inputAttribute as MultiEdgeInputAttribute)?.processOrder ?? EdgeProcessOrder.FIFO;
+                this.processOrder = (inputAttribute as MultiEdgeInputAttribute)?.processOrder ?? EdgeProcessOrder.DefaultEdgeProcessOrder;
                 this.behavior = null; // Set after instantiation
                 this.tooltip = tooltip;
                 this.showAsDrawer = showAsDrawer;

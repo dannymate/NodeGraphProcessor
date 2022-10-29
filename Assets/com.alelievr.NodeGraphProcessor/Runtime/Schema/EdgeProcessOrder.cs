@@ -5,6 +5,7 @@ namespace GraphProcessor.EdgeProcessing
 {
     public static class EdgeProcessOrder
     {
+        public const string DefaultEdgeProcessOrder = FIFO;
         public const string FIFO = nameof(FIFO);
         public const string TOP_TO_BOTTOM = nameof(TOP_TO_BOTTOM);
         public const string BOTTOM_TO_TOP = nameof(BOTTOM_TO_TOP);

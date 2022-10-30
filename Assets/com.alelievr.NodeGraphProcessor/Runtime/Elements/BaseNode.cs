@@ -500,9 +500,38 @@ namespace GraphProcessor
 
         void InitializeInOutDatas()
         {
-            var fields = GetNodeFields().Cast<MemberInfo>().Concat(GetNodeProperties()).ToArray();
+            var fields = GetNodeFields().Cast<MemberInfo>().Concat(GetNodeProperties()).ToList();
             var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                                   .Where(x => x.HasCustomAttribute<CustomPortBehaviorAttribute>());
+                                   .Where(x => x.HasCustomAttribute<CustomPortBehaviorAttribute>()).ToList();
+
+            Dictionary<MemberInfo, CustomPortBehaviorDelegateInfo> customBehaviorInfoByField = new();
+            foreach (var method in methods)
+            {
+                var customPortBehaviorAttribute = method?.GetCustomAttribute<CustomPortBehaviorAttribute>();
+
+                MemberInfo field = fields.Find(x => x.Name == customPortBehaviorAttribute.fieldName);
+
+                if (field == null)
+                {
+                    Debug.LogError("Invalid field name for custom port behavior: " + method + ", " + customPortBehaviorAttribute.fieldName);
+                    continue;
+                }
+
+                CustomPortBehaviorDelegate deleg = null;
+                try
+                {
+                    var referenceType = typeof(CustomPortBehaviorDelegate);
+                    deleg = (CustomPortBehaviorDelegate)Delegate.CreateDelegate(referenceType, this, method, true);
+                }
+                catch
+                {
+                    Debug.LogError("The function " + method + " cannot be converted to the required delegate format: " + typeof(CustomPortBehaviorDelegate));
+                    continue;
+                }
+                var delegInfo = new CustomPortBehaviorDelegateInfo(deleg, customPortBehaviorAttribute.cloneResults);
+
+                customBehaviorInfoByField.Add(field, delegInfo);
+            }
 
             foreach (var field in fields)
             {
@@ -512,32 +541,7 @@ namespace GraphProcessor
                     continue;
 
                 // By default we set the behavior to null, if the field have a custom behavior, it will be set in the loop just below
-                nodeFields[field.Name] = new NodeFieldInformation(field);
-            }
-
-            foreach (var method in methods)
-            {
-                var customPortBehaviorAttribute = method.GetCustomAttribute<CustomPortBehaviorAttribute>();
-                CustomPortBehaviorDelegate deleg = null;
-
-                if (customPortBehaviorAttribute == null)
-                    continue;
-
-                // Check if custom port behavior function is valid
-                try
-                {
-                    var referenceType = typeof(CustomPortBehaviorDelegate);
-                    deleg = (CustomPortBehaviorDelegate)Delegate.CreateDelegate(referenceType, this, method, true);
-                }
-                catch
-                {
-                    Debug.LogError("The function " + method + " cannot be converted to the required delegate format: " + typeof(CustomPortBehaviorDelegate));
-                }
-
-                if (nodeFields.ContainsKey(customPortBehaviorAttribute.fieldName))
-                    nodeFields[customPortBehaviorAttribute.fieldName].behavior = new CustomPortBehaviorDelegateInfo(deleg, customPortBehaviorAttribute.cloneResults);
-                else
-                    Debug.LogError("Invalid field name for custom port behavior: " + method + ", " + customPortBehaviorAttribute.fieldName);
+                nodeFields[field.Name] = new NodeFieldInformation(field, customBehaviorInfoByField.GetValueOrDefault(key: field, defaultValue: null));
             }
         }
 

@@ -22,7 +22,7 @@ namespace GraphProcessor
             public CustomPortBehaviorDelegateInfo behavior;
             public bool vertical;
 
-            public NodeFieldInformation(MemberInfo info)
+            public NodeFieldInformation(MemberInfo info, CustomPortBehaviorDelegateInfo behavior)
             {
                 var inputAttribute = info.GetCustomAttribute<InputAttribute>();
                 var outputAttribute = info.GetCustomAttribute<OutputAttribute>();
@@ -54,7 +54,7 @@ namespace GraphProcessor
                 this.fieldName = info.Name;
                 this.displayType = (inputAttribute as MultiEdgeInputAttribute)?.displayType;
                 this.processOrder = (inputAttribute as MultiEdgeInputAttribute)?.processOrder ?? EdgeProcessOrder.DefaultEdgeProcessOrder;
-                this.behavior = null; // Set after instantiation
+                this.behavior = behavior;
                 this.tooltip = tooltip;
                 this.showAsDrawer = showAsDrawer;
                 this.vertical = info.HasCustomAttribute<VerticalAttribute>();

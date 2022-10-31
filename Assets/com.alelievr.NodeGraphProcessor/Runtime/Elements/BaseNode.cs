@@ -552,7 +552,7 @@ namespace GraphProcessor
         public void OnEdgeConnected(SerializableEdge edge)
         {
             bool input = edge.inputNode == this;
-            NodePortContainer portCollection = (input) ? (NodePortContainer)inputPorts : outputPorts;
+            NodePortContainer portCollection = input ? inputPorts : outputPorts;
 
             portCollection.Add(edge);
 
@@ -569,7 +569,7 @@ namespace GraphProcessor
                 return;
 
             bool input = edge.inputNode == this;
-            NodePortContainer portCollection = (input) ? (NodePortContainer)inputPorts : outputPorts;
+            NodePortContainer portCollection = input ? inputPorts : outputPorts;
 
             portCollection.Remove(edge);
 

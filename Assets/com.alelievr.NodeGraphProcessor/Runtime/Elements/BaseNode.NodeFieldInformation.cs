@@ -27,36 +27,23 @@ namespace GraphProcessor
                 var inputAttribute = info.GetCustomAttribute<InputAttribute>();
                 var outputAttribute = info.GetCustomAttribute<OutputAttribute>();
                 var tooltipAttribute = info.GetCustomAttribute<TooltipAttribute>();
-                bool isMultiple;
-                bool isInput;
+
                 string name = info.Name;
-                string tooltip;
-                bool showAsDrawer = false;
-
-                isInput = inputAttribute != null;
-                isMultiple = (inputAttribute != null) ? inputAttribute.AcceptsMultipleEdges : outputAttribute.allowMultiple;
-
-                if (isInput)
-                    showAsDrawer = inputAttribute.showAsDrawer;
-
-                tooltip = tooltipAttribute?.tooltip;
-
                 if (!string.IsNullOrEmpty(inputAttribute?.name))
                     name = inputAttribute.name;
                 if (!string.IsNullOrEmpty(outputAttribute?.name))
                     name = outputAttribute.name;
 
-
-                this.input = isInput;
-                this.isMultiple = isMultiple;
+                this.input = inputAttribute != null;
+                this.isMultiple = (inputAttribute != null) ? inputAttribute.AcceptsMultipleEdges : outputAttribute.allowMultiple;
                 this.info = info;
                 this.name = name;
                 this.fieldName = info.Name;
-                this.displayType = (inputAttribute as MultiEdgeInputAttribute)?.displayType;
+                this.displayType = inputAttribute?.displayType;
                 this.processOrder = (inputAttribute as MultiEdgeInputAttribute)?.processOrder ?? EdgeProcessOrder.DefaultEdgeProcessOrder;
                 this.behavior = behavior;
-                this.tooltip = tooltip;
-                this.showAsDrawer = showAsDrawer;
+                this.tooltip = tooltipAttribute?.tooltip;
+                this.showAsDrawer = input && inputAttribute.showAsDrawer;
                 this.vertical = info.HasCustomAttribute<VerticalAttribute>();
             }
         }

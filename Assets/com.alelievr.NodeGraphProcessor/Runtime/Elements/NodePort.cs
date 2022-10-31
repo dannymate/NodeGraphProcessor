@@ -352,26 +352,39 @@ namespace GraphProcessor
 
         PushDataDelegate CreatePushDataDelegateForMultiEdgeInput(IList<SerializableEdge> edges)
         {
+            static string IsNotInputErrorMessage() => $"{nameof(CreatePushDataDelegateForMultiEdgeInput)} should only be called within an input!";
+            static string IsNotCollectionTypeErrorMessage(Type inType) => $"{inType} is not a collection type!";
+            static string UnexpectedElementTypeErrorMessage(SerializableEdge edge, Type expectedElementType)
+            {
+                string outputNodeName = edge.outputNode.GetCustomName();
+                string outputPortName = edge.outputPort.portData.displayName;
+                Type outputPortType = edge.outputPort.portData.DisplayType;
+                string inputNodeName = edge.inputNode.GetCustomName();
+                string inputPortName = edge.inputPort.portData.displayName;
+                return $"[Node: {outputNodeName}, OutputPort: {outputPortName}] emits {outputPortType} which is not compatible with [Node: {inputNodeName}, InputPort: {inputPortName}] with type of {expectedElementType}. If using a fixed size array such as T[] then this may cause issues. Skipping.";
+            }
+
             try
             {
                 // We know that this port is the input
                 MemberInfo inputField = fieldInfo;
-
                 Type inType = inputField.GetUnderlyingType();
-                Type elementType = typeof(object);
-                if (inType.IsArray) elementType = inType.GetElementType();
-                else if (inType.IsGenericType) elementType = inType.GenericTypeArguments[0];
 
-                var outputValues = Activator.CreateInstance(inType, new object[] { edges.Count });
-
-                EdgeProcessOrderCallback edgeProcessOrderDelegate = EdgeProcessOrderCallbackByKey[portData.edgeProcessOrder];
-
-                if (inType.IsArray) Array.Copy(edgeProcessOrderDelegate(edges).Select(x => x.passThroughBuffer).ToArray(), outputValues as Array, edges.Count);
-                else if (outputValues is IList)
+                if (!IsInput)
                 {
-                    foreach (var edge in edgeProcessOrderDelegate(edges))
-                        (outputValues as IList).Add(edge.passThroughBuffer);
+                    Debug.LogError(IsNotInputErrorMessage());
+                    return null;
                 }
+                if (!inType.IsCollection())
+                {
+                    Debug.LogError(IsNotCollectionTypeErrorMessage(inType));
+                    return null;
+                }
+
+                EdgeProcessOrderCallback edgeProcessOrderCallback = EdgeProcessOrderCallbackByKey[portData.edgeProcessOrder];
+                var outputValues = Activator.CreateInstance(inType, new object[] { edges.Count });
+                Type elementType = inType.GetCollectionElementType() ?? typeof(object);
+                CopyEdgeBufferToIList(edgeProcessOrderCallback(edges), elementType, outputValues as IList);
 
                 Expression inputParamField = Expression.PropertyOrField(Expression.Constant(owner), inputField.Name);
                 Expression outputParamField = Expression.Constant(outputValues);
@@ -398,6 +411,22 @@ namespace GraphProcessor
             {
                 Debug.LogError(e);
                 return null;
+            }
+
+
+            static void CopyEdgeBufferToIList(IList<SerializableEdge> edges, Type expectedElementType, in IList toIList)
+            {
+                for (int i = 0; i < edges.Count; i++)
+                {
+                    if (!expectedElementType.IsReallyAssignableFrom(edges[i].passThroughBuffer.GetType()))
+                    {
+                        Debug.LogError(UnexpectedElementTypeErrorMessage(edges[i], expectedElementType));
+                        continue;
+                    }
+
+                    if (toIList.IsFixedSize) toIList[i] = edges[i].passThroughBuffer;
+                    else toIList.Add(edges[i].passThroughBuffer);
+                }
             }
         }
 
@@ -487,7 +516,7 @@ namespace GraphProcessor
 
             // Only one input connection is handled by this code, if you want to
             // take multiple inputs, you must create a custom input function see CustomPortsNode.cs
-            if (!IsMultiEdgeInput && edges.Count > 0)
+            if ((!IsMultiEdgeInput || !fieldInfo.GetUnderlyingType().IsCollection()) && edges.Count > 0)
             {
                 var passThroughObject = edges.First().passThroughBuffer;
 

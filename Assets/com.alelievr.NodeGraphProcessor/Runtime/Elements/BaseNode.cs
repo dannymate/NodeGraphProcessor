@@ -229,13 +229,14 @@ namespace GraphProcessor
                     // If we don't have a custom behavior on the node, we just have to create a simple port
                     AddPort(
                         nodeField.input,
-                        nodeField.fieldName,
+                        nodeField.info,
                         new PortData
                         {
                             acceptMultipleEdges = nodeField.isMultiple,
                             displayName = nodeField.name,
                             displayType = nodeField.displayType,
                             edgeProcessOrder = nodeField.processOrder ?? EdgeProcessOrder.DefaultEdgeProcessOrder,
+                            proxiedFieldPath = nodeField.proxiedFieldPath,
                             tooltip = nodeField.tooltip,
                             vertical = nodeField.vertical,
                             showAsDrawer = nodeField.showAsDrawer
@@ -357,7 +358,7 @@ namespace GraphProcessor
                 // Guard using the port identifier so we don't duplicate identifiers
                 if (port == null)
                 {
-                    AddPort(fieldInfo.input, fieldName, portData);
+                    AddPort(fieldInfo.input, fieldInfo.info, portData);
                     changed = true;
                 }
                 else
@@ -500,49 +501,8 @@ namespace GraphProcessor
 
         void InitializeInOutDatas()
         {
-            var fields = GetNodeFields().Cast<MemberInfo>().Concat(GetNodeProperties()).ToList();
-            var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                                   .Where(x => x.HasCustomAttribute<CustomPortBehaviorAttribute>()).ToList();
-
-            Dictionary<MemberInfo, CustomPortBehaviorDelegateInfo> customBehaviorInfoByField = new();
-            foreach (var method in methods)
-            {
-                var customPortBehaviorAttribute = method?.GetCustomAttribute<CustomPortBehaviorAttribute>();
-
-                MemberInfo field = fields.Find(x => x.Name == customPortBehaviorAttribute.fieldName);
-
-                if (field == null)
-                {
-                    Debug.LogError("Invalid field name for custom port behavior: " + method + ", " + customPortBehaviorAttribute.fieldName);
-                    continue;
-                }
-
-                CustomPortBehaviorDelegate deleg = null;
-                try
-                {
-                    var referenceType = typeof(CustomPortBehaviorDelegate);
-                    deleg = (CustomPortBehaviorDelegate)Delegate.CreateDelegate(referenceType, this, method, true);
-                }
-                catch
-                {
-                    Debug.LogError("The function " + method + " cannot be converted to the required delegate format: " + typeof(CustomPortBehaviorDelegate));
-                    continue;
-                }
-                var delegInfo = new CustomPortBehaviorDelegateInfo(deleg, customPortBehaviorAttribute.cloneResults);
-
-                customBehaviorInfoByField.Add(field, delegInfo);
-            }
-
-            foreach (var field in fields)
-            {
-                _needsInspector = field.HasCustomAttribute<ShowInInspector>();
-
-                if (!field.HasCustomAttribute<InputAttribute>() && !field.HasCustomAttribute<OutputAttribute>())
-                    continue;
-
-                // By default we set the behavior to null, if the field have a custom behavior, it will be set in the loop just below
-                nodeFields[field.Name] = new NodeFieldInformation(field, customBehaviorInfoByField.GetValueOrDefault(key: field, defaultValue: null));
-            }
+            foreach (var nodeFieldInformation in PortGeneration.GetAllPortInformation(this))
+                nodeFields[nodeFieldInformation.fieldName] = nodeFieldInformation;
         }
 
         #endregion
@@ -656,6 +616,32 @@ namespace GraphProcessor
                 inputPorts.Add(new NodePort(this, fieldName, portData));
             else
                 outputPorts.Add(new NodePort(this, fieldName, portData));
+        }
+
+        /// <summary>
+        /// Add a port
+        /// </summary>
+        /// <param name="input">is input port</param>
+        /// <param name="memberInfo">MemberInfo to attach this port to</param>
+        /// <param name="portData">Data of the port</param>
+        public void AddPort(bool input, MemberInfo memberInfo, PortData portData)
+        {
+            // Fixup port data info if needed:
+            if (portData.DisplayType == null)
+            {
+                Type displayType = nodeFields[memberInfo.Name].info.GetUnderlyingType();
+                if (input && portData.acceptMultipleEdges)
+                {
+                    if (displayType.IsArray) displayType = displayType.GetElementType();
+                    else if (displayType.IsGenericType) displayType = displayType.GenericTypeArguments[0];
+                }
+                portData.DisplayType = displayType;
+            }
+
+            if (input)
+                inputPorts.Add(new NodePort(this, nodeFields[memberInfo.Name], portData));
+            else
+                outputPorts.Add(new NodePort(this, nodeFields[memberInfo.Name], portData));
         }
 
         /// <summary>

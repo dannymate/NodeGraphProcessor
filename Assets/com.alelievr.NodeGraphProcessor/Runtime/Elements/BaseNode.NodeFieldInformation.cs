@@ -8,10 +8,12 @@ namespace GraphProcessor
 {
     public abstract partial class BaseNode
     {
-        internal class NodeFieldInformation
+        public class NodeFieldInformation
         {
             public string name;
             public string fieldName;
+            public string proxiedFieldPath;
+            public object memberOwner;
             public MemberInfo info;
             public bool input;
             public bool isMultiple;
@@ -22,7 +24,7 @@ namespace GraphProcessor
             public CustomPortBehaviorDelegateInfo behavior;
             public bool vertical;
 
-            public NodeFieldInformation(MemberInfo info, CustomPortBehaviorDelegateInfo behavior)
+            public NodeFieldInformation(object memberOwner, MemberInfo info, CustomPortBehaviorDelegateInfo behavior, string proxiedFieldPath = "")
             {
                 var inputAttribute = info.GetCustomAttribute<InputAttribute>();
                 var outputAttribute = info.GetCustomAttribute<OutputAttribute>();
@@ -34,11 +36,13 @@ namespace GraphProcessor
                 if (!string.IsNullOrEmpty(outputAttribute?.name))
                     name = outputAttribute.name;
 
+                this.memberOwner = memberOwner;
                 this.input = inputAttribute != null;
                 this.isMultiple = (inputAttribute != null) ? inputAttribute.AcceptsMultipleEdges : outputAttribute.allowMultiple;
                 this.info = info;
                 this.name = name;
                 this.fieldName = info.Name;
+                this.proxiedFieldPath = proxiedFieldPath;
                 this.displayType = inputAttribute?.displayType;
                 this.processOrder = (inputAttribute as MultiEdgeInputAttribute)?.processOrder ?? EdgeProcessOrder.DefaultEdgeProcessOrder;
                 this.behavior = behavior;

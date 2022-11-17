@@ -14,6 +14,7 @@ namespace GraphProcessor
 
         public string fieldName => fieldInfo.Name;
         public Type fieldType => fieldInfo.GetUnderlyingType();
+        public MemberInfo MemberInfo => fieldInfo;
         public new Type portType;
         public BaseNodeView owner { get; private set; }
         public PortData portData;

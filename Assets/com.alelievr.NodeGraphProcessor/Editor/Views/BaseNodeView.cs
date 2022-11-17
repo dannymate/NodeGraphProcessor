@@ -26,7 +26,7 @@ namespace GraphProcessor
 
         public BaseGraphView owner { private set; get; }
 
-        protected Dictionary<string, List<PortView>> portsPerFieldName = new Dictionary<string, List<PortView>>();
+        protected Dictionary<MemberInfo, List<PortView>> portsByMemberInfo = new();
 
         public VisualElement controlsContainer;
         protected VisualElement debugContainer;
@@ -433,9 +433,11 @@ namespace GraphProcessor
 
         public List<PortView> GetPortViewsFromFieldName(string fieldName)
         {
-            List<PortView> ret;
+            MemberInfo info = portsByMemberInfo.Keys.First(info => info.Name == fieldName);
 
-            portsPerFieldName.TryGetValue(fieldName, out ret);
+            if (info == null) return null;
+
+            portsByMemberInfo.TryGetValue(info, out List<PortView> ret);
 
             return ret;
         }
@@ -480,11 +482,11 @@ namespace GraphProcessor
             p.Initialize(this, portData?.displayName);
 
             List<PortView> ports;
-            portsPerFieldName.TryGetValue(p.fieldName, out ports);
+            portsByMemberInfo.TryGetValue(p.MemberInfo, out ports);
             if (ports == null)
             {
                 ports = new List<PortView>();
-                portsPerFieldName[p.fieldName] = ports;
+                portsByMemberInfo[p.MemberInfo] = ports;
             }
             ports.Add(p);
 
@@ -542,8 +544,7 @@ namespace GraphProcessor
                     p.RemoveFromHierarchy();
             }
 
-            List<PortView> ports;
-            portsPerFieldName.TryGetValue(p.fieldName, out ports);
+            portsByMemberInfo.TryGetValue(p.MemberInfo, out List<PortView> ports);
             ports.Remove(p);
         }
 
@@ -786,16 +787,40 @@ namespace GraphProcessor
 
             nodeTarget.DrawControlsContainer(controlsContainer);
 
-            var fields = nodeTarget.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Cast<MemberInfo>()
-                .Concat(nodeTarget.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-                // Filter fields from the BaseNode type since we are only interested in user-defined fields
-                // (better than BindingFlags.DeclaredOnly because we keep any inherited user-defined fields) 
-                .Where(f => f.DeclaringType != typeof(BaseNode)).ToList();
+            DrawFields(FindNodeMembers(), fromInspector);
+        }
 
-            fields = nodeTarget.OverrideFieldOrder(fields).Reverse().ToList();
+        private List<MemberInfo> FindNodeMembers()
+        {
+            List<MemberInfo> nodeMembers = nodeTarget.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+               .Cast<MemberInfo>()
+               .Concat(nodeTarget.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+               // Filter fields from the BaseNode type since we are only interested in user-defined fields
+               // (better than BindingFlags.DeclaredOnly because we keep any inherited user-defined fields) 
+               .Where(f => f.DeclaringType != typeof(BaseNode)).ToList();
 
-            DrawFields(fields, fromInspector);
+            nodeMembers.AddRange(FindAllNestedPortMembers(nodeMembers));
+
+            nodeMembers = nodeTarget.OverrideFieldOrder(nodeMembers).Reverse().ToList();
+
+            return nodeMembers;
+
+            List<MemberInfo> FindAllNestedPortMembers(in IEnumerable<MemberInfo> membersToSearch)
+            {
+                List<MemberInfo> nestedPorts = new();
+                foreach (var field in new List<MemberInfo>(membersToSearch.Where(f => f.HasCustomAttribute<NestedPortsAttribute>())))
+                {
+                    var nestedFields = field.GetUnderlyingType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                        .Cast<MemberInfo>()
+                        .Concat(field.GetUnderlyingType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance));
+
+                    var foundNestedPorts = nestedFields.Where(f => portsByMemberInfo.ContainsKey(f)).ToList();
+
+                    nestedPorts.AddRange(foundNestedPorts);
+                    nestedPorts.AddRange(FindAllNestedPortMembers(nestedFields));
+                }
+                return nestedPorts;
+            }
         }
 
         protected virtual void DrawFields(List<MemberInfo> fields, bool fromInspector = false)
@@ -803,26 +828,30 @@ namespace GraphProcessor
             for (int i = 0; i < fields.Count; i++)
             {
                 MemberInfo field = fields[i];
-                if (!portsPerFieldName.ContainsKey(field.Name))
+
+                if (!portsByMemberInfo.ContainsKey(field))
                 {
                     if (field.HasCustomAttribute<CustomBehaviourOnly>()) continue;
                     DrawField(new MemberInfoWithPath(field), fromInspector);
                     continue;
                 }
 
-                foreach (var portView in portsPerFieldName[field.Name])
+                foreach (var portView in portsByMemberInfo[field])
                 {
                     string fieldPath = portView.portData.IsProxied ? portView.portData.proxiedFieldPath : portView.fieldName;
-                    DrawField(new MemberInfoWithPath(MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget)), fromInspector, portView);
+
+                    var memberInfos = MemberInfoWithPath.GetMemberInfoPath(fieldPath, nodeTarget);
+                    var memberInfoWithPath = memberInfos != null ? new MemberInfoWithPath(memberInfos) : new MemberInfoWithPath(field);
+                    DrawField(memberInfoWithPath, fromInspector, portView);
                 }
             }
         }
 
         protected virtual void DrawField(MemberInfoWithPath fieldInfoWithPath, bool fromInspector, PortView portView = null)
         {
+            bool hasPortView = portView != null;
             MemberInfo member = fieldInfoWithPath.Member;
             string fieldPath = fieldInfoWithPath.Path;
-            bool hasPortView = portView != null;
             PortData portData = portView?.portData;
             bool isProxied = hasPortView && portData.IsProxied;
 
@@ -896,7 +925,7 @@ namespace GraphProcessor
                 hideElementIfConnected[fieldPath] = elem;
 
                 // Hide the field right away if there is already a connection:
-                if (portsPerFieldName.TryGetValue(fieldPath, out var pvs))
+                if (portsByMemberInfo.TryGetValue(member, out var pvs))
                     if (pvs.Any(pv => pv.GetEdges().Count > 0))
                         elem.style.display = DisplayStyle.None;
             }

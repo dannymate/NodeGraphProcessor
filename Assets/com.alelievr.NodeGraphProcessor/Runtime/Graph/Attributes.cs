@@ -80,6 +80,13 @@ namespace GraphProcessor
     }
 
     /// <summary>
+    /// Tells NGP to search port attributes within a given field value
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class NestedPortsAttribute : Attribute { }
+
+
+    /// <summary>
     /// Register the node in the NodeProvider class. The node will also be available in the node creation window.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]

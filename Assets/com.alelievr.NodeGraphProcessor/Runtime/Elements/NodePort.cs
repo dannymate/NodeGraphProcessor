@@ -8,6 +8,7 @@ using System;
 using TypeReferences;
 using GraphProcessor.EdgeProcessing;
 using static GraphProcessor.EdgeProcessing.EdgeProcessing;
+using static GraphProcessor.BaseNode;
 
 namespace GraphProcessor
 {
@@ -243,6 +244,23 @@ namespace GraphProcessor
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="owner">owner node</param>
+        /// <param name="nodeFieldInformation"></param>
+        /// <param name="portData">Data of the port</param>
+        public NodePort(BaseNode owner, NodeFieldInformation nodeFieldInformation, PortData portData)
+        {
+            this.fieldName = nodeFieldInformation.fieldName;
+            this.owner = owner;
+            this.portData = portData;
+            this.fieldOwner = nodeFieldInformation.memberOwner;
+            this.fieldInfo = nodeFieldInformation.info;
+
+            customPortIOMethod = CustomPortIO.GetCustomPortMethod(owner.GetType(), fieldName);
+        }
+
+        /// <summary>
         /// Connect an edge to this port
         /// </summary>
         /// <param name="edge"></param>
@@ -284,13 +302,8 @@ namespace GraphProcessor
             try
             {
                 //Creation of the delegate to move the data from the input node to the output node:
-                MemberInfo inputField = edge.inputNode.GetType().GetField(edge.inputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                if (inputField == null)
-                    inputField = edge.inputNode.GetType().GetProperty(edge.inputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                MemberInfo outputField = edge.outputNode.GetType().GetField(edge.outputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                if (outputField == null)
-                    outputField = edge.outputNode.GetType().GetProperty(edge.outputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
+                MemberInfo inputField = edge.inputPort.fieldInfo;
+                MemberInfo outputField = edge.outputPort.fieldInfo;
                 Type inType, outType;
 
 #if DEBUG_LAMBDA
@@ -321,8 +334,8 @@ namespace GraphProcessor
                 }
 #endif
 
-                Expression inputParamField = Expression.PropertyOrField(Expression.Constant(edge.inputNode), inputField.Name);
-                Expression outputParamField = Expression.PropertyOrField(Expression.Constant(edge.outputNode), outputField.Name);
+                Expression inputParamField = Expression.PropertyOrField(Expression.Constant(edge.inputPort.fieldOwner), inputField.Name);
+                Expression outputParamField = Expression.PropertyOrField(Expression.Constant(edge.outputPort.fieldOwner), outputField.Name);
 
                 inType = edge.inputPort.portData.DisplayType ?? inputField.GetUnderlyingType();
                 outType = edge.outputPort.portData.DisplayType ?? outputField.GetUnderlyingType();

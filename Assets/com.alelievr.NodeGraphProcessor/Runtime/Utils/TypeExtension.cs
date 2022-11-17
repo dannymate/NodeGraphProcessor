@@ -2,6 +2,8 @@ using UnityEngine;
 using System;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
 
 namespace GraphProcessor
 {
@@ -105,6 +107,19 @@ namespace GraphProcessor
                 return typeof(object);
             return null;
         }
+
+        public static FieldInfo[] GetInstanceFields(this Type type)
+            => type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        public static PropertyInfo[] GetInstanceProperties(this Type type)
+            => type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        public static MemberInfo[] GetInstanceFieldsAndProperties(this Type type)
+            => type.GetInstanceFields().Cast<MemberInfo>().Concat(type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)).ToArray();
+
+        public static MethodInfo[] GetInstanceMethodsByAttribute<T>(this Type type) where T : Attribute
+            => type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                    .Where(x => x.HasCustomAttribute<T>()).ToArray();
 
     }
 }

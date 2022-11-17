@@ -7,13 +7,13 @@ namespace GraphProcessor
     public class SerializableEdge : ISerializationCallbackReceiver
     {
         [SerializeField]
-        private SerializableGuid _guid;
-        public SerializableGuid GUID
+        private PropertyName _guid;
+        public PropertyName GUID
         {
             get
             {
-                if (!_guid.HasValue)
-                    _guid = Guid.NewGuid();
+                if (PropertyName.IsNullOrEmpty(_guid))
+                    _guid = Guid.NewGuid().ToString();
 
                 return _guid;
             }
@@ -23,9 +23,9 @@ namespace GraphProcessor
         BaseGraph owner;
 
         [SerializeField]
-        SerializableGuid inputNodeGUID;
+        PropertyName inputNodeGUID;
         [SerializeField]
-        SerializableGuid outputNodeGUID;
+        PropertyName outputNodeGUID;
 
         [System.NonSerialized]
         public BaseNode inputNode;
@@ -56,7 +56,7 @@ namespace GraphProcessor
             SerializableEdge edge = new SerializableEdge();
 
             edge.owner = graph;
-            edge._guid = Guid.NewGuid();
+            edge._guid = Guid.NewGuid().ToString();
             edge.inputNode = inputPort.owner;
             edge.inputFieldName = inputPort.fieldName;
             edge.outputNode = outputPort.owner;

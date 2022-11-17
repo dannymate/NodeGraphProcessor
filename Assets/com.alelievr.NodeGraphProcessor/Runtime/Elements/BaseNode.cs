@@ -43,13 +43,13 @@ namespace GraphProcessor
 
         //id
         [SerializeField]
-        private SerializableGuid _guid;
-        public SerializableGuid GUID
+        private PropertyName _guid;
+        public PropertyName GUID
         {
             get
             {
-                if (!_guid.HasValue)
-                    _guid = Guid.NewGuid();
+                if (PropertyName.IsNullOrEmpty(_guid))
+                    _guid = Guid.NewGuid().ToString();
 
                 return _guid;
             }
@@ -491,7 +491,7 @@ namespace GraphProcessor
         /// <summary>
         /// Called only when the node is created, not when instantiated
         /// </summary>
-        public virtual void OnNodeCreated() => _guid = Guid.NewGuid();
+        public virtual void OnNodeCreated() => _guid = Guid.NewGuid().ToString();
 
         public virtual FieldInfo[] GetNodeFields()
             => GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);

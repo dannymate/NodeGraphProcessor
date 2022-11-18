@@ -22,14 +22,26 @@ namespace GraphProcessor
             Type dataType = owner.GetType();
 
             PortMemberInfoDataForType portMemberInfoDataForType = GeneratePortMemberInfoDataForType(dataType, owner);
-            foreach (var member in portMemberInfoDataForType.MembersWithInputOrOutputAttribute)
+            foreach (MemberInfo member in portMemberInfoDataForType.MembersWithInputOrOutputAttribute)
             {
                 portMemberInfoDataForType.CustomBehaviorInfoByMember.TryGetValue(member, out CustomPortBehaviorDelegateInfo customBehavior);
                 nodePortInformation.Add(new NodeFieldInformation(owner, member, customBehavior, proxiedFieldPath.Assemble(member)));
             }
 
-            foreach (var member in portMemberInfoDataForType.MembersWithNestedPortsAttribute)
+            foreach (MemberInfo member in portMemberInfoDataForType.MembersWithNestedPortsAttribute)
             {
+                // If the NestedPorts member is null, try to supply a value
+                if (member.GetValue(owner) == null)
+                {
+                    if (!member.GetUnderlyingType().TryInstantiate(out object instance))
+                    {
+                        Debug.LogError($"Skipping NestedPorts member {member.Name} as it's null and doesn't contain a parameterless constructor. Please either provide a parameterless constructor or initialise the member manually.");
+                        continue;
+                    }
+
+                    member.SetValue(owner, instance);
+                }
+
                 nodePortInformation.AddRange(GetAllPortInformation(member.GetValue(owner), proxiedFieldPath.Branch().Append(member)));
             }
 

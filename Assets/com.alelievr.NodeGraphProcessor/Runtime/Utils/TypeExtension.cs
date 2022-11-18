@@ -108,6 +108,35 @@ namespace GraphProcessor
             return null;
         }
 
+        /// <summary>
+        /// Try to instantiate a type using the default constructor
+        /// Returns false if a parameter constructor doesn't exist
+        /// </summary>
+        /// <param name="type">The type to instantiate</param>
+        /// <param name="instance">Returns the instantiated value. null if constructor isn't found</param>
+        /// <returns>Whether the instantiation is successful</returns>
+        public static bool TryInstantiate(this Type type, out object instance)
+        {
+            if (!type.HasDefaultConstructor())
+            {
+                instance = null;
+                return false;
+            }
+
+            instance = Activator.CreateInstance(type);
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether the given type has a parameterless constructor
+        /// </summary>
+        /// <param name="t">To to check</param>
+        /// <returns>True if parameterless constructor is found</returns>
+        public static bool HasDefaultConstructor(this Type t)
+        {
+            return t.IsValueType || t.GetConstructor(Type.EmptyTypes) != null;
+        }
+
         public static FieldInfo[] GetInstanceFields(this Type type)
             => type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 

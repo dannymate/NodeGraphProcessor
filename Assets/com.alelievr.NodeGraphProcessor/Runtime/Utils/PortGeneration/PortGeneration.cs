@@ -12,8 +12,11 @@ namespace GraphProcessor
     {
         #region Reflection Generation Of Ports
 
-        internal static List<NodeFieldInformation> GetAllPortInformation(object owner, string proxiedFieldPath = "")
+        internal static List<NodeFieldInformation> GetAllPortInformation(object owner, UnityPathFactory proxiedFieldPath = null)
         {
+            if (proxiedFieldPath == null)
+                proxiedFieldPath = UnityPathFactory.Init();
+
             List<NodeFieldInformation> nodePortInformation = new();
 
             Type dataType = owner.GetType();
@@ -22,17 +25,15 @@ namespace GraphProcessor
             foreach (var member in portMemberInfoDataForType.MembersWithInputOrOutputAttribute)
             {
                 portMemberInfoDataForType.CustomBehaviorInfoByMember.TryGetValue(member, out CustomPortBehaviorDelegateInfo customBehavior);
-                nodePortInformation.Add(new NodeFieldInformation(owner, member, customBehavior, AppendMemberToPath(proxiedFieldPath, member)));
+                nodePortInformation.Add(new NodeFieldInformation(owner, member, customBehavior, proxiedFieldPath.Assemble(member)));
             }
 
             foreach (var member in portMemberInfoDataForType.MembersWithNestedPortsAttribute)
             {
-                nodePortInformation.AddRange(GetAllPortInformation(member.GetValue(owner), AppendMemberToPath(proxiedFieldPath, member)));
+                nodePortInformation.AddRange(GetAllPortInformation(member.GetValue(owner), proxiedFieldPath.Branch().Append(member)));
             }
 
             return nodePortInformation;
-
-            static string AppendMemberToPath(string path, MemberInfo member) => $"{path}{(string.IsNullOrEmpty(path) ? string.Empty : '.')}{member.Name}";
         }
 
         internal static PortMemberInfoDataForType GeneratePortMemberInfoDataForType(Type type, object owner)

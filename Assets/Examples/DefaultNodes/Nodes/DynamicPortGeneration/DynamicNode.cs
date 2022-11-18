@@ -105,7 +105,7 @@ public abstract class DynamicNode<T> : BaseNode
                 identifier = field.fieldInfo.Name,
                 showAsDrawer = field.inputAttribute.showAsDrawer,
                 vertical = false,
-                proxiedFieldPath = nameof(data) + '.' + field.fieldInfo.Name,
+                proxiedFieldPath = UnityPathFactory.Init().Append(nameof(data)).Assemble(field.fieldInfo.Name),
                 acceptMultipleEdges = field.inputAttribute.AcceptsMultipleEdges,
             };
         }

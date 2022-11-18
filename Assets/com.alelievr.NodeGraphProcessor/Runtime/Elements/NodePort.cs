@@ -72,7 +72,7 @@ namespace GraphProcessor
         /// The field the port is proxying if using custombehavior
         /// </summary>
         [SerializeField, HideInInspector]
-        public string proxiedFieldPath;
+        public UnityPath proxiedFieldPath;
         /// <summary>
         /// Port size, will also affect the size of the connected edge
         /// </summary>
@@ -103,7 +103,7 @@ namespace GraphProcessor
         // public bool Vertical { get => vertical; set => vertical = value; }
         #endregion
 
-        public bool IsProxied => !String.IsNullOrEmpty(proxiedFieldPath);
+        public bool IsProxied => proxiedFieldPath != null;
 
         public bool Equals(PortData other)
         {

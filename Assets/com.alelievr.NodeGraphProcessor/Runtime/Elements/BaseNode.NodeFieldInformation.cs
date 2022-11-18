@@ -12,7 +12,7 @@ namespace GraphProcessor
         {
             public string name;
             public string fieldName;
-            public string proxiedFieldPath;
+            public UnityPath proxiedFieldPath;
             public object memberOwner;
             public MemberInfo info;
             public bool input;
@@ -24,7 +24,7 @@ namespace GraphProcessor
             public CustomPortBehaviorDelegateInfo behavior;
             public bool vertical;
 
-            public NodeFieldInformation(object memberOwner, MemberInfo info, CustomPortBehaviorDelegateInfo behavior, string proxiedFieldPath = "")
+            public NodeFieldInformation(object memberOwner, MemberInfo info, CustomPortBehaviorDelegateInfo behavior, UnityPath proxiedFieldPath = null)
             {
                 var inputAttribute = info.GetCustomAttribute<InputAttribute>();
                 var outputAttribute = info.GetCustomAttribute<OutputAttribute>();

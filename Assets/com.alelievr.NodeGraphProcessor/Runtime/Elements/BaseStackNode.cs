@@ -27,7 +27,7 @@ namespace GraphProcessor
         /// </summary>
         /// <typeparam name="string"></typeparam>
         /// <returns></returns>
-        public List<SerializableGuid> nodeGUIDs = new();
+        public List<PropertyName> nodeGUIDs = new();
 
         public BaseStackNode(Vector2 position, string title = "Stack", bool acceptDrop = true, bool acceptNewNode = true)
         {

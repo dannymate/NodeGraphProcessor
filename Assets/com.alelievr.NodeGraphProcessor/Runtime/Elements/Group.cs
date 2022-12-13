@@ -20,7 +20,7 @@ namespace GraphProcessor
         /// </summary>
         /// <typeparam name="string">GUID of a node</typeparam>
         /// <returns></returns>
-        public List<SerializableGuid> innerNodeGUIDs = new();
+        public List<PropertyName> innerNodeGUIDs = new();
 
         // For serialization loading
         public Group() { }

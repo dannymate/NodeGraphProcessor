@@ -6,6 +6,9 @@ using System.Reflection;
 using System.Linq.Expressions;
 using System;
 using TypeReferences;
+using GraphProcessor.EdgeProcessing;
+using static GraphProcessor.EdgeProcessing.EdgeProcessing;
+using static GraphProcessor.BaseNode;
 
 namespace GraphProcessor
 {
@@ -22,6 +25,7 @@ namespace GraphProcessor
         public const string DisplayTypeFieldName = nameof(displayType);
         public const string ShowAsDrawerFieldName = nameof(showAsDrawer);
         public const string AcceptMultipleEdgesFieldName = nameof(acceptMultipleEdges);
+        public const string EdgeProcessOrderFieldName = nameof(edgeProcessOrder);
         public const string TooltipFieldName = nameof(tooltip);
         public const string VerticalFieldName = nameof(vertical);
 
@@ -37,7 +41,7 @@ namespace GraphProcessor
         [SerializeField]
         public bool useIdentifierObject = false;
 
-        public string Identifier => !useIdentifierObject ? identifier : identifierObject;
+        public string Identifier => useIdentifierObject && identifierObject ? identifierObject : identifier;
 
         /// <summary>
         /// Display name on the node
@@ -60,10 +64,15 @@ namespace GraphProcessor
         [SerializeField]
         public bool acceptMultipleEdges;
         /// <summary>
+        /// Order to process connected edges
+        /// </summary>
+        [SerializeField]
+        public EdgeProcessOrderKey edgeProcessOrder = EdgeProcessOrder.DefaultEdgeProcessOrder;
+        /// <summary>
         /// The field the port is proxying if using custombehavior
         /// </summary>
         [SerializeField, HideInInspector]
-        public string proxiedFieldPath;
+        public UnityPath proxiedFieldPath;
         /// <summary>
         /// Port size, will also affect the size of the connected edge
         /// </summary>
@@ -94,7 +103,7 @@ namespace GraphProcessor
         // public bool Vertical { get => vertical; set => vertical = value; }
         #endregion
 
-        public bool IsProxied => !String.IsNullOrEmpty(proxiedFieldPath);
+        public bool IsProxied => proxiedFieldPath != null;
 
         public bool Equals(PortData other)
         {
@@ -104,6 +113,7 @@ namespace GraphProcessor
                 && DisplayType == other.DisplayType
                 && showAsDrawer == other.showAsDrawer
                 && acceptMultipleEdges == other.acceptMultipleEdges
+                && edgeProcessOrder == other.edgeProcessOrder
                 && sizeInPixel == other.sizeInPixel
                 && proxiedFieldPath == other.proxiedFieldPath
                 && tooltip == other.tooltip
@@ -130,6 +140,7 @@ namespace GraphProcessor
             displayType = other.displayType;
             showAsDrawer = other.showAsDrawer;
             acceptMultipleEdges = other.acceptMultipleEdges;
+            edgeProcessOrder = other.edgeProcessOrder;
             sizeInPixel = other.sizeInPixel;
             proxiedFieldPath = other.proxiedFieldPath;
             tooltip = other.tooltip;
@@ -181,6 +192,10 @@ namespace GraphProcessor
         List<SerializableEdge> edges = new List<SerializableEdge>();
         Dictionary<SerializableEdge, PushDataDelegate> pushDataDelegates = new Dictionary<SerializableEdge, PushDataDelegate>();
         List<SerializableEdge> edgeWithRemoteCustomIO = new List<SerializableEdge>();
+        List<SerializableEdge> edgeWithArrayInput = new();
+
+        public bool IsInput => owner.inputPorts.Contains(this);
+        public bool IsMultiEdgeInput => IsInput && portData.acceptMultipleEdges;
 
         /// <summary>
         /// Owner of the FieldInfo, to be used in case of Get/SetValue
@@ -229,6 +244,23 @@ namespace GraphProcessor
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="owner">owner node</param>
+        /// <param name="nodeFieldInformation"></param>
+        /// <param name="portData">Data of the port</param>
+        public NodePort(BaseNode owner, NodeFieldInformation nodeFieldInformation, PortData portData)
+        {
+            this.fieldName = nodeFieldInformation.fieldName;
+            this.owner = owner;
+            this.portData = portData;
+            this.fieldOwner = nodeFieldInformation.memberOwner;
+            this.fieldInfo = nodeFieldInformation.info;
+
+            customPortIOMethod = CustomPortIO.GetCustomPortMethod(owner.GetType(), fieldName);
+        }
+
+        /// <summary>
         /// Connect an edge to this port
         /// </summary>
         /// <param name="edge"></param>
@@ -252,6 +284,13 @@ namespace GraphProcessor
             if (edge.inputPort.customPortIOMethod != null || edge.outputPort.customPortIOMethod != null)
                 return;
 
+            // We want to process all edges at once and provide a list
+            if (edge.inputPort.IsMultiEdgeInput)
+            {
+                edgeWithArrayInput.Add(edge);
+                return;
+            }
+
             PushDataDelegate edgeDelegate = CreatePushDataDelegateForEdge(edge);
 
             if (edgeDelegate != null)
@@ -263,13 +302,8 @@ namespace GraphProcessor
             try
             {
                 //Creation of the delegate to move the data from the input node to the output node:
-                MemberInfo inputField = edge.inputNode.GetType().GetField(edge.inputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                if (inputField == null)
-                    inputField = edge.inputNode.GetType().GetProperty(edge.inputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                MemberInfo outputField = edge.outputNode.GetType().GetField(edge.outputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                if (outputField == null)
-                    outputField = edge.outputNode.GetType().GetProperty(edge.outputFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
+                MemberInfo inputField = edge.inputPort.fieldInfo;
+                MemberInfo outputField = edge.outputPort.fieldInfo;
                 Type inType, outType;
 
 #if DEBUG_LAMBDA
@@ -300,8 +334,8 @@ namespace GraphProcessor
                 }
 #endif
 
-                Expression inputParamField = Expression.PropertyOrField(Expression.Constant(edge.inputNode), inputField.Name);
-                Expression outputParamField = Expression.PropertyOrField(Expression.Constant(edge.outputNode), outputField.Name);
+                Expression inputParamField = Expression.PropertyOrField(Expression.Constant(edge.inputPort.fieldOwner), inputField.Name);
+                Expression outputParamField = Expression.PropertyOrField(Expression.Constant(edge.outputPort.fieldOwner), outputField.Name);
 
                 inType = edge.inputPort.portData.DisplayType ?? inputField.GetUnderlyingType();
                 outType = edge.outputPort.portData.DisplayType ?? outputField.GetUnderlyingType();
@@ -326,6 +360,86 @@ namespace GraphProcessor
             {
                 Debug.LogError(e);
                 return null;
+            }
+        }
+
+        PushDataDelegate CreatePushDataDelegateForMultiEdgeInput(IList<SerializableEdge> edges)
+        {
+            static string IsNotInputErrorMessage() => $"{nameof(CreatePushDataDelegateForMultiEdgeInput)} should only be called within an input!";
+            static string IsNotCollectionTypeErrorMessage(Type inType) => $"{inType} is not a collection type!";
+            static string UnexpectedElementTypeErrorMessage(SerializableEdge edge, Type expectedElementType)
+            {
+                string outputNodeName = edge.outputNode.GetCustomName();
+                string outputPortName = edge.outputPort.portData.displayName;
+                Type outputPortType = edge.outputPort.portData.DisplayType;
+                string inputNodeName = edge.inputNode.GetCustomName();
+                string inputPortName = edge.inputPort.portData.displayName;
+                return $"[Node: {outputNodeName}, OutputPort: {outputPortName}] emits {outputPortType} which is not compatible with [Node: {inputNodeName}, InputPort: {inputPortName}] with type of {expectedElementType}. If using a fixed size array such as T[] then this may cause issues. Skipping.";
+            }
+
+            try
+            {
+                // We know that this port is the input
+                MemberInfo inputField = fieldInfo;
+                Type inType = inputField.GetUnderlyingType();
+
+                if (!IsInput)
+                {
+                    Debug.LogError(IsNotInputErrorMessage());
+                    return null;
+                }
+                if (!inType.IsCollection())
+                {
+                    Debug.LogError(IsNotCollectionTypeErrorMessage(inType));
+                    return null;
+                }
+
+                EdgeProcessOrderCallback edgeProcessOrderCallback = EdgeProcessOrderCallbackByKey[portData.edgeProcessOrder];
+                var outputValues = Activator.CreateInstance(inType, new object[] { edges.Count });
+                Type elementType = inType.GetCollectionElementType() ?? typeof(object);
+                CopyEdgeBufferToIList(edgeProcessOrderCallback(edges), elementType, outputValues as IList);
+
+                Expression inputParamField = Expression.PropertyOrField(Expression.Constant(owner), inputField.Name);
+                Expression outputParamField = Expression.Constant(outputValues);
+
+                Type outType = outputValues.GetType();
+
+                // If there is a user defined conversion function, then we call it
+                if (TypeAdapter.AreAssignable(outType, inType))
+                {
+                    // We add a cast in case there we're calling the conversion method with a base class parameter (like object)
+                    var convertedParam = Expression.Convert(outputParamField, outType);
+                    outputParamField = Expression.Call(TypeAdapter.GetConversionMethod(outType, inType), convertedParam);
+                    // In case there is a custom port behavior in the output, then we need to re-cast to the base type because
+                    // the conversion method return type is not always assignable directly:
+                    outputParamField = Expression.Convert(outputParamField, inType);
+                }
+                else // otherwise we cast
+                    outputParamField = Expression.Convert(outputParamField, inType);
+
+                BinaryExpression assign = Expression.Assign(inputParamField, outputParamField);
+                return Expression.Lambda<PushDataDelegate>(assign).Compile();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                return null;
+            }
+
+
+            static void CopyEdgeBufferToIList(IList<SerializableEdge> edges, Type expectedElementType, in IList toIList)
+            {
+                for (int i = 0; i < edges.Count; i++)
+                {
+                    if (!expectedElementType.IsReallyAssignableFrom(edges[i].passThroughBuffer.GetType()))
+                    {
+                        Debug.LogError(UnexpectedElementTypeErrorMessage(edges[i], expectedElementType));
+                        continue;
+                    }
+
+                    if (toIList.IsFixedSize) toIList[i] = edges[i].passThroughBuffer;
+                    else toIList.Add(edges[i].passThroughBuffer);
+                }
             }
         }
 
@@ -364,11 +478,15 @@ namespace GraphProcessor
             foreach (var pushDataDelegate in pushDataDelegates)
                 pushDataDelegate.Value();
 
+
+            object ourValue = fieldInfo.GetValue(fieldOwner);
+            foreach (var edge in edgeWithArrayInput)
+                edge.passThroughBuffer = ourValue;
+
             if (edgeWithRemoteCustomIO.Count == 0)
                 return;
 
             //if there are custom IO implementation on the other ports, they'll need our value in the passThrough buffer
-            object ourValue = fieldInfo.GetValue(fieldOwner);
             foreach (var edge in edgeWithRemoteCustomIO)
                 edge.passThroughBuffer = ourValue;
         }
@@ -406,12 +524,12 @@ namespace GraphProcessor
             }
 
             // check if this port have connection to ports that have custom output functions
-            if (edgeWithRemoteCustomIO.Count == 0)
+            if (!IsMultiEdgeInput && edgeWithRemoteCustomIO.Count == 0)
                 return;
 
             // Only one input connection is handled by this code, if you want to
             // take multiple inputs, you must create a custom input function see CustomPortsNode.cs
-            if (edges.Count > 0)
+            if ((!IsMultiEdgeInput || !fieldInfo.GetUnderlyingType().IsCollection()) && edges.Count > 0)
             {
                 var passThroughObject = edges.First().passThroughBuffer;
 
@@ -421,6 +539,10 @@ namespace GraphProcessor
                         passThroughObject = TypeAdapter.Convert(passThroughObject, fieldInfo.GetUnderlyingType());
 
                 fieldInfo.SetValue(fieldOwner, passThroughObject);
+            }
+            else if (IsMultiEdgeInput)
+            {
+                CreatePushDataDelegateForMultiEdgeInput(edges)();
             }
         }
     }

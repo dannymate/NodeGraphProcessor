@@ -7,14 +7,14 @@ using System.Linq;
 [System.Serializable, NodeMenuItem("Custom/PortData")]
 public class CustomPortData : BaseNode
 {
-    [Input(name = "In Values", allowMultiple = true)]
+    [Input(name = "In Values")]
     public IEnumerable<object> inputs = null;
 
     static PortData[] portDatas = new PortData[] {
-        new PortData{displayName = "0", DisplayType = typeof(float), identifier = "0"},
-        new PortData{displayName = "1", DisplayType = typeof(int), identifier = "1"},
-        new PortData{displayName = "2", DisplayType = typeof(GameObject), identifier = "2"},
-        new PortData{displayName = "3", DisplayType = typeof(Texture2D), identifier = "3"},
+        new PortData{displayName = "0", acceptMultipleEdges = true, DisplayType = typeof(float), identifier = "0"},
+        new PortData{displayName = "1", acceptMultipleEdges = true, DisplayType = typeof(int), identifier = "1"},
+        new PortData{displayName = "2", acceptMultipleEdges = true, DisplayType = typeof(GameObject), identifier = "2"},
+        new PortData{displayName = "3", acceptMultipleEdges = true, DisplayType = typeof(Texture2D), identifier = "3"},
     };
 
     [Output]

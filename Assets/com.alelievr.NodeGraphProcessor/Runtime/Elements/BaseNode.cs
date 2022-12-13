@@ -4,6 +4,7 @@ using System;
 using System.Reflection;
 using System.Linq;
 using static GraphProcessor.NodeDelegates;
+using GraphProcessor.EdgeProcessing;
 
 namespace GraphProcessor
 {
@@ -42,13 +43,13 @@ namespace GraphProcessor
 
         //id
         [SerializeField]
-        private SerializableGuid _guid;
-        public SerializableGuid GUID
+        private PropertyName _guid;
+        public PropertyName GUID
         {
             get
             {
-                if (!_guid.HasValue)
-                    _guid = Guid.NewGuid();
+                if (PropertyName.IsNullOrEmpty(_guid))
+                    _guid = Guid.NewGuid().ToString();
 
                 return _guid;
             }
@@ -228,11 +229,14 @@ namespace GraphProcessor
                     // If we don't have a custom behavior on the node, we just have to create a simple port
                     AddPort(
                         nodeField.input,
-                        nodeField.fieldName,
+                        nodeField.info,
                         new PortData
                         {
                             acceptMultipleEdges = nodeField.isMultiple,
                             displayName = nodeField.name,
+                            displayType = nodeField.displayType,
+                            edgeProcessOrder = nodeField.processOrder ?? EdgeProcessOrder.DefaultEdgeProcessOrder,
+                            proxiedFieldPath = nodeField.proxiedFieldPath,
                             tooltip = nodeField.tooltip,
                             vertical = nodeField.vertical,
                             showAsDrawer = nodeField.showAsDrawer
@@ -354,7 +358,7 @@ namespace GraphProcessor
                 // Guard using the port identifier so we don't duplicate identifiers
                 if (port == null)
                 {
-                    AddPort(fieldInfo.input, fieldName, portData);
+                    AddPort(fieldInfo.input, fieldInfo.info, portData);
                     changed = true;
                 }
                 else
@@ -487,7 +491,7 @@ namespace GraphProcessor
         /// <summary>
         /// Called only when the node is created, not when instantiated
         /// </summary>
-        public virtual void OnNodeCreated() => _guid = Guid.NewGuid();
+        public virtual void OnNodeCreated() => _guid = Guid.NewGuid().ToString();
 
         public virtual FieldInfo[] GetNodeFields()
             => GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
@@ -497,70 +501,8 @@ namespace GraphProcessor
 
         void InitializeInOutDatas()
         {
-            var fields = GetNodeFields().Cast<MemberInfo>().Concat(GetNodeProperties()).ToArray();
-            var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-            foreach (var field in fields)
-            {
-                var inputAttribute = field.GetCustomAttribute<InputAttribute>();
-                var outputAttribute = field.GetCustomAttribute<OutputAttribute>();
-                var tooltipAttribute = field.GetCustomAttribute<TooltipAttribute>();
-                var showInInspector = field.GetCustomAttribute<ShowInInspector>();
-                var vertical = field.GetCustomAttribute<VerticalAttribute>();
-                bool isMultiple = false;
-                bool input = false;
-                string name = field.Name;
-                string tooltip = null;
-                bool showAsDrawer = false;
-
-                if (showInInspector != null)
-                    _needsInspector = true;
-
-                if (inputAttribute == null && outputAttribute == null)
-                    continue;
-
-                //check if field is a collection type
-                isMultiple = (inputAttribute != null) ? inputAttribute.allowMultiple : (outputAttribute.allowMultiple);
-                input = inputAttribute != null;
-
-                if (input)
-                    showAsDrawer = inputAttribute.showAsDrawer;
-
-                tooltip = tooltipAttribute?.tooltip;
-
-                if (!String.IsNullOrEmpty(inputAttribute?.name))
-                    name = inputAttribute.name;
-                if (!String.IsNullOrEmpty(outputAttribute?.name))
-                    name = outputAttribute.name;
-
-                // By default we set the behavior to null, if the field have a custom behavior, it will be set in the loop just below
-                nodeFields[field.Name] = new NodeFieldInformation(field, name, input, isMultiple, tooltip, showAsDrawer, vertical != null, null);
-            }
-
-            foreach (var method in methods)
-            {
-                var customPortBehaviorAttribute = method.GetCustomAttribute<CustomPortBehaviorAttribute>();
-                CustomPortBehaviorDelegate deleg = null;
-
-                if (customPortBehaviorAttribute == null)
-                    continue;
-
-                // Check if custom port behavior function is valid
-                try
-                {
-                    var referenceType = typeof(CustomPortBehaviorDelegate);
-                    deleg = (CustomPortBehaviorDelegate)Delegate.CreateDelegate(referenceType, this, method, true);
-                }
-                catch
-                {
-                    Debug.LogError("The function " + method + " cannot be converted to the required delegate format: " + typeof(CustomPortBehaviorDelegate));
-                }
-
-                if (nodeFields.ContainsKey(customPortBehaviorAttribute.fieldName))
-                    nodeFields[customPortBehaviorAttribute.fieldName].behavior = new CustomPortBehaviorDelegateInfo(deleg, customPortBehaviorAttribute.cloneResults);
-                else
-                    Debug.LogError("Invalid field name for custom port behavior: " + method + ", " + customPortBehaviorAttribute.fieldName);
-            }
+            foreach (var nodeFieldInformation in PortGeneration.GetAllPortInformation(this))
+                nodeFields[nodeFieldInformation.fieldName] = nodeFieldInformation;
         }
 
         #endregion
@@ -570,7 +512,7 @@ namespace GraphProcessor
         public void OnEdgeConnected(SerializableEdge edge)
         {
             bool input = edge.inputNode == this;
-            NodePortContainer portCollection = (input) ? (NodePortContainer)inputPorts : outputPorts;
+            NodePortContainer portCollection = input ? inputPorts : outputPorts;
 
             portCollection.Add(edge);
 
@@ -587,7 +529,7 @@ namespace GraphProcessor
                 return;
 
             bool input = edge.inputNode == this;
-            NodePortContainer portCollection = (input) ? (NodePortContainer)inputPorts : outputPorts;
+            NodePortContainer portCollection = input ? inputPorts : outputPorts;
 
             portCollection.Remove(edge);
 
@@ -660,12 +602,46 @@ namespace GraphProcessor
         {
             // Fixup port data info if needed:
             if (portData.DisplayType == null)
-                portData.DisplayType = nodeFields[fieldName].info.GetUnderlyingType();
+            {
+                Type displayType = nodeFields[fieldName].info.GetUnderlyingType();
+                if (input && portData.acceptMultipleEdges)
+                {
+                    if (displayType.IsArray) displayType = displayType.GetElementType();
+                    else if (displayType.IsGenericType) displayType = displayType.GenericTypeArguments[0];
+                }
+                portData.DisplayType = displayType;
+            }
 
             if (input)
                 inputPorts.Add(new NodePort(this, fieldName, portData));
             else
                 outputPorts.Add(new NodePort(this, fieldName, portData));
+        }
+
+        /// <summary>
+        /// Add a port
+        /// </summary>
+        /// <param name="input">is input port</param>
+        /// <param name="memberInfo">MemberInfo to attach this port to</param>
+        /// <param name="portData">Data of the port</param>
+        public void AddPort(bool input, MemberInfo memberInfo, PortData portData)
+        {
+            // Fixup port data info if needed:
+            if (portData.DisplayType == null)
+            {
+                Type displayType = nodeFields[memberInfo.Name].info.GetUnderlyingType();
+                if (input && portData.acceptMultipleEdges)
+                {
+                    if (displayType.IsArray) displayType = displayType.GetElementType();
+                    else if (displayType.IsGenericType) displayType = displayType.GenericTypeArguments[0];
+                }
+                portData.DisplayType = displayType;
+            }
+
+            if (input)
+                inputPorts.Add(new NodePort(this, nodeFields[memberInfo.Name], portData));
+            else
+                outputPorts.Add(new NodePort(this, nodeFields[memberInfo.Name], portData));
         }
 
         /// <summary>

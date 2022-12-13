@@ -65,7 +65,7 @@ namespace GraphProcessor
         /// <typeparam name="BaseNode"></typeparam>
         /// <returns></returns>
         [System.NonSerialized]
-        public Dictionary<SerializableGuid, BaseNode> nodesPerGUID = new();
+        public Dictionary<PropertyName, BaseNode> nodesPerGUID = new();
 
         /// <summary>
         /// Json list of edges
@@ -81,7 +81,7 @@ namespace GraphProcessor
         /// <typeparam name="SerializableEdge"></typeparam>
         /// <returns></returns>
         [System.NonSerialized]
-        public Dictionary<SerializableGuid, SerializableEdge> edgesPerGUID = new();
+        public Dictionary<PropertyName, SerializableEdge> edgesPerGUID = new();
 
         /// <summary>
         /// All groups in the graph
@@ -329,7 +329,7 @@ namespace GraphProcessor
         /// Disconnect an edge
         /// </summary>
         /// <param name="edgeGUID"></param>
-        public void Disconnect(SerializableGuid edgeGUID)
+        public void Disconnect(PropertyName edgeGUID)
         {
             List<(BaseNode, SerializableEdge)> disconnectEvents = new();
 

@@ -9,7 +9,7 @@ using System;
 [System.Serializable]
 public abstract class DynamicNode<T> : BaseNode
 {
-    [Input("Action Data", true)]
+    [Input("Action Data")]
     public Dictionary<string, List<object>> actionData = new Dictionary<string, List<object>>();
 
     public T data;
@@ -105,8 +105,8 @@ public abstract class DynamicNode<T> : BaseNode
                 identifier = field.fieldInfo.Name,
                 showAsDrawer = field.inputAttribute.showAsDrawer,
                 vertical = false,
-                proxiedFieldPath = nameof(data) + '.' + field.fieldInfo.Name,
-                acceptMultipleEdges = field.inputAttribute.allowMultiple,
+                proxiedFieldPath = UnityPathFactory.Init().Append(nameof(data)).Assemble(field.fieldInfo.Name),
+                acceptMultipleEdges = field.inputAttribute.AcceptsMultipleEdges,
             };
         }
 

@@ -1,30 +1,52 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
+using GraphProcessor.EdgeProcessing;
 
 namespace GraphProcessor
 {
     /// <summary>
-    /// Tell that this field is will generate an input port
+    /// Tell that this field is will generate an input port that accepts a single edge
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class InputAttribute : Attribute
     {
         public string name;
-        public bool allowMultiple = false;
+        public Type displayType = null;
         public bool showAsDrawer = false;
 
+        public bool AcceptsMultipleEdges => this is MultiEdgeInputAttribute;
+
         /// <summary>
-        /// Mark the field as an input port
+        /// Mark the field as a single input port
         /// </summary>
         /// <param name="name">display name</param>
-        /// <param name="allowMultiple">is connecting multiple edges allowed</param>
-        public InputAttribute(string name = null, bool allowMultiple = false, bool showAsDrawer = false)
+        /// <param name="showAsDrawer">if true shows a property drawer of displayType</param>
+        public InputAttribute(string name = null, Type displayType = null, bool showAsDrawer = false)
         {
             this.name = name;
-            this.allowMultiple = allowMultiple;
+            this.displayType = displayType;
             this.showAsDrawer = showAsDrawer;
+        }
+    }
+
+    /// <summary>
+    /// Tell that this field is will generate an input port that can accept multiple edges
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class MultiEdgeInputAttribute : InputAttribute
+    {
+        public readonly EdgeProcessOrderKey processOrder = EdgeProcessOrder.DefaultEdgeProcessOrder;
+
+        /// <summary>
+        /// Mark the field as a multi input port
+        /// </summary>
+        /// <param name="name">display name</param>
+        /// <param name="sortType">order in which to process connected edges</param>
+        /// <param name="displayType">changes the default port input type if set</param>
+        public MultiEdgeInputAttribute(string name = null, string processOrder = EdgeProcessOrder.DefaultEdgeProcessOrder, Type displayType = null)
+        {
+            this.name = name;
+            this.processOrder = processOrder;
+            this.displayType = displayType;
         }
     }
 
@@ -56,6 +78,13 @@ namespace GraphProcessor
     public class VerticalAttribute : Attribute
     {
     }
+
+    /// <summary>
+    /// Tells NGP to search port attributes within a given field value
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class NestedPortsAttribute : Attribute { }
+
 
     /// <summary>
     /// Register the node in the NodeProvider class. The node will also be available in the node creation window.
@@ -205,6 +234,21 @@ namespace GraphProcessor
         public CustomStackNodeView(Type stackNodeType)
         {
             this.stackNodeType = stackNodeType;
+        }
+    }
+
+    /// <summary>
+    /// Register a method with key as a way to sort edges
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public class EdgeOrdererAttribute : Attribute
+    {
+        private readonly EdgeProcessOrderKey _key;
+        public EdgeProcessOrderKey Key => _key;
+
+        public EdgeOrdererAttribute(string key)
+        {
+            this._key = key;
         }
     }
 

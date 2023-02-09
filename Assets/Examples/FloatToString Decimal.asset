@@ -18,39 +18,30 @@ MonoBehaviour:
   - rid: 4827994175793266716
   - rid: 4827994175793266725
   edges:
-  - _guid:
-      Value: 5bd500b9-06f3-42b4-b8cd-8cb20b88d758
+  - _guid: 4fa0a37f-6e44-4633-bf9a-f9940e8fb713
     owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: ea9dd183-58e9-46d0-b544-e999ef6808ab
-    outputNodeGUID:
-      Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
-    inputFieldName: _egress
-    outputFieldName: output
-    inputPortIdentifier: String OUT
-    outputPortIdentifier: 
-  - _guid:
-      Value: 6d781f5e-c949-4d06-9a7d-6335a4ba2645
-    owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
-    outputNodeGUID:
-      Value: 258cd69a-880c-4cfe-b47c-9ca6089c9fcc
+    inputNodeGUID: 69042931-8395-4153-b3e5-55423d7ba311
+    outputNodeGUID: d957237e-c9a8-4bfb-9707-32cab870448d
     inputFieldName: input
     outputFieldName: _ingress
     inputPortIdentifier: 
     outputPortIdentifier: Float IN
-  - _guid:
-      Value: 9015bc02-1bed-4b66-b818-ff6e5cb376de
+  - _guid: 90a86dd0-a5df-40ad-b231-33869e4e5381
     owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
-    outputNodeGUID:
-      Value: 258cd69a-880c-4cfe-b47c-9ca6089c9fcc
+    inputNodeGUID: 69042931-8395-4153-b3e5-55423d7ba311
+    outputNodeGUID: d957237e-c9a8-4bfb-9707-32cab870448d
     inputFieldName: decimalPlaces
     outputFieldName: _ingress
     inputPortIdentifier: 
     outputPortIdentifier: Decimal Places
+  - _guid: b3c06d84-6dbf-4651-8a65-48d890de6936
+    owner: {fileID: 11400000}
+    inputNodeGUID: daf27763-c288-43e1-8725-29d7d72a1676
+    outputNodeGUID: 69042931-8395-4153-b3e5-55423d7ba311
+    inputFieldName: _egress
+    outputFieldName: output
+    inputPortIdentifier: String OUT
+    outputPortIdentifier: 
   groups: []
   stackNodes: []
   pinnedElements: []
@@ -78,7 +69,11 @@ MonoBehaviour:
       _suppressLogs: 0
     showAsDrawer: 0
     acceptMultipleEdges: 0
-    proxiedFieldPath: 
+    edgeProcessOrder:
+      _value: FIFO
+    proxiedFieldPath:
+      path: 
+      pathArray: []
     sizeInPixel: 0
     tooltip: 
     vertical: 0
@@ -91,15 +86,14 @@ MonoBehaviour:
       type: {class: SubGraphIngressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 258cd69a-880c-4cfe-b47c-9ca6089c9fcc
+        _guid: d957237e-c9a8-4bfb-9707-32cab870448d
         computeOrder: 0
         position:
           serializedVersion: 2
-          x: 535.4502
-          y: 464.75006
-          width: 84
-          height: 75
+          x: 535
+          y: 463.00003
+          width: 119
+          height: 99
         initialPosition:
           serializedVersion: 2
           x: 0
@@ -113,8 +107,7 @@ MonoBehaviour:
       type: {class: SubGraphEgressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: ea9dd183-58e9-46d0-b544-e999ef6808ab
+        _guid: daf27763-c288-43e1-8725-29d7d72a1676
         computeOrder: 2
         position:
           serializedVersion: 2
@@ -135,8 +128,7 @@ MonoBehaviour:
       type: {class: FloatToStringsNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
+        _guid: 69042931-8395-4153-b3e5-55423d7ba311
         computeOrder: 1
         position:
           serializedVersion: 2
@@ -153,6 +145,6 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        input: 150
+        input: 200
         decimalPlaces: 1
-        output: 150.0
+        output: 200.0

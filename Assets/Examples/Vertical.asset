@@ -43,7 +43,7 @@ MonoBehaviour:
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: -48, y: -358, z: 0}
+  position: {x: -357, y: -453, z: 0}
   scale: {x: 1.15, y: 1.15, z: 1}
   references:
     version: 2
@@ -52,8 +52,7 @@ MonoBehaviour:
       type: {class: VerticalNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 768d39dc-e493-4767-8a2f-e9bf4dd01ba3
+        _guid: ba161c7f-435d-4224-a947-23963ae0f8f9
         computeOrder: 0
         position:
           serializedVersion: 2
@@ -78,8 +77,7 @@ MonoBehaviour:
       type: {class: VerticalNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 3ee11df3-27d0-4a88-a5e5-74a97fdb7911
+        _guid: 7f4f1db2-310d-466f-8e18-f3b8e1b1e685
         computeOrder: 1
         position:
           serializedVersion: 2
@@ -104,8 +102,7 @@ MonoBehaviour:
       type: {class: VerticalNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 760d4471-fa39-4646-9479-29354062f6b5
+        _guid: 0fe4170b-a7b6-46b4-9302-7ff77fd284aa
         computeOrder: 2
         position:
           serializedVersion: 2
@@ -130,8 +127,7 @@ MonoBehaviour:
       type: {class: VerticalNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 1dcf714f-c852-480f-a50f-56475b9f4bd7
+        _guid: 09fb5131-728f-4ca5-b78f-2e2dcedfb648
         computeOrder: 3
         position:
           serializedVersion: 2
@@ -156,8 +152,7 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 5fc08c53-0223-4dce-b952-cbe6306222f3
+        _guid: 9df7a176-249d-4587-98f3-489e30295e26
         computeOrder: 4
         position:
           serializedVersion: 2
@@ -180,8 +175,7 @@ MonoBehaviour:
       type: {class: VerticalNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: f06343ad-fb16-42af-992a-350378d0a4b8
+        _guid: f475579a-4bac-4c4c-839f-fdfecbe7f45d
         computeOrder: 5
         position:
           serializedVersion: 2
@@ -206,8 +200,7 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 7eea9f1a-b08d-4b17-82ef-91246f8187d4
+        _guid: f0983138-e9c1-48e3-b2ff-2479f3c2aa9b
         computeOrder: 6
         position:
           serializedVersion: 2
@@ -230,8 +223,7 @@ MonoBehaviour:
       type: {class: VerticalNode2, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: dd3f8d5d-7003-41e9-b0ce-0596272cdfd8
+        _guid: 6a8818f9-7c05-49e8-85d6-517550e3037b
         computeOrder: 7
         position:
           serializedVersion: 2
@@ -256,8 +248,7 @@ MonoBehaviour:
       type: {class: ColorNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 65a569df-d1ed-4265-a072-7d1f10241497
+        _guid: 2f3c714d-98c6-4a48-8f38-341ad342fd8b
         computeOrder: 8
         position:
           serializedVersion: 2
@@ -279,8 +270,7 @@ MonoBehaviour:
       type: {class: DrawerFieldTestNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: a46628c2-9004-4fd8-994d-29ca0126195c
+        _guid: f7e29e42-f328-46d9-93de-9e39a936c37e
         computeOrder: 9
         position:
           serializedVersion: 2
@@ -322,15 +312,14 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: bc1ca80b-0ecd-4b70-b55f-abd71cdcfc35
+        _guid: 30b8a795-6bcd-4132-980f-daa5405d38cb
         computeOrder: 10
         position:
           serializedVersion: 2
-          x: 1309.6409
-          y: 782.6087
-          width: 100
-          height: 100
+          x: 1310.8695
+          y: 783
+          width: 102
+          height: 99
         initialPosition:
           serializedVersion: 2
           x: 0

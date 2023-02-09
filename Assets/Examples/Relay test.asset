@@ -12,174 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31390c44c9f3a3d40b424bf6821999a2, type: 3}
   m_Name: Relay test
   m_EditorClassIdentifier: 
-  serializedNodes:
-  - type: FloatNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"1ad54be9-1723-4d54-9671-812db0de58fd","computeOrder":0,"position":{"serializedVersion":"2","x":156.29998779296876,"y":164.84999084472657,"width":100.00001525878906,"height":101.0},"expanded":false,"debug":false,"nodeLock":false,"output":11.0,"input":11.0}'
-  - type: FloatNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"53aa7629-8d6e-4292-9647-778ccbb8b182","computeOrder":1,"position":{"serializedVersion":"2","x":111.0999984741211,"y":281.5500183105469,"width":100.00001525878906,"height":101.0},"expanded":false,"debug":false,"nodeLock":false,"output":42.0,"input":42.0}'
-  - type: PrintNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"e4f0bda9-f2d8-48ad-b517-ece8bec67999","computeOrder":9,"position":{"serializedVersion":"2","x":923.0,"y":124.0,"width":74.0,"height":90.0},"expanded":false,"debug":false,"nodeLock":false}'
-  - type: PrintNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"4d94860e-2068-48ef-b0ce-9e0dac25893a","computeOrder":10,"position":{"serializedVersion":"2","x":889.0,"y":258.0,"width":72.0,"height":91.0},"expanded":false,"debug":false,"nodeLock":false}'
-  - type: FloatNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"ffe8426f-e5db-4e65-8f9c-be27cb009a65","computeOrder":2,"position":{"serializedVersion":"2","x":118.30003356933594,"y":404.2000427246094,"width":100.00001525878906,"height":101.0},"expanded":false,"debug":false,"nodeLock":false,"output":32.0,"input":32.0}'
-  - type: FloatNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"d3157ee0-b408-4a80-a192-1433251d0ee4","computeOrder":11,"position":{"serializedVersion":"2","x":331.97613525390627,"y":539.2286376953125,"width":100.0,"height":101.0},"expanded":false,"debug":false,"nodeLock":false,"output":12.0,"input":12.0}'
-  - type: PrintNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"7ee69120-870b-40c2-a8c7-4d7924791a40","computeOrder":12,"position":{"serializedVersion":"2","x":810.0,"y":376.0,"width":72.0,"height":91.0},"expanded":false,"debug":false,"nodeLock":false}'
-  - type: FloatNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"3ce8d3c8-6dcf-4df4-b8a1-826f0f432d45","computeOrder":13,"position":{"serializedVersion":"2","x":-89.64997863769531,"y":160.8500213623047,"width":100.00001525878906,"height":101.0},"expanded":false,"debug":false,"nodeLock":false,"output":12.0,"input":12.0}'
-  - type: FloatNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"9bf8c295-9383-4f10-97dd-b0b13d0166fa","computeOrder":14,"position":{"serializedVersion":"2","x":-210.65000915527345,"y":219.85003662109376,"width":100.00001525878906,"height":101.0},"expanded":false,"debug":false,"nodeLock":false,"output":42.0,"input":42.0}'
-  - type: FloatNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"8527e8d2-b644-4d99-bb16-3c86b69cb505","computeOrder":15,"position":{"serializedVersion":"2","x":-106.64999389648438,"y":298.85003662109377,"width":100.00001525878906,"height":101.0},"expanded":false,"debug":false,"nodeLock":false,"output":32.0,"input":32.0}'
-  - type: FloatNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"84ffe132-231f-44da-b7f1-19ee7a4acd2b","computeOrder":16,"position":{"serializedVersion":"2","x":-219.64999389648438,"y":358.8500061035156,"width":100.00001525878906,"height":101.0},"expanded":false,"debug":false,"nodeLock":false,"output":22.0,"input":22.0}'
-  - type: PrintNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"a909f44c-9bed-4891-abae-4498dc82c8d2","computeOrder":18,"position":{"serializedVersion":"2","x":686.8074951171875,"y":536.5575561523438,"width":74.0,"height":91.0},"expanded":false,"debug":false,"nodeLock":false}'
-  - type: PrintNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"a2ad7d87-36c5-4332-ae59-f120c1cdf9cc","computeOrder":19,"position":{"serializedVersion":"2","x":824.0,"y":475.0,"width":72.0,"height":91.0},"expanded":false,"debug":false,"nodeLock":false}'
-  - type: PrintNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"4c96e926-f348-46dd-8037-8cc469342ce6","computeOrder":20,"position":{"serializedVersion":"2","x":818.0,"y":597.0,"width":72.0,"height":91.0},"expanded":false,"debug":false,"nodeLock":false}'
-  - type: RelayNode, com.alelievr.NodeGraphProcessor.Runtime, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"95436c03-79b8-423e-be58-ce326b125b7e","computeOrder":4,"position":{"serializedVersion":"2","x":328.4500427246094,"y":299.8500671386719,"width":200.0,"height":200.0},"expanded":false,"debug":false,"nodeLock":false,"unpackOutput":false,"packInput":false,"inputEdgeCount":4}'
-  - type: RelayNode, com.alelievr.NodeGraphProcessor.Runtime, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"f1e2978a-b542-48b6-8326-597c70e29bc8","computeOrder":5,"position":{"serializedVersion":"2","x":411.4500427246094,"y":274.85003662109377,"width":200.0,"height":200.0},"expanded":false,"debug":false,"nodeLock":false,"unpackOutput":false,"packInput":false,"inputEdgeCount":1}'
-  - type: RelayNode, com.alelievr.NodeGraphProcessor.Runtime, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"188630e2-e213-4568-ad15-da01f1417e3b","computeOrder":21,"position":{"serializedVersion":"2","x":413.4500427246094,"y":328.8500061035156,"width":200.0,"height":200.0},"expanded":false,"debug":false,"nodeLock":false,"unpackOutput":false,"packInput":false,"inputEdgeCount":1}'
-  - type: RelayNode, com.alelievr.NodeGraphProcessor.Runtime, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"1f94ce69-a4d1-4a59-95f9-44c49c6a97eb","computeOrder":22,"position":{"serializedVersion":"2","x":525.4500122070313,"y":279.8500061035156,"width":200.0,"height":200.0},"expanded":false,"debug":false,"nodeLock":false,"unpackOutput":false,"packInput":false,"inputEdgeCount":1}'
-  - type: RelayNode, com.alelievr.NodeGraphProcessor.Runtime, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"3c32f66f-aefd-4f09-8854-4b6fb2196ad0","computeOrder":6,"position":{"serializedVersion":"2","x":496.4500427246094,"y":168.85000610351563,"width":200.0,"height":200.0},"expanded":false,"debug":false,"nodeLock":false,"unpackOutput":false,"packInput":false,"inputEdgeCount":1}'
-  - type: RelayNode, com.alelievr.NodeGraphProcessor.Runtime, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"e4b6ea7d-83e9-476f-9b99-8dc27480c9e0","computeOrder":7,"position":{"serializedVersion":"2","x":597.4501342773438,"y":112.85000610351563,"width":200.0,"height":200.0},"expanded":false,"debug":false,"nodeLock":false,"unpackOutput":false,"packInput":false,"inputEdgeCount":1}'
-  - type: RelayNode, com.alelievr.NodeGraphProcessor.Runtime, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"a23224f7-767d-48c1-a000-6b3942711e5f","computeOrder":8,"position":{"serializedVersion":"2","x":692.5001220703125,"y":138.10003662109376,"width":200.0,"height":200.0},"expanded":false,"debug":false,"nodeLock":false,"unpackOutput":true,"packInput":false,"inputEdgeCount":1}'
-  - type: TextNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"78debfc1-3f99-46c1-a242-35722416e1f2","computeOrder":3,"position":{"serializedVersion":"2","x":64.0,"y":52.0,"width":218.0,"height":97.0},"expanded":false,"debug":false,"nodeLock":false,"output":"dwqdwq"}'
-  - type: RelayNode, com.alelievr.NodeGraphProcessor.Runtime, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"3b7c2f51-ab4e-48f9-95ce-5fd41e53ef38","computeOrder":17,"position":{"serializedVersion":"2","x":552.8049926757813,"y":696.95751953125,"width":200.0,"height":200.0},"expanded":false,"debug":false,"nodeLock":false,"unpackOutput":false,"packInput":false,"inputEdgeCount":1}'
-  edges:
-  - GUID: f196711d-5c70-4487-acdb-f1ca652c6bee
-    owner: {fileID: 11400000}
-    inputNodeGUID: f1e2978a-b542-48b6-8326-597c70e29bc8
-    outputNodeGUID: 95436c03-79b8-423e-be58-ce326b125b7e
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: 706291ae-bfc8-46e5-b2e2-6bfc1334a433
-    owner: {fileID: 11400000}
-    inputNodeGUID: 95436c03-79b8-423e-be58-ce326b125b7e
-    outputNodeGUID: 1ad54be9-1723-4d54-9671-812db0de58fd
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: 40ddb268-b738-40ba-a8a4-476f5844d7ff
-    owner: {fileID: 11400000}
-    inputNodeGUID: 188630e2-e213-4568-ad15-da01f1417e3b
-    outputNodeGUID: 95436c03-79b8-423e-be58-ce326b125b7e
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: b6319afd-df83-4e95-ac76-da03a29f746e
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1f94ce69-a4d1-4a59-95f9-44c49c6a97eb
-    outputNodeGUID: f1e2978a-b542-48b6-8326-597c70e29bc8
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: fa66bb75-17fb-428f-b161-faa9ffd36725
-    owner: {fileID: 11400000}
-    inputNodeGUID: 3c32f66f-aefd-4f09-8854-4b6fb2196ad0
-    outputNodeGUID: f1e2978a-b542-48b6-8326-597c70e29bc8
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: d4b83e20-d73c-405f-b6f2-78e5b44e651f
-    owner: {fileID: 11400000}
-    inputNodeGUID: e4b6ea7d-83e9-476f-9b99-8dc27480c9e0
-    outputNodeGUID: 3c32f66f-aefd-4f09-8854-4b6fb2196ad0
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: 3f581796-b60e-424b-bc70-fc6cd081688f
-    owner: {fileID: 11400000}
-    inputNodeGUID: a23224f7-767d-48c1-a000-6b3942711e5f
-    outputNodeGUID: e4b6ea7d-83e9-476f-9b99-8dc27480c9e0
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 0
-  - GUID: d87f0fdc-d692-47e1-aefb-a63dce5428e8
-    owner: {fileID: 11400000}
-    inputNodeGUID: 95436c03-79b8-423e-be58-ce326b125b7e
-    outputNodeGUID: 53aa7629-8d6e-4292-9647-778ccbb8b182
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: 357301b6-5b93-4043-940f-4c5b77dd4581
-    owner: {fileID: 11400000}
-    inputNodeGUID: 95436c03-79b8-423e-be58-ce326b125b7e
-    outputNodeGUID: ffe8426f-e5db-4e65-8f9c-be27cb009a65
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: e2b2ed25-313c-4a60-acca-2f696b3d842d
-    owner: {fileID: 11400000}
-    inputNodeGUID: e4f0bda9-f2d8-48ad-b517-ece8bec67999
-    outputNodeGUID: a23224f7-767d-48c1-a000-6b3942711e5f
-    inputFieldName: obj
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 0
-  - GUID: aacee0ff-cba4-4b2c-af76-dec0ca3b5a65
-    owner: {fileID: 11400000}
-    inputNodeGUID: 4d94860e-2068-48ef-b0ce-9e0dac25893a
-    outputNodeGUID: a23224f7-767d-48c1-a000-6b3942711e5f
-    inputFieldName: obj
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 1
-  - GUID: 786c45b6-0d91-4abf-9dd5-21d6f1890f69
-    owner: {fileID: 11400000}
-    inputNodeGUID: 95436c03-79b8-423e-be58-ce326b125b7e
-    outputNodeGUID: 78debfc1-3f99-46c1-a242-35722416e1f2
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: 8cc59aa5-6206-42ec-b56a-e4292f099b00
-    owner: {fileID: 11400000}
-    inputNodeGUID: 3b7c2f51-ab4e-48f9-95ce-5fd41e53ef38
-    outputNodeGUID: d3157ee0-b408-4a80-a192-1433251d0ee4
-    inputFieldName: input
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: 9dc91fc6-4f59-487b-8229-ef2a0f8695f4
-    owner: {fileID: 11400000}
-    inputNodeGUID: a909f44c-9bed-4891-abae-4498dc82c8d2
-    outputNodeGUID: 3b7c2f51-ab4e-48f9-95ce-5fd41e53ef38
-    inputFieldName: obj
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 0
+  serializedNodes: []
+  nodes:
+  - rid: 6685669736541848397
+  - rid: 6685669736541848398
+  - rid: 6685669736541848399
+  - rid: 6685669736541848400
+  - rid: 6685669736541848401
+  - rid: 6685669736541848402
+  - rid: 6685669736541848403
+  - rid: 6685669736541848404
+  - rid: 6685669736541848405
+  - rid: 6685669736541848406
+  - rid: 6685669736541848407
+  - rid: 6685669736541848408
+  - rid: 6685669736541848409
+  - rid: 6685669736541848410
+  - rid: 6685669736541848411
+  - rid: 6685669736541848412
+  - rid: 6685669736541848413
+  - rid: 6685669736541848414
+  - rid: 6685669736541848415
+  - rid: 6685669736541848416
+  - rid: 6685669736541848417
+  - rid: 6685669736541848418
+  - rid: 6685669736541848419
+  edges: []
   groups: []
   stackNodes: []
   pinnedElements:
@@ -204,8 +62,535 @@ MonoBehaviour:
       serializedType: GraphProcessor.ProcessorView, com.alelievr.NodeGraphProcessor.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   exposedParameters: []
+  serializedParameterList: []
   stickyNotes: []
-  position: {x: -855, y: -14, z: 0}
-  scale: {x: 1.520875, y: 1.520875, z: 1}
+  nodeInspectorReference: {fileID: 0}
+  position: {x: 707, y: 52, z: 0}
+  scale: {x: 1.15, y: 1.15, z: 1}
   references:
-    version: 1
+    version: 2
+    RefIds:
+    - rid: 6685669736541848397
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: adf5a74e-9dde-4e8a-ab23-1c1306e83b20
+        computeOrder: 0
+        position:
+          serializedVersion: 2
+          x: 156.29999
+          y: 164.84999
+          width: 100.000015
+          height: 101
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 11
+        input: 11
+    - rid: 6685669736541848398
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: ab7a864c-188d-46e9-9d3d-100d208af06d
+        computeOrder: 1
+        position:
+          serializedVersion: 2
+          x: 111.1
+          y: 281.55002
+          width: 100.000015
+          height: 101
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 42
+        input: 42
+    - rid: 6685669736541848399
+      type: {class: PrintNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: d7f20fed-134a-4c2b-aff2-786ec12ada47
+        computeOrder: 2
+        position:
+          serializedVersion: 2
+          x: 923
+          y: 124
+          width: 74
+          height: 90
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+    - rid: 6685669736541848400
+      type: {class: PrintNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: 844c793e-c595-489f-8527-733c3ba6300a
+        computeOrder: 3
+        position:
+          serializedVersion: 2
+          x: 889
+          y: 258
+          width: 72
+          height: 91
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+    - rid: 6685669736541848401
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: 3a7f42b8-de03-4ac2-a884-89a3f3cf3af2
+        computeOrder: 4
+        position:
+          serializedVersion: 2
+          x: 118.30003
+          y: 404.20004
+          width: 100.000015
+          height: 101
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 32
+        input: 32
+    - rid: 6685669736541848402
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: a96a6694-a04a-4422-83cd-16a4aa149703
+        computeOrder: 5
+        position:
+          serializedVersion: 2
+          x: 331.97614
+          y: 539.22864
+          width: 100
+          height: 101
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 12
+        input: 12
+    - rid: 6685669736541848403
+      type: {class: PrintNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: 721495bb-ade2-4d01-8e2f-0238f90d6f90
+        computeOrder: 6
+        position:
+          serializedVersion: 2
+          x: 810
+          y: 376
+          width: 72
+          height: 91
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+    - rid: 6685669736541848404
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: 690cc70f-6a04-4124-a534-7f49dee8be52
+        computeOrder: 7
+        position:
+          serializedVersion: 2
+          x: -89.64998
+          y: 160.85002
+          width: 100.000015
+          height: 101
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 12
+        input: 12
+    - rid: 6685669736541848405
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: f461dbd7-b562-4119-8b47-c38072bde230
+        computeOrder: 8
+        position:
+          serializedVersion: 2
+          x: -210.65001
+          y: 219.85004
+          width: 100.000015
+          height: 101
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 42
+        input: 42
+    - rid: 6685669736541848406
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: 94be83fe-e5e2-4bbf-a307-845702532f45
+        computeOrder: 9
+        position:
+          serializedVersion: 2
+          x: -106.649994
+          y: 298.85004
+          width: 100.000015
+          height: 101
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 32
+        input: 32
+    - rid: 6685669736541848407
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: 2ad0ef91-5919-4ba9-b12c-ff0aa31d6f75
+        computeOrder: 10
+        position:
+          serializedVersion: 2
+          x: -219.65
+          y: 358.85
+          width: 100.000015
+          height: 101
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 22
+        input: 22
+    - rid: 6685669736541848408
+      type: {class: PrintNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: 10784cd1-4775-4192-a8e0-f9d529c6991f
+        computeOrder: 11
+        position:
+          serializedVersion: 2
+          x: 686.8075
+          y: 536.55756
+          width: 74
+          height: 91
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+    - rid: 6685669736541848409
+      type: {class: PrintNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: 7c814de9-bdae-4a34-ba4a-6f7352bc5314
+        computeOrder: 12
+        position:
+          serializedVersion: 2
+          x: 824
+          y: 475
+          width: 72
+          height: 91
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+    - rid: 6685669736541848410
+      type: {class: PrintNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: f348d9b8-cd55-4f14-bcc3-aa0d74976de2
+        computeOrder: 13
+        position:
+          serializedVersion: 2
+          x: 818
+          y: 597
+          width: 72
+          height: 91
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+    - rid: 6685669736541848411
+      type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid: 81bb2259-654f-472d-a71b-b9e6cc2c4be0
+        computeOrder: 14
+        position:
+          serializedVersion: 2
+          x: 328.45004
+          y: 299.85007
+          width: 200
+          height: 200
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        unpackOutput: 0
+        packInput: 0
+        inputEdgeCount: 4
+    - rid: 6685669736541848412
+      type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid: d5da903a-93e6-4049-ab26-64b7bee4da8e
+        computeOrder: 15
+        position:
+          serializedVersion: 2
+          x: 411.45004
+          y: 274.85004
+          width: 200
+          height: 200
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        unpackOutput: 0
+        packInput: 0
+        inputEdgeCount: 1
+    - rid: 6685669736541848413
+      type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid: e9829156-56bc-4664-8c56-c41784996e12
+        computeOrder: 16
+        position:
+          serializedVersion: 2
+          x: 413.45004
+          y: 328.85
+          width: 200
+          height: 200
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        unpackOutput: 0
+        packInput: 0
+        inputEdgeCount: 1
+    - rid: 6685669736541848414
+      type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid: 05937224-208a-4753-b528-afd049ec4b08
+        computeOrder: 17
+        position:
+          serializedVersion: 2
+          x: 525.45
+          y: 279.85
+          width: 200
+          height: 200
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        unpackOutput: 0
+        packInput: 0
+        inputEdgeCount: 1
+    - rid: 6685669736541848415
+      type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid: f4178d61-b86a-4200-b116-e0612a4b817a
+        computeOrder: 18
+        position:
+          serializedVersion: 2
+          x: 496.45004
+          y: 168.85
+          width: 200
+          height: 200
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        unpackOutput: 0
+        packInput: 0
+        inputEdgeCount: 1
+    - rid: 6685669736541848416
+      type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid: b0a7bb81-515f-4183-9de1-9d49f0183b72
+        computeOrder: 19
+        position:
+          serializedVersion: 2
+          x: 597.45013
+          y: 112.850006
+          width: 200
+          height: 200
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        unpackOutput: 0
+        packInput: 0
+        inputEdgeCount: 1
+    - rid: 6685669736541848417
+      type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid: aca00486-d5b8-426e-b8da-39ff4de295c3
+        computeOrder: 20
+        position:
+          serializedVersion: 2
+          x: 692.5001
+          y: 138.10004
+          width: 200
+          height: 200
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        unpackOutput: 1
+        packInput: 0
+        inputEdgeCount: 1
+    - rid: 6685669736541848418
+      type: {class: TextNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: a85d1374-6064-4409-8f26-6e9938822f56
+        computeOrder: 21
+        position:
+          serializedVersion: 2
+          x: 64
+          y: 52
+          width: 218
+          height: 97
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: dwqdwq
+    - rid: 6685669736541848419
+      type: {class: RelayNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        _guid: a5261e49-ddef-43d5-9f18-0fa7542b23d5
+        computeOrder: 22
+        position:
+          serializedVersion: 2
+          x: 552.805
+          y: 696.9575
+          width: 200
+          height: 200
+        initialPosition:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        unpackOutput: 0
+        packInput: 0
+        inputEdgeCount: 1

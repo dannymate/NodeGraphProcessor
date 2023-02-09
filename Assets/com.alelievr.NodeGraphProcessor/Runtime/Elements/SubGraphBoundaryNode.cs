@@ -13,7 +13,7 @@ namespace GraphProcessor
         public override bool deletable => false;
         public override bool needsInspector => true;
         public override bool HideNodeInspectorBlock => true;
-        public override Color color => Color.grey;
+        public override Color AccentColor => Color.grey;
 
         public SubGraph SubGraph => graph as SubGraph;
 

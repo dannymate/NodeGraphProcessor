@@ -24,7 +24,11 @@ MonoBehaviour:
       _suppressLogs: 0
     showAsDrawer: 0
     acceptMultipleEdges: 0
-    proxiedFieldPath: 
+    edgeProcessOrder:
+      _value: FIFO
+    proxiedFieldPath:
+      path: 
+      pathArray: []
     sizeInPixel: 0
     tooltip: 
     vertical: 0
@@ -40,7 +44,11 @@ MonoBehaviour:
       _suppressLogs: 0
     showAsDrawer: 0
     acceptMultipleEdges: 0
-    proxiedFieldPath: 
+    edgeProcessOrder:
+      _value: FIFO
+    proxiedFieldPath:
+      path: 
+      pathArray: []
     sizeInPixel: 0
     tooltip: 
     vertical: 0

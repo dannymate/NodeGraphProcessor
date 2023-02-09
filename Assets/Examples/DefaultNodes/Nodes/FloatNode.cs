@@ -7,12 +7,12 @@ using GraphProcessor;
 public class FloatNode : BaseNode
 {
     [Output("Out")]
-	public float		output;
-	
+    public float output;
+
     [Input("In")]
-	public float		input;
+    public float input;
 
-	public override string name => "Float";
+    public override string name => "Float";
 
-	protected override void Process() => output = input;
+    protected override void Process() => output = input;
 }

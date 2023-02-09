@@ -6,7 +6,7 @@ using UnityEngine;
 public class MacroNode : SubGraphNode
 {
     public override bool needsInspector => false;
-    public override Color color => new Color(0, 0, 1, 0.5f);
+    public override Color AccentColor => new Color(0, 0, 1, 0.5f);
 
     public void SetMacro(SubGraph macro)
     {

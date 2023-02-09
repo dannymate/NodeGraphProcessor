@@ -23,7 +23,7 @@ namespace GraphProcessor
         /// <summary>
         /// The accent color of the node
         /// </summary>
-        public virtual Color color => Color.clear;
+        public virtual Color AccentColor => Color.clear;
 
         /// <summary>
         /// Set a custom uss file for the node. We use a Resources.Load to get the stylesheet so be sure to put the correct resources path

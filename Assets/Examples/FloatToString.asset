@@ -18,24 +18,18 @@ MonoBehaviour:
   - rid: 4827994175793266716
   - rid: 4827994175793266725
   edges:
-  - _guid:
-      Value: 6c633c2e-ccc0-4b60-b504-734e85a9054b
+  - _guid: ab7a64ff-b37b-4abf-914e-8049a89aa663
     owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
-    outputNodeGUID:
-      Value: 258cd69a-880c-4cfe-b47c-9ca6089c9fcc
+    inputNodeGUID: 47ac759b-428a-4139-9628-7ddb2618dea8
+    outputNodeGUID: 6baffe81-7cbf-40fe-b037-d08bacbc418e
     inputFieldName: input
     outputFieldName: _ingress
     inputPortIdentifier: 
     outputPortIdentifier: Float IN
-  - _guid:
-      Value: 6b771e34-f0f7-4080-92ce-4101464e233c
+  - _guid: 6a977968-56df-4e52-b620-3c99f2da1d94
     owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: ea9dd183-58e9-46d0-b544-e999ef6808ab
-    outputNodeGUID:
-      Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
+    inputNodeGUID: 5ac4cf5d-7930-4099-b273-264d134475ec
+    outputNodeGUID: 47ac759b-428a-4139-9628-7ddb2618dea8
     inputFieldName: _egress
     outputFieldName: output
     inputPortIdentifier: String OUT
@@ -65,8 +59,7 @@ MonoBehaviour:
       type: {class: SubGraphIngressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 258cd69a-880c-4cfe-b47c-9ca6089c9fcc
+        _guid: 6baffe81-7cbf-40fe-b037-d08bacbc418e
         computeOrder: 0
         position:
           serializedVersion: 2
@@ -87,8 +80,7 @@ MonoBehaviour:
       type: {class: SubGraphEgressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: ea9dd183-58e9-46d0-b544-e999ef6808ab
+        _guid: 5ac4cf5d-7930-4099-b273-264d134475ec
         computeOrder: 2
         position:
           serializedVersion: 2
@@ -109,8 +101,7 @@ MonoBehaviour:
       type: {class: FloatToStringsNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 7a64e6db-4a2a-4a0f-920e-45ac493ae39f
+        _guid: 47ac759b-428a-4139-9628-7ddb2618dea8
         computeOrder: 1
         position:
           serializedVersion: 2

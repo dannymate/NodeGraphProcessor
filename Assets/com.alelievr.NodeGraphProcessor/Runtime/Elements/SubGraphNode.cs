@@ -38,7 +38,7 @@ public class SubGraphNode : BaseNode
             return SubGraph.Options.DisplayName;
         }
     }
-    public override Color color => new Color(1, 0, 1, 0.5f);
+    public override Color AccentColor => new Color(1, 0, 1, 0.5f);
 
     public SubGraph SubGraph => subGraph;
 

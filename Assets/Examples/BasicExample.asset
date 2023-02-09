@@ -52,84 +52,48 @@ MonoBehaviour:
   - rid: 4827994175793266935
   - rid: 4827994175793266986
   - rid: 4827994175793266993
+  - rid: 6685669736541848038
   edges:
-  - _guid:
-      Value: 46bcf875-f1a9-4b6a-a132-32407e2b5a7f
+  - _guid: 0d4b7d9f-4e28-405c-be3f-c40c66ee306c
     owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 53a7bbb4-f3ed-421a-813c-8fd732f2c7f4
-    outputNodeGUID:
-      Value: 52a4174a-4882-490c-a900-0a1761754e80
-    inputFieldName: obj
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - _guid:
-      Value: abe45722-8a31-4cc1-be33-d3b8a90b5c1a
-    owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 034f0a6d-ea56-4e83-8190-5459f04085bf
-    outputNodeGUID:
-      Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
-    inputFieldName: _ingress
-    outputFieldName: output
-    inputPortIdentifier: Float IN
-    outputPortIdentifier: 
-  - _guid:
-      Value: 0e58fe31-0e18-47ec-9e66-772ca7d7a543
-    owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: f1bbd92e-6021-4bfb-9420-a3cc973fbb0d
-    outputNodeGUID:
-      Value: 034f0a6d-ea56-4e83-8190-5459f04085bf
+    inputNodeGUID: 78e09a63-554b-46a4-83d8-ea89bf5ce40a
+    outputNodeGUID: 2699ee6e-4d8d-4bc6-9ae4-9931c02e0b5c
     inputFieldName: obj
     outputFieldName: _egress
     inputPortIdentifier: 
     outputPortIdentifier: String OUT
-  - _guid:
-      Value: eec4286d-0123-4afd-b207-f7b8294a4a02
+  - _guid: da104018-70cc-446e-bdd1-58db282a6d49
     owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 034f0a6d-ea56-4e83-8190-5459f04085bf
-    outputNodeGUID:
-      Value: 87d938a8-54f3-4391-aad4-abf499ae38b4
+    inputNodeGUID: 269a535c-054f-4259-b3ef-b046a7e9b4f9
+    outputNodeGUID: 8da9e577-ceaa-419a-ab6f-c4ea833647e4
     inputFieldName: _ingress
     outputFieldName: output
     inputPortIdentifier: Decimal Places
     outputPortIdentifier: output
-  - _guid:
-      Value: c8cb5412-1b74-4cea-8c0a-a03b10f7dcaa
+  - _guid: af180468-af0d-49ca-b173-1bf784844fe6
     owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 034f0a6d-ea56-4e83-8190-5459f04085bf
-    outputNodeGUID:
-      Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
+    inputNodeGUID: 269a535c-054f-4259-b3ef-b046a7e9b4f9
+    outputNodeGUID: 7b412bcf-6305-47e5-98de-7a97447c037d
     inputFieldName: _ingress
     outputFieldName: output
     inputPortIdentifier: Float IN
     outputPortIdentifier: 
-  - _guid:
-      Value: 3245c8d4-ed87-4397-a4fa-f623440c641a
+  - _guid: 3b2d296d-0a16-4020-9d59-714872a49271
     owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: 05c6ea81-f327-4692-9e0f-792c109f3184
-    outputNodeGUID:
-      Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
-    inputFieldName: _ingress
-    outputFieldName: output
-    inputPortIdentifier: Float IN
-    outputPortIdentifier: 
-  - _guid:
-      Value: 9d4de727-b267-4c5b-b92a-ea85f72633bf
-    owner: {fileID: 11400000}
-    inputNodeGUID:
-      Value: b233fdec-4d0e-48e2-a2d9-bb976eb6f6f3
-    outputNodeGUID:
-      Value: 05c6ea81-f327-4692-9e0f-792c109f3184
+    inputNodeGUID: c01aa327-3f85-45fc-97b4-e28801d56856
+    outputNodeGUID: 269a535c-054f-4259-b3ef-b046a7e9b4f9
     inputFieldName: obj
     outputFieldName: _egress
     inputPortIdentifier: 
     outputPortIdentifier: String OUT
+  - _guid: 813802d2-a7d8-4f7f-a931-1073992e17b2
+    owner: {fileID: 11400000}
+    inputNodeGUID: 2699ee6e-4d8d-4bc6-9ae4-9931c02e0b5c
+    outputNodeGUID: ee11e525-0f60-4a6e-b502-248f69ad14db
+    inputFieldName: _ingress
+    outputFieldName: output
+    inputPortIdentifier: Float IN
+    outputPortIdentifier: 
   groups:
   - title: New Comment Block
     color: {r: 0, g: 0, b: 0, a: 0}
@@ -307,8 +271,8 @@ MonoBehaviour:
     title: New Sticky Note
     content: Write your text here
   nodeInspectorReference: {fileID: 0}
-  position: {x: 1330, y: -1187, z: 0}
-  scale: {x: 1.7490063, y: 1.7490063, z: 1}
+  position: {x: 1504, y: -396, z: 0}
+  scale: {x: 1.15, y: 1.15, z: 1}
   references:
     version: 2
     RefIds:
@@ -318,8 +282,7 @@ MonoBehaviour:
       type: {class: ColorNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: f44a49d0-7d7b-4268-9d47-c7bd2fbd8349
+        _guid: ce7bbcfb-a2bc-4f36-801f-d2d013c38e37
         computeOrder: 0
         position:
           serializedVersion: 2
@@ -341,8 +304,7 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 79d54e5f-89c8-4d94-b0da-4bd83cb80a7c
+        _guid: f30bfee7-9c7a-45e3-93e2-60eb7b0fff29
         computeOrder: 1
         position:
           serializedVersion: 2
@@ -365,8 +327,7 @@ MonoBehaviour:
       type: {class: MultiAddNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 13f95966-f717-4b01-9f3c-a47a0f326219
+        _guid: 34f97a76-1be5-42ad-b879-9fc6232a307f
         computeOrder: 2
         position:
           serializedVersion: 2
@@ -388,8 +349,7 @@ MonoBehaviour:
       type: {class: SubNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: aa5016c0-f679-4162-b658-fc60d98dd971
+        _guid: 7dd1422c-6c37-4a8b-9c2d-f228a1af4e8d
         computeOrder: 3
         position:
           serializedVersion: 2
@@ -413,8 +373,7 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 1bc4b423-59fe-442c-8b21-8e203ccde9b7
+        _guid: 3a12f666-acaf-4347-9e20-0cd31db22929
         computeOrder: 4
         position:
           serializedVersion: 2
@@ -435,8 +394,7 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 7b704bb2-68f7-4817-a7d3-9055f5facf8b
+        _guid: 61e03a8f-a7a3-4ef6-8108-0ad86460f536
         computeOrder: 5
         position:
           serializedVersion: 2
@@ -457,8 +415,7 @@ MonoBehaviour:
       type: {class: PrefabNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 6f19427c-c5ed-4485-afc7-3b5ab86d8fa2
+        _guid: d3d6ced0-a6ec-4f87-bc0f-a76f3627e83c
         computeOrder: 6
         position:
           serializedVersion: 2
@@ -481,8 +438,7 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 5151677b-2aad-4287-b0ee-a30f3a36da80
+        _guid: 45fa3188-0fb0-4bc0-bb61-90e5c5a3fa91
         computeOrder: 7
         position:
           serializedVersion: 2
@@ -505,8 +461,7 @@ MonoBehaviour:
       type: {class: TextNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 2f900184-3a6d-43e3-b7ad-167311d1abd7
+        _guid: cbdc8fbb-b299-458a-b164-4a5185451437
         computeOrder: 8
         position:
           serializedVersion: 2
@@ -528,8 +483,7 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: b233fdec-4d0e-48e2-a2d9-bb976eb6f6f3
+        _guid: 78e09a63-554b-46a4-83d8-ea89bf5ce40a
         computeOrder: 11
         position:
           serializedVersion: 2
@@ -550,8 +504,7 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: f092acad-9de0-4ba2-a82c-20b797f73b1e
+        _guid: ec1e5e8e-b477-4c60-b29e-adc6bc560516
         computeOrder: 12
         position:
           serializedVersion: 2
@@ -574,8 +527,7 @@ MonoBehaviour:
       type: {class: SettingsNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 190136ef-7885-452f-8c2f-b3af931233d3
+        _guid: 3690ea08-56df-49aa-8869-c68f166ed70b
         computeOrder: 13
         position:
           serializedVersion: 2
@@ -599,8 +551,7 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 1594ca0f-fab6-4bbe-b739-49a012294423
+        _guid: 4a761813-d7bc-4abb-bfed-18372edfde5d
         computeOrder: 14
         position:
           serializedVersion: 2
@@ -621,8 +572,7 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 8baad979-f03f-4695-9f7b-977f2833f7bc
+        _guid: ef8309d1-e40b-4fd7-ab3d-4dc7238c6575
         computeOrder: 15
         position:
           serializedVersion: 2
@@ -645,8 +595,7 @@ MonoBehaviour:
       type: {class: CustomPortData, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: ecf6694d-e464-42b3-a65f-0b8242dddc2b
+        _guid: ce887e51-9329-447a-8972-09099ac5f5ba
         computeOrder: 16
         position:
           serializedVersion: 2
@@ -668,8 +617,7 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: e758e713-6edc-4731-ba78-60d5d0023deb
+        _guid: e069564c-9ba0-4629-844f-57a439522ef1
         computeOrder: 17
         position:
           serializedVersion: 2
@@ -690,8 +638,7 @@ MonoBehaviour:
       type: {class: PortConnectionTests, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: e275442c-ca67-4898-a3a5-ddbd1e2d27d9
+        _guid: 32f708fa-c50c-44ef-bd5c-95556b291fdb
         computeOrder: 18
         position:
           serializedVersion: 2
@@ -713,8 +660,7 @@ MonoBehaviour:
       type: {class: PortConnectionTests, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 9785e124-5c11-4256-966f-ff31daf434d8
+        _guid: c586e0c2-e9cc-4f35-9bb5-a2b556a44e13
         computeOrder: 19
         position:
           serializedVersion: 2
@@ -736,8 +682,7 @@ MonoBehaviour:
       type: {class: DrawerFieldTestNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 353340ea-58ca-48dc-8463-0a3423eaf67c
+        _guid: 75ff4da6-f72a-40a5-b9f3-95088f8d1bd6
         computeOrder: 20
         position:
           serializedVersion: 2
@@ -779,8 +724,7 @@ MonoBehaviour:
       type: {class: InspectorNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 55a1596b-7c86-4f53-85a7-74aef83dd122
+        _guid: 9a25153c-3e45-4cab-aa6a-a8f4eed4e007
         computeOrder: 21
         position:
           serializedVersion: 2
@@ -805,8 +749,7 @@ MonoBehaviour:
       type: {class: DrawerFieldTestNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 01e94ed6-7697-41dd-a76f-b38757528885
+        _guid: ed7730e4-680a-4e93-a201-b94c97a1cc6c
         computeOrder: 22
         position:
           serializedVersion: 2
@@ -848,8 +791,7 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: e35bde04-76f0-494e-9cd3-9e984c29d459
+        _guid: 050ede42-ce92-4b33-bad5-2e4187f1851b
         computeOrder: 23
         position:
           serializedVersion: 2
@@ -872,8 +814,7 @@ MonoBehaviour:
       type: {class: ColorNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: d29cb965-003c-4cb0-a6b0-dbb1f69933ee
+        _guid: a5730144-75c1-41b0-83a1-b2a6bbe3e864
         computeOrder: 24
         position:
           serializedVersion: 2
@@ -895,8 +836,7 @@ MonoBehaviour:
       type: {class: MultiAddNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 74a8b801-a688-4b34-87dd-e0532944b92d
+        _guid: 60f362d3-2fab-4f7d-ab83-954597f34495
         computeOrder: 25
         position:
           serializedVersion: 2
@@ -949,8 +889,7 @@ MonoBehaviour:
       type: {class: SubNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: d2be3e4d-f69f-42d6-a693-14f4aa3ded5c
+        _guid: 2022b37a-aea2-4068-b918-0060d7453b2e
         computeOrder: 30
         position:
           serializedVersion: 2
@@ -974,13 +913,12 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 2d09ddaf-923b-4f10-9ea7-a279c757ea26
+        _guid: ee11e525-0f60-4a6e-b502-248f69ad14db
         computeOrder: 9
         position:
           serializedVersion: 2
-          x: -512
-          y: 838
+          x: -524.5
+          y: 827.5
           width: 102
           height: 99
         initialPosition:
@@ -998,9 +936,8 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: f1bbd92e-6021-4bfb-9420-a3cc973fbb0d
-        computeOrder: 33
+        _guid: c01aa327-3f85-45fc-97b4-e28801d56856
+        computeOrder: 34
         position:
           serializedVersion: 2
           x: -130.00003
@@ -1020,9 +957,8 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: e62392d6-2006-4211-b579-12ca244389ea
-        computeOrder: 34
+        _guid: 7b412bcf-6305-47e5-98de-7a97447c037d
+        computeOrder: 31
         position:
           serializedVersion: 2
           x: -643.0002
@@ -1044,8 +980,7 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 811a225b-7b12-4e3e-bf73-8d1b5f1ce5b2
+        _guid: 95f1e35e-ef06-4487-955c-a62646ce2d46
         computeOrder: 35
         position:
           serializedVersion: 2
@@ -1068,9 +1003,8 @@ MonoBehaviour:
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 53a7bbb4-f3ed-421a-813c-8fd732f2c7f4
-        computeOrder: 37
+        _guid: c856a18a-ad41-4499-8ee7-2675ab291dee
+        computeOrder: 36
         position:
           serializedVersion: 2
           x: -130.00005
@@ -1090,9 +1024,8 @@ MonoBehaviour:
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 52a4174a-4882-490c-a900-0a1761754e80
-        computeOrder: 36
+        _guid: 1e4a8332-7c6f-41f7-b368-7b9d37d79e21
+        computeOrder: 37
         position:
           serializedVersion: 2
           x: -516.00006
@@ -1114,8 +1047,7 @@ MonoBehaviour:
       type: {class: NamerNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 3ecc0329-d5cb-4c5e-aaee-981933481681
+        _guid: f09f9b92-4c84-487d-b501-d5b24867fb80
         computeOrder: 26
         position:
           serializedVersion: 2
@@ -1165,8 +1097,7 @@ MonoBehaviour:
       type: {class: CustomParameterNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: e7f55b8a-e4dc-43bf-bd8d-63204d7e671f
+        _guid: 259b8606-7db7-4c40-a246-1db4ed7c4843
         computeOrder: 27
         position:
           serializedVersion: 2
@@ -1189,8 +1120,7 @@ MonoBehaviour:
       type: {class: CustomParameterNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        _guid:
-          Value: b0790ec9-3bef-482f-8395-a1a7b1a3efc1
+        _guid: e1b45fa4-7cdf-4fe1-921c-391142ea843b
         computeOrder: 28
         position:
           serializedVersion: 2
@@ -1213,8 +1143,7 @@ MonoBehaviour:
       type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: c9b188d1-aaa1-43f9-aeef-85f3efaddfaf
+        _guid: b3679284-8b6b-41e7-bbf0-cd66ec831034
         computeOrder: 29
         position:
           serializedVersion: 2
@@ -1260,8 +1189,7 @@ MonoBehaviour:
       type: {class: SubGraphNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: Float To String
-        _guid:
-          Value: 05c6ea81-f327-4692-9e0f-792c109f3184
+        _guid: 2699ee6e-4d8d-4bc6-9ae4-9931c02e0b5c
         computeOrder: 10
         position:
           serializedVersion: 2
@@ -1283,9 +1211,8 @@ MonoBehaviour:
       type: {class: SubGraphNode, ns: , asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 034f0a6d-ea56-4e83-8190-5459f04085bf
-        computeOrder: 32
+        _guid: 269a535c-054f-4259-b3ef-b046a7e9b4f9
+        computeOrder: 33
         position:
           serializedVersion: 2
           x: -370.00003
@@ -1306,9 +1233,8 @@ MonoBehaviour:
       type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: 87d938a8-54f3-4391-aad4-abf499ae38b4
-        computeOrder: 31
+        _guid: 8da9e577-ceaa-419a-ab6f-c4ea833647e4
+        computeOrder: 32
         position:
           serializedVersion: 2
           x: -535
@@ -1326,3 +1252,27 @@ MonoBehaviour:
         nodeLock: 0
         parameterGUID: 25883f77-b419-452b-ad87-cd00d7147310
         accessor: 0
+    - rid: 6685669736541848038
+      type: {class: TestNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        _guid: b5e9aa9b-30e6-4cc4-b222-e2b7336cb5ab
+        computeOrder: 38
+        position:
+          serializedVersion: 2
+          x: -751
+          y: 699
+          width: 98
+          height: 75
+        initialPosition:
+          serializedVersion: 2
+          x: -756.8012
+          y: 698.93976
+          width: 100
+          height: 100
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        myList:
+        - 
+        - 

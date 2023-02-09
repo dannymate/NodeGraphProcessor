@@ -222,7 +222,7 @@ namespace GraphProcessor
 
             UpdateTitle();
             SetPosition(nodeTarget.position.position != Vector2.zero ? nodeTarget.position : nodeTarget.initialPosition);
-            SetNodeColor(nodeTarget.color);
+            SetNodeColor(nodeTarget.AccentColor);
 
             AddInputContainer();
 
@@ -828,7 +828,6 @@ namespace GraphProcessor
             for (int i = 0; i < fields.Count; i++)
             {
                 MemberInfo field = fields[i];
-
                 if (!portsByMemberInfo.ContainsKey(field))
                 {
                     if (field.HasCustomAttribute<CustomBehaviourOnly>()) continue;
@@ -847,78 +846,111 @@ namespace GraphProcessor
 
         protected virtual void DrawField(MemberInfo origin, UnityPath memberPath, bool fromInspector, PortView portView = null)
         {
+
             bool hasPortView = portView != null;
             MemberInfo memberToDraw = memberPath.GetPathAsMemberInfoList(nodeTarget)?.Last() ?? origin;
             PortData portData = portView?.portData;
             bool isProxied = hasPortView && portData.IsProxied;
 
+            // Debug.Log("X " + memberToDraw.Name + " " + memberPath + " " + memberToDraw.MemberType);
+            // Properties can't have drawers
             if (!memberToDraw.IsField())
             {
+                AddEmptyField(memberToDraw, fromInspector);
                 return;
             }
 
             FieldInfo field = memberToDraw as FieldInfo;
 
-            //skip if the field is a node setting
-            if (field.HasCustomAttribute<SettingAttribute>())
+            // Skip if the field is a node setting
+            if (memberToDraw.HasCustomAttribute<SettingAttribute>())
             {
                 hasSettings = true;
                 return;
             }
 
             //skip if the field is not serializable
-            bool serializeField = field.HasCustomAttribute<SerializeField>();
-            bool serializeReference = field.HasCustomAttribute<SerializeReference>();
-            if ((!field.IsPublic && !serializeField && !serializeReference) || field.IsNotSerialized)
+            bool isFieldPublic = field.IsPublic;
+            bool hasNonSerializedAttribute = field.IsNotSerialized;
+            bool hasSerializeFieldAttribute = field.HasCustomAttribute<SerializeField>();
+            bool hasSerializeReferenceAttribute = field.HasCustomAttribute<SerializeReference>();
+            bool isSerialized = !hasNonSerializedAttribute && (isFieldPublic || hasSerializeFieldAttribute || hasSerializeReferenceAttribute);
+            if (!isSerialized && !isProxied)
             {
+                // Debug.Log("0 " + origin.Name);
                 AddEmptyField(field, fromInspector);
                 return;
             }
 
-            //skip if the field is an input/output and not marked as SerializedField
-            InputAttribute inputAttribute = field.GetCustomAttribute<InputAttribute>();
-            bool hasInputAttribute = inputAttribute != null;
-            bool isInput = (!hasPortView && hasInputAttribute) || (hasPortView && portView.direction == Direction.Input);
-            bool showAsDrawer = !fromInspector && isInput && (inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>());
-            showAsDrawer |= !fromInspector && isInput && hasPortView && portData.showAsDrawer;
-            if (((!serializeField && !serializeReference) || isProxied) && (hasPortView || hasInputAttribute) && !showAsDrawer)
+            if (field.HasCustomAttribute<HideInInspector>())
             {
+                // Debug.Log("1 " + origin.Name);
                 AddEmptyField(field, fromInspector);
                 return;
             }
 
-            //skip if marked with NonSerialized or HideInInspector
-            if (field.HasCustomAttribute<NonSerializedAttribute>() || field.HasCustomAttribute<HideInInspector>())
+            if (fromInspector)
             {
-                // Debug.Log("3 " + fieldPath);
-                AddEmptyField(field, fromInspector);
-                return;
+                string displayName = ObjectNames.NicifyVariableName(field.Name);
+                var inspectorNameAttribute = field.GetCustomAttribute<InspectorNameAttribute>();
+                if (inspectorNameAttribute != null)
+                    displayName = inspectorNameAttribute.displayName;
+
+                var elem = AddControlField(memberPath, displayName, false);
             }
-
-            // Hide the field if we want to display in in the inspector
-            var showInInspector = field.GetCustomAttribute<ShowInInspector>();
-            if (!serializeField && !serializeReference && showInInspector != null && !showInInspector.showInNode && !fromInspector)
+            else // Then we're manipulating the node drawers
             {
-                // Debug.Log("4 " + fieldPath);
-                AddEmptyField(field, fromInspector);
-                return;
-            }
+                // Skip if not an Input as only inputs can have drawers at the moment
+                InputAttribute inputAttribute = field.GetCustomAttribute<InputAttribute>();
+                bool hasInputAttribute = inputAttribute != null;
+                bool isInput = (!hasPortView && hasInputAttribute) || (hasPortView && portView.direction == Direction.Input);
+                if (!isInput)
+                {
+                    // Debug.Log("2 " + origin.Name);
+                    return;
+                }
+
+                // Properties can't have drawers
+                if (!memberToDraw.IsField())
+                {
+                    AddEmptyField(field, fromInspector);
+                    return;
+                }
 
 
-            var showInputDrawer = hasInputAttribute && (serializeField || serializeReference);
-            showInputDrawer |= showAsDrawer;
-            showInputDrawer &= !fromInspector; // We can't show a drawer in the inspector
-            showInputDrawer &= !typeof(IList).IsAssignableFrom(field.GetUnderlyingType());
+                bool isShowAsDrawer = inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>() || (hasPortView && portData.showAsDrawer);
+                if (!isShowAsDrawer)
+                {
+                    // Debug.Log("3 " + origin.Name);
+                    AddEmptyField(field, fromInspector);
+                    return;
+                }
 
-            string displayName = ObjectNames.NicifyVariableName(field.Name);
+                // Hide the field if we want to display it in the inspector
+                var showInInspector = field.GetCustomAttribute<ShowInInspector>();
+                if (showInInspector != null && !showInInspector.showInNode)
+                {
+                    // Debug.Log("4 " + origin.Name);
+                    AddEmptyField(field, fromInspector);
+                    return;
+                }
 
-            var inspectorNameAttribute = field.GetCustomAttribute<InspectorNameAttribute>();
-            if (inspectorNameAttribute != null)
-                displayName = inspectorNameAttribute.displayName;
+                bool isList = typeof(IList).IsAssignableFrom(field.GetUnderlyingType());
+                if (isList)
+                {
+                    // Debug.Log("5 " + origin.Name);
+                    AddEmptyField(field, fromInspector);
+                    return;
+                }
+                // Debug.Log("6 " + origin.Name);
 
-            var elem = AddControlField(memberPath, displayName, showInputDrawer);
-            if (hasInputAttribute || (hasPortView && portView.direction == Direction.Input))
-            {
+                string displayName = ObjectNames.NicifyVariableName(field.Name);
+                var inspectorNameAttribute = field.GetCustomAttribute<InspectorNameAttribute>();
+                if (inspectorNameAttribute != null)
+                    displayName = inspectorNameAttribute.displayName;
+
+                var elem = AddControlField(memberPath, displayName, true);
+
                 hideElementIfConnected[memberPath] = elem;
 
                 // Hide the field right away if there is already a connection:

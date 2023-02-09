@@ -7,8 +7,8 @@ using System.Linq;
 [System.Serializable, NodeMenuItem("Primitives/Color")]
 public class ColorNode : BaseNode
 {
-	[Output(name = "Color"), SerializeField]
-	new public Color				color;
+    [Output(name = "Color"), SerializeField]
+    public Color color;
 
-	public override string		name => "Color";
+    public override string name => "Color";
 }

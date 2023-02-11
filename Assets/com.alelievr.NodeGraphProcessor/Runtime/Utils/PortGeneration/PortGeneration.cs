@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -72,9 +73,35 @@ namespace GraphProcessor
 
                 try
                 {
-                    Delegate deleg = Delegate.CreateDelegate(typeof(CustomPortBehaviorDelegate), owner, customPortBehaviorMethod, true);
-                    CustomPortBehaviorDelegateInfo delegInfo = new(deleg as CustomPortBehaviorDelegate, customPortBehaviorAttribute.cloneResults);
-                    customBehaviorInfoByMember.Add(field, delegInfo);
+                    if (field.HasCustomAttribute<MultiPortInputAttribute>() && field.GetUnderlyingType().IsCollection())
+                    {
+                        CustomPortBehaviorDelegateInfo delegInfo = new(UnwrapListIntoPorts, false);
+                        customBehaviorInfoByMember.Add(field, delegInfo);
+
+                        IEnumerable<PortData> UnwrapListIntoPorts(List<SerializableEdge> edges)
+                        {
+                            if (field.GetValue(owner) is not IList collection) yield break;
+
+                            for (int i = 0; i < collection.Count; i++)
+                            {
+                                yield return new PortData
+                                {
+                                    displayName = $"{field.Name} {i}",
+                                    acceptMultipleEdges = false,
+                                    DisplayType = field.GetUnderlyingType().GetElementType(),
+                                    showAsDrawer = true,
+                                    proxiedFieldPath = new UnityPath($"{field.Name}.Array.data[{i}]"),
+                                    identifier = $"{i}"
+                                };
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Delegate deleg = Delegate.CreateDelegate(typeof(CustomPortBehaviorDelegate), owner, customPortBehaviorMethod, true);
+                        CustomPortBehaviorDelegateInfo delegInfo = new(deleg as CustomPortBehaviorDelegate, customPortBehaviorAttribute.cloneResults);
+                        customBehaviorInfoByMember.Add(field, delegInfo);
+                    }
                 }
                 catch
                 {

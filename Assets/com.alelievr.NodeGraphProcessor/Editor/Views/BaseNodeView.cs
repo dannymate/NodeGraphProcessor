@@ -844,11 +844,12 @@ namespace GraphProcessor
             }
         }
 
-        protected virtual void DrawField(MemberInfo origin, UnityPath memberPath, bool fromInspector, PortView portView = null)
+        protected virtual void DrawField(MemberInfo origin, UnityPath unityPath, bool fromInspector, PortView portView = null)
         {
+            UnityPath.Info unityPathInfo = unityPath.GatherInfo(nodeTarget);
 
             bool hasPortView = portView != null;
-            MemberInfo memberToDraw = memberPath.GetPathAsMemberInfoList(nodeTarget)?.Last() ?? origin;
+            MemberInfo memberToDraw = unityPathInfo.MemberInfo ?? origin;
             PortData portData = portView?.portData;
             bool isProxied = hasPortView && portData.IsProxied;
 
@@ -896,7 +897,7 @@ namespace GraphProcessor
                 if (inspectorNameAttribute != null)
                     displayName = inspectorNameAttribute.displayName;
 
-                var elem = AddControlField(memberPath, displayName, false);
+                var elem = AddControlField(unityPath, displayName, false);
             }
             else // Then we're manipulating the node drawers
             {
@@ -909,14 +910,6 @@ namespace GraphProcessor
                     // Debug.Log("2 " + origin.Name);
                     return;
                 }
-
-                // Properties can't have drawers
-                if (!memberToDraw.IsField())
-                {
-                    AddEmptyField(field, fromInspector);
-                    return;
-                }
-
 
                 bool isShowAsDrawer = inputAttribute.showAsDrawer || field.HasCustomAttribute<ShowAsDrawer>() || (hasPortView && portData.showAsDrawer);
                 if (!isShowAsDrawer)
@@ -935,7 +928,7 @@ namespace GraphProcessor
                     return;
                 }
 
-                bool isList = typeof(IList).IsAssignableFrom(field.GetUnderlyingType());
+                bool isList = portData.DisplayType.IsCollection();
                 if (isList)
                 {
                     // Debug.Log("5 " + origin.Name);
@@ -949,14 +942,14 @@ namespace GraphProcessor
                 if (inspectorNameAttribute != null)
                     displayName = inspectorNameAttribute.displayName;
 
-                var elem = AddControlField(memberPath, displayName, true);
+                var elem = AddControlField(unityPath, displayName, true);
 
-                hideElementIfConnected[memberPath] = elem;
+                hideElementIfConnected[unityPath.Path] = elem;
 
                 // Hide the field right away if there is already a connection:
                 if (portsByMemberInfo.TryGetValue(memberToDraw, out var pvs))
-                    if (pvs.Any(pv => pv.GetEdges().Count > 0))
-                        elem.style.display = DisplayStyle.None;
+                    if (pvs.Any(pv => pv.portData.Equals(portData) && pv.GetEdges().Count > 0))
+                        elem.style.display = DisplayStyle.None;//
             }
         }
 
@@ -1000,21 +993,20 @@ namespace GraphProcessor
         {
             foreach (var inputField in fieldControlsMap[field])
             {
-                var notify = inputField as INotifyValueChanged<T>;
-                if (notify != null)
+                if (inputField is INotifyValueChanged<T> notify)
                     notify.SetValueWithoutNotify((T)newValue);
             }
         }
 
         static MethodInfo specificUpdateOtherFieldValue = typeof(BaseNodeView).GetMethod(nameof(UpdateOtherFieldValueSpecific), BindingFlags.NonPublic | BindingFlags.Instance);
-        void UpdateOtherFieldValue(UnityPath info, object newValue)
+        void UpdateOtherFieldValue(UnityPath.Info info, object newValue)
         {
             // Warning: Keep in sync with FieldFactory CreateField
-            MemberInfo member = info.GetPathAsMemberInfoList(nodeTarget).Last();
-            var fieldType = member.GetType().IsSubclassOf(typeof(UnityEngine.Object)) ? typeof(UnityEngine.Object) : member.GetUnderlyingType();
+            // MemberInfo member = info.GetPathAsMemberInfoList(nodeTarget).Last();
+            var fieldType = info.DisplayType.IsSubclassOf(typeof(UnityEngine.Object)) ? typeof(UnityEngine.Object) : info.DisplayType;
             var genericUpdate = specificUpdateOtherFieldValue.MakeGenericMethod(fieldType);
 
-            genericUpdate.Invoke(this, new object[] { info, newValue });
+            genericUpdate.Invoke(this, new object[] { info.Origin, newValue });
         }
 
         object GetInputFieldValueSpecific<T>(UnityPath field)
@@ -1031,14 +1023,14 @@ namespace GraphProcessor
         }
 
         static MethodInfo specificGetValue = typeof(BaseNodeView).GetMethod(nameof(GetInputFieldValueSpecific), BindingFlags.NonPublic | BindingFlags.Instance);
-        object GetInputFieldValue(UnityPath info)
+        object GetInputFieldValue(UnityPath.Info info)
         {
             // Warning: Keep in sync with FieldFactory CreateField
-            var member = info.GetPathAsMemberInfoList(nodeTarget).Last();
-            var fieldType = member.GetUnderlyingType().IsSubclassOf(typeof(UnityEngine.Object)) ? typeof(UnityEngine.Object) : member.GetUnderlyingType();
+            // var member = info.GetPathAsMemberInfoList(nodeTarget).Last();
+            var fieldType = info.DisplayType.IsSubclassOf(typeof(UnityEngine.Object)) ? typeof(UnityEngine.Object) : info.DisplayType;
             var genericUpdate = specificGetValue.MakeGenericMethod(fieldType);
 
-            return genericUpdate.Invoke(this, new object[] { info });
+            return genericUpdate.Invoke(this, new object[] { info.Origin });
         }
 
         Regex s_ReplaceNodeIndexPropertyPath = new Regex(@"(^nodes.Array.data\[)(\d+)(\])");
@@ -1064,12 +1056,12 @@ namespace GraphProcessor
             }
         }
 
-        protected SerializedProperty FindSerializedProperty(UnityPath fieldName)
+        protected SerializedProperty FindSerializedProperty(UnityPath.Info fieldName)
         {
             return FindSerializedProperty(fieldName, out _);
         }
 
-        protected SerializedProperty FindSerializedProperty(UnityPath fieldPath, out SerializedObject parent)
+        protected SerializedProperty FindSerializedProperty(UnityPath.Info fieldPath, out SerializedObject parent)
         {
             int i = owner.graph.nodes.FindIndex(n => n == nodeTarget);
 
@@ -1090,13 +1082,15 @@ namespace GraphProcessor
 
         protected VisualElement AddControlField(UnityPath unityPath, string label = null, bool showInputDrawer = false, Action valueChangedCallback = null)
         {
-            var memberInfo = unityPath?.GetPathAsMemberInfoList(nodeTarget)?.Last();
+            // var memberInfo = unityPath?.GetPathAsMemberInfoList(nodeTarget)?.Last();
+            // Debug.Log(this.nodeTarget.name + " " + unityPath.Path);
+            UnityPath.Info unityPathInfo = unityPath.GatherInfo(nodeTarget);
             var path = unityPath.Path;
 
-            if (memberInfo == null)
-                return null;
+            // if (memberInfo == null)
+            //     return null;
 
-            var element = new PropertyField(FindSerializedProperty(unityPath, out SerializedObject fieldParentObject), showInputDrawer ? "" : label);
+            var element = new PropertyField(FindSerializedProperty(unityPathInfo, out SerializedObject fieldParentObject), showInputDrawer ? "" : label);
             element.Bind(fieldParentObject);
 
 #if UNITY_2020_3 // In Unity 2020.3 the empty label on property field doesn't hide it, so we do it manually
@@ -1104,7 +1098,7 @@ namespace GraphProcessor
 				element.AddToClassList("DrawerField_2020_3");
 #endif
 
-            if (typeof(IList).IsAssignableFrom(memberInfo.GetUnderlyingType()))
+            if (unityPathInfo.IsCollection)
             {
                 EnableSyncSelectionBorderHeight();
 
@@ -1129,7 +1123,7 @@ namespace GraphProcessor
 
             element.RegisterValueChangeCallback(e =>
             {
-                UpdateFieldVisibility(memberInfo.Name, unityPath.GetValueOfMemberAtPath(nodeTarget));
+                UpdateFieldVisibility(unityPathInfo.FieldName, unityPath.GetValueOfMemberAtPath(nodeTarget));
                 valueChangedCallback?.Invoke();
                 NotifyNodeChanged();
             });
@@ -1150,7 +1144,7 @@ namespace GraphProcessor
             {
                 if (showInputDrawer)
                 {
-                    var box = new VisualElement { name = memberInfo.Name };
+                    var box = new VisualElement { name = unityPathInfo.FieldName };
                     box.AddToClassList("port-input-element");
                     box.Add(element);
                     inputContainerElement.Add(box);
@@ -1159,15 +1153,15 @@ namespace GraphProcessor
                 {
                     controlsContainer.Add(element);
                 }
-                element.name = memberInfo.Name;
+                element.name = unityPathInfo.Path;
             }
             else
             {
                 // Make sure we create an empty placeholder if FieldFactory can not provide a drawer
-                if (showInputDrawer) AddEmptyField(memberInfo, false);
+                if (showInputDrawer) AddEmptyField(unityPathInfo.MemberInfo, false);
             }
 
-            var visibleCondition = memberInfo.GetCustomAttribute<VisibleIf>();
+            var visibleCondition = unityPathInfo.MemberInfo.GetCustomAttribute<VisibleIf>();
             if (visibleCondition != null)
             {
                 // Check if target field exists:
@@ -1190,7 +1184,7 @@ namespace GraphProcessor
         void UpdateFieldValues()
         {
             foreach (var kp in fieldControlsMap)
-                UpdateOtherFieldValue(kp.Key, kp.Key.GetValueOfMemberAtPath(nodeTarget));
+                UpdateOtherFieldValue(kp.Key.GatherInfo(nodeTarget), kp.Key.GetValueOfMemberAtPath(nodeTarget));
         }
 
         protected void AddSettingField(FieldInfo field)
@@ -1200,7 +1194,7 @@ namespace GraphProcessor
 
             var label = field.GetCustomAttribute<SettingAttribute>().name;
 
-            var element = new PropertyField(FindSerializedProperty(new UnityPath(field)));
+            var element = new PropertyField(FindSerializedProperty(new UnityPath(field).GatherInfo(nodeTarget)));
             element.Bind(owner.serializedGraph);
 
             if (element != null)
@@ -1223,7 +1217,7 @@ namespace GraphProcessor
             onPortConnected?.Invoke(port);
         }
 
-        internal void OnPortDisconnected(PortView port) //
+        internal void OnPortDisconnected(PortView port)
         {
             bool isProxied = port.portData.IsProxied;
             UnityPath fieldName = isProxied ? port.portData.proxiedFieldPath : new UnityPath(port.fieldName);
@@ -1232,7 +1226,7 @@ namespace GraphProcessor
             {
                 inputContainerElement.Q(fieldName).RemoveFromClassList("empty");
 
-                var valueBeforeConnection = GetInputFieldValue(fieldName);
+                var valueBeforeConnection = GetInputFieldValue(fieldName.GatherInfo(nodeTarget));
 
                 if (valueBeforeConnection != null)
                 {

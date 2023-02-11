@@ -51,6 +51,24 @@ namespace GraphProcessor
     }
 
     /// <summary>
+    /// Tell that this field is will generate an input port that can accept multiple edges
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class MultiPortInputAttribute : InputAttribute
+    {
+        /// <summary>
+        /// Mark the field as a multi input port
+        /// </summary>
+        /// <param name="name">display name</param>
+        /// <param name="displayType">changes the default port input type if set</param>
+        public MultiPortInputAttribute(string name = null, Type displayType = null)
+        {
+            this.name = name;
+            this.displayType = displayType;
+        }
+    }
+
+    /// <summary>
     /// Tell that this field is will generate an output port
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -85,28 +86,43 @@ namespace GraphProcessor
             return memberInfo != null && memberInfo.MemberType == MemberTypes.Field;
         }
 
-        public static object GetFinalValue(this IList<MemberInfo> list, object startingValue)
+        public static object GetFinalValue(this IList<UnityPath.PathMemberInfo> list, object startingValue)
         {
             object currentValue = startingValue;
             for (int i = 0; i < list.Count; i++)
             {
-                currentValue = list[i].GetValue(currentValue);
+                currentValue = list[i].MemberInfo.GetValue(currentValue);
+
+                if (list[i].ArrayIndex.HasValue)
+                {
+                    currentValue = (currentValue as IList)[list[i].ArrayIndex.Value];
+                }
             }
             return currentValue;
         }
 
-        public static void SetValue(this IList<MemberInfo> list, object startingValue, object finalValue)
+        public static void SetValue(this IList<UnityPath.PathMemberInfo> list, object startingValue, object finalValue)
         {
             object currentValue = startingValue;
             for (int i = 0; i < list.Count; i++)
             {
                 if (i + 1 == list.Count)
                 {
-                    list[i].SetValue(currentValue, finalValue);
+                    if (list[i].ArrayIndex.HasValue)
+                    {
+                        currentValue = list[i].MemberInfo.GetValue(currentValue);
+                        (currentValue as IList)[list[i].ArrayIndex.Value] = finalValue;
+                    }
+                    else list[i].MemberInfo.SetValue(currentValue, finalValue);
                     break;
                 }
 
-                currentValue = list[i].GetValue(currentValue);
+                currentValue = list[i].MemberInfo.GetValue(currentValue);
+
+                if (list[i].ArrayIndex.HasValue)
+                {
+                    currentValue = (currentValue as IList)[list[i].ArrayIndex.Value];
+                }
             }
         }
 

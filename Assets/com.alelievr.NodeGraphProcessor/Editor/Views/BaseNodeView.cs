@@ -837,8 +837,18 @@ namespace GraphProcessor
 
                 foreach (var portView in portsByMemberInfo[field])
                 {
-                    UnityPath fieldPath = portView.portData.IsProxied ? portView.portData.proxiedFieldPath : new UnityPath(portView.fieldName);
+                    // MultiPorts can either show the origin field drawer or the individual ports drawers in the inspector 
+                    if (fromInspector && field.HasCustomAttribute<MultiPortInputAttribute>())
+                    {
+                        MultiPortInputAttribute multiPortInputAttribute = field.GetCustomAttribute<MultiPortInputAttribute>();
+                        if (multiPortInputAttribute.showParentInInspector)
+                        {
+                            DrawField(field, new UnityPath(portView.fieldName), fromInspector, portView);
+                            break;
+                        }
+                    }
 
+                    UnityPath fieldPath = portView.portData.IsProxied ? portView.portData.proxiedFieldPath : new UnityPath(portView.fieldName);
                     DrawField(field, fieldPath, fromInspector, portView);
                 }
             }
@@ -883,15 +893,15 @@ namespace GraphProcessor
                 return;
             }
 
-            if (field.HasCustomAttribute<HideInInspector>())
-            {
-                // Debug.Log("1 " + origin.Name);
-                AddEmptyField(field, fromInspector);
-                return;
-            }
-
             if (fromInspector)
             {
+                if (field.HasCustomAttribute<HideInInspector>())
+                {
+                    // Debug.Log("1 " + origin.Name);
+                    AddEmptyField(field, fromInspector);
+                    return;
+                }
+
                 string displayName = ObjectNames.NicifyVariableName(field.Name);
                 var inspectorNameAttribute = field.GetCustomAttribute<InspectorNameAttribute>();
                 if (inspectorNameAttribute != null)

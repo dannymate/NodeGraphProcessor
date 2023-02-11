@@ -56,14 +56,17 @@ namespace GraphProcessor
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class MultiPortInputAttribute : InputAttribute
     {
+        public bool showParentInInspector;
+
         /// <summary>
         /// Mark the field as a multi input port
         /// </summary>
         /// <param name="name">display name</param>
         /// <param name="displayType">changes the default port input type if set</param>
-        public MultiPortInputAttribute(string name = null, Type displayType = null)
+        public MultiPortInputAttribute(string name = null, bool showParentInInspector = false, Type displayType = null)
         {
             this.name = name;
+            this.showParentInInspector = showParentInInspector;
             this.displayType = displayType;
         }
     }

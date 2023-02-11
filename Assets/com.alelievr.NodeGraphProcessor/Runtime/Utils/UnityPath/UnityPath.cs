@@ -19,40 +19,6 @@ namespace GraphProcessor
         private string[] pathArray;
         private Dictionary<object, Info> pathAsMemberInfoArrayByOrigin = new();
 
-        public class Info
-        {
-            public Info(UnityPath origin, string path, string[] pathArray, List<PathMemberInfo> pathAsMemberInfo, Type type = null, Nullable<bool> isCollection = null)
-            {
-                Origin = origin;
-                Path = path;
-                PathArray = pathArray;
-                PathAsMemberInfo = pathAsMemberInfo;
-                DisplayType = type ?? MemberInfo.GetUnderlyingType();
-                IsCollection = isCollection ?? DisplayType.IsCollection();
-            }
-
-            public UnityPath Origin { get; private set; }
-            public string Path { get; private set; }
-            public string[] PathArray { get; private set; }
-            public List<PathMemberInfo> PathAsMemberInfo { get; private set; }
-            public MemberInfo MemberInfo => PathAsMemberInfo.Last().MemberInfo;
-            public bool IsCollection { get; private set; }
-            public Type DisplayType { get; private set; }
-            public string FieldName => MemberInfo.Name;
-        }
-
-        public struct PathMemberInfo
-        {
-            public PathMemberInfo(MemberInfo memberInfo, int? arrayIndex = null)
-            {
-                MemberInfo = memberInfo;
-                ArrayIndex = arrayIndex;
-            }
-
-            public MemberInfo MemberInfo { get; private set; }
-            public int? ArrayIndex { get; private set; }
-        }
-
         public UnityPath(string path)
         {
             this.path = path;
@@ -78,8 +44,8 @@ namespace GraphProcessor
         }
 
         public string Path => PropertyUtils.LazyLoad(ref path, BuildPathFromArray, (value) => string.IsNullOrEmpty(value));
-        private string ReflectedPath => Regex.Replace(Path, @"\.Array\.data\[(\d+)\]", ".$1");
         public string[] PathArray => PropertyUtils.LazyLoad(ref pathArray, SplitPathIntoArray, (value) => value == null || value.Length == 0);
+        private string ReflectedPath => Regex.Replace(Path, @"\.Array\.data\[(\d+)\]", ".$1");
         public string[] ReflectedPathArray => ReflectedPath.Split('.');
 
         public static implicit operator string(UnityPath unityPath) => unityPath.Path;
@@ -159,6 +125,40 @@ namespace GraphProcessor
                 path += ".";
             }
             return path;
+        }
+
+        public struct PathMemberInfo
+        {
+            public PathMemberInfo(MemberInfo memberInfo, int? arrayIndex = null)
+            {
+                MemberInfo = memberInfo;
+                ArrayIndex = arrayIndex;
+            }
+
+            public MemberInfo MemberInfo { get; private set; }
+            public int? ArrayIndex { get; private set; }
+        }
+
+        public class Info
+        {
+            public Info(UnityPath origin, string path, string[] pathArray, List<PathMemberInfo> pathAsMemberInfo, Type type = null, Nullable<bool> isCollection = null)
+            {
+                Origin = origin;
+                Path = path;
+                PathArray = pathArray;
+                PathAsMemberInfo = pathAsMemberInfo;
+                DisplayType = type ?? MemberInfo.GetUnderlyingType();
+                IsCollection = isCollection ?? DisplayType.IsCollection();
+            }
+
+            public UnityPath Origin { get; private set; }
+            public string Path { get; private set; }
+            public string[] PathArray { get; private set; }
+            public List<PathMemberInfo> PathAsMemberInfo { get; private set; }
+            public MemberInfo MemberInfo => PathAsMemberInfo.Last().MemberInfo;
+            public bool IsCollection { get; private set; }
+            public Type DisplayType { get; private set; }
+            public string FieldName => MemberInfo.Name;
         }
     }
 }

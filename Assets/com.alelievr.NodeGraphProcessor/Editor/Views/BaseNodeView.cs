@@ -1125,10 +1125,35 @@ namespace GraphProcessor
                         _.StopImmediatePropagation();
                     }, TrickleDown.TrickleDown);
 
+                    // Keeping Lists In Sync. We'll want to not do this for every list.
+                    element.Q<ListView>().itemsAdded += (e) =>
+                    {
+                        nodeTarget.UpdateAllPortsLocal();
+                        UpdateFieldVisibility(unityPathInfo.FieldName, unityPath.GetValueOfMemberAtPath(nodeTarget));
+                        valueChangedCallback?.Invoke();
+                        NotifyNodeChanged();
+                    };
+                    element.Q<ListView>().itemsRemoved += (e) =>
+                    {
+                        nodeTarget.UpdateAllPortsLocal();
+                        UpdateFieldVisibility(unityPathInfo.FieldName, unityPath.GetValueOfMemberAtPath(nodeTarget));
+                        valueChangedCallback?.Invoke();
+                        NotifyNodeChanged();
+                    };
+                    element.Q<ListView>().itemIndexChanged += (i, ip) =>
+                    {
+                        nodeTarget.UpdateAllPortsLocal();
+                        UpdateFieldVisibility(unityPathInfo.FieldName, unityPath.GetValueOfMemberAtPath(nodeTarget));
+                        valueChangedCallback?.Invoke();
+                        NotifyNodeChanged();
+                    };
+
                     // Unregister this callback as we don't need it anymore
                     element.UnregisterCallback<GeometryChangedEvent>(ListViewSelectionFixCallback);
                 }
                 element.RegisterCallback<GeometryChangedEvent>(ListViewSelectionFixCallback);
+
+
             }
 
             element.RegisterValueChangeCallback(e =>

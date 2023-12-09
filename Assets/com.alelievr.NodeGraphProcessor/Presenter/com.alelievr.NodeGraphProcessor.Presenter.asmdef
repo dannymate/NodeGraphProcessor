@@ -1,0 +1,18 @@
+{
+    "name": "com.alelievr.NodeGraphProcessor.Presenter",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a432eb0a70c5c4a37ab50d59671586f8",
+        "GUID:ca937d03ee5dd4d699091438dc0f3ae6",
+        "GUID:ea6a6314f279f814facc8c48a7d3c9f1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

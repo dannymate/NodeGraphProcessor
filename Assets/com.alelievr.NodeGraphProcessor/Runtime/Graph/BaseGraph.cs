@@ -384,21 +384,28 @@ namespace GraphProcessor
         /// Add a sticky note 
         /// </summary>
         /// <param name="note"></param>
-        public void AddStickyNote(StickyNote note)
+        public void AddStickyNote(StickyNote note, bool suppressEvent = false)
         {
+            if (stickyNotes.Contains(note)) return;
+
             stickyNotes.Add(note);
+            if (!suppressEvent) StickyNoteAdded?.Invoke(note);
             onGraphChanges?.Invoke(new GraphChanges { addedStickyNotes = note });
         }
+        public event Action<StickyNote> StickyNoteAdded;
 
         /// <summary>
         /// Removes a sticky note 
         /// </summary>
         /// <param name="note"></param>
-        public void RemoveStickyNote(StickyNote note)
+        public void RemoveStickyNote(StickyNote note, bool suppressEvent = false)
         {
-            stickyNotes.Remove(note);
+            if (!stickyNotes.Remove(note)) return;
+
+            if (!suppressEvent) StickyNoteRemoved?.Invoke(note);
             onGraphChanges?.Invoke(new GraphChanges { removedStickyNotes = note });
         }
+        public event Action<StickyNote> StickyNoteRemoved;
 
         /// <summary>
         /// Invoke the onGraphChanges event, can be used as trigger to execute the graph when the content of a node is changed 

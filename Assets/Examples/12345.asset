@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 061c4e5078ffdfd1ab72813a0e014ce2, type: 3}
   m_Name: 12345
   m_EditorClassIdentifier: 
-  serializedNodes: []
   nodes:
   - rid: 702614988847841435
   - rid: 702614988847841436
@@ -45,7 +44,11 @@ MonoBehaviour:
       _suppressLogs: 0
     showAsDrawer: 0
     acceptMultipleEdges: 0
-    proxiedFieldPath: 
+    edgeProcessOrder:
+      _value: FIFO
+    proxiedFieldPath:
+      path: 
+      pathArray: []
     sizeInPixel: 0
     tooltip: 
     vertical: 0
@@ -57,8 +60,7 @@ MonoBehaviour:
       type: {class: SubGraphIngressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: cf545a48-50c8-431e-a553-cc844dc81f42
+        _guid: 924eb28b-000d-4a26-9fcd-99db62aa3e89
         computeOrder: 0
         position:
           serializedVersion: 2
@@ -79,8 +81,7 @@ MonoBehaviour:
       type: {class: SubGraphEgressNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        _guid:
-          Value: f8939290-9a63-42ab-83ed-ac5096e3277b
+        _guid: e367b444-fe8b-46e0-9533-27cc131d50f2
         computeOrder: 1
         position:
           serializedVersion: 2

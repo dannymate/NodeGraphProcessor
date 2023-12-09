@@ -119,7 +119,6 @@ namespace GraphProcessor
         {
             get
             {
-
                 if (graph.nodeInspectorReference == null)
                     graph.nodeInspectorReference = CreateNodeInspectorObject();
                 return graph.nodeInspectorReference as NodeInspectorObject;
@@ -902,13 +901,13 @@ namespace GraphProcessor
                 AddGroupView(group);
         }
 
-        void InitializeStickyNotes()
-        {
-#if UNITY_2020_1_OR_NEWER
-            foreach (var group in graph.stickyNotes)
-                AddStickyNoteView(group);
-#endif
-        }
+        //         void InitializeStickyNotes()
+        //         {
+        // #if UNITY_2020_1_OR_NEWER
+        //             foreach (var group in graph.stickyNotes)
+        //                 AddStickyNoteView(group);
+        // #endif
+        //         }
 
         void InitializeStackNodes()
         {
@@ -1070,38 +1069,38 @@ namespace GraphProcessor
             RemoveElement(stackNodeView);
         }
 
-#if UNITY_2020_1_OR_NEWER
-        public StickyNoteView AddStickyNote(StickyNote note)
-        {
-            graph.AddStickyNote(note);
-            return AddStickyNoteView(note);
-        }
+        // #if UNITY_2020_1_OR_NEWER
+        //         public StickyNoteView AddStickyNote(StickyNote note)
+        //         {
+        //             graph.AddStickyNote(note);
+        //             return AddStickyNoteView(note);
+        //         }
 
-        public StickyNoteView AddStickyNoteView(StickyNote note)
-        {
-            var c = new StickyNoteView();
+        //         public StickyNoteView AddStickyNoteView(StickyNote note)
+        //         {
+        //             var c = new StickyNoteView();
 
-            c.Initialize(this, note);
+        //             c.Initialize(this, note);
 
-            AddElement(c);
+        //             AddElement(c);
 
-            stickyNoteViews.Add(c);
-            return c;
-        }
+        //             stickyNoteViews.Add(c);
+        //             return c;
+        //         }
 
-        public void RemoveStickyNoteView(StickyNoteView view)
-        {
-            stickyNoteViews.Remove(view);
-            RemoveElement(view);
-        }
+        //         public void RemoveStickyNoteView(StickyNoteView view)
+        //         {
+        //             stickyNoteViews.Remove(view);
+        //             RemoveElement(view);
+        //         }
 
-        public void RemoveStrickyNotes()
-        {
-            foreach (var stickyNodeView in stickyNoteViews)
-                RemoveElement(stickyNodeView);
-            stickyNoteViews.Clear();
-        }
-#endif
+        //         public void RemoveStrickyNotes()
+        //         {
+        //             foreach (var stickyNodeView in stickyNoteViews)
+        //                 RemoveElement(stickyNodeView);
+        //             stickyNoteViews.Clear();
+        //         }
+        // #endif
 
         public void AddSelectionsToGroup(GroupView view)
         {
